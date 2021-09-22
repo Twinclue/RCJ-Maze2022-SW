@@ -1,1 +1,2 @@
 # RCJ-Maze2022-SW
+RoboCupJunior2022シーズンのRescue Mazeに出場するTwinclueのソフトウェア開発リポジトリです．
