@@ -1,7 +1,5 @@
-
-main-teensy/.pio/build/project.checksum
-main-teensy/.pio/build/project.checksum
-main-teensy/.pio/build/teensy35/idedata.json
-main-teensy/.vscode/c_cpp_properties.json
-main-teensy/.vscode/launch.json
+RCJ-Maze2022-SW/.vscode/launch.json
+RCJ-Maze2022-SW/.vscode/c_cpp_properties.json
+RCJ-Maze2022-SW/.pio/build/teensy35/idedata.json
+RCJ-Maze2022-SW/.pio/build/project.checksum
 workspace.code-workspace
