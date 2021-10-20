@@ -34,38 +34,43 @@
 //
 // PUBLIC
 //
+
 GY521::GY521(uint8_t address)
 {
   _address = address;
   setThrottleTime(GY521_THROTTLE_TIME);
 }
 
+void GY521::setBus(TwoWire *_bus) {
+   bus = _bus;
+}
+
 #if defined (ESP8266) || defined(ESP32)
 bool GY521::begin(uint8_t sda, uint8_t scl)
 {
-  Wire.begin(sda, scl);
+  bus->begin(sda, scl);
   return isConnected();
 }
 #endif
 
 bool GY521::begin()
 {
-  Wire.begin();
+  bus->begin();
   return isConnected();
 }
 
 bool GY521::isConnected()
 {
-  Wire.beginTransmission(_address);
-  return (Wire.endTransmission() == 0);
+  bus->beginTransmission(_address);
+  return (bus->endTransmission() == 0);
 }
 
 bool GY521::wakeup()
 {
-  Wire.beginTransmission(_address);
-  Wire.write(GY521_PWR_MGMT_1);
-  Wire.write(GY521_WAKEUP);
-  return (Wire.endTransmission() == 0);
+  bus->beginTransmission(_address);
+  bus->write(GY521_PWR_MGMT_1);
+  bus->write(GY521_WAKEUP);
+  return (bus->endTransmission() == 0);
 }
 
 int16_t GY521::read()
@@ -79,12 +84,12 @@ int16_t GY521::read()
   }
 
   // Connected ?
-  Wire.beginTransmission(_address);
-  Wire.write(GY521_ACCEL_XOUT_H);
-  if (Wire.endTransmission() != 0) return GY521_ERROR_WRITE;
+  bus->beginTransmission(_address);
+  bus->write(GY521_ACCEL_XOUT_H);
+  if (bus->endTransmission() != 0) return GY521_ERROR_WRITE;
 
   // Get the data
-  int8_t n = Wire.requestFrom(_address, (uint8_t)14);
+  int8_t n = bus->requestFrom(_address, (uint8_t)14);
   if (n != 14) return GY521_ERROR_READ;
   // ACCELEROMETER
   _ax = _WireRead2();  // ACCEL_XOUT_H  ACCEL_XOUT_L
@@ -213,11 +218,11 @@ uint8_t GY521::getGyroSensitivity()
 
 uint8_t GY521::setRegister(uint8_t reg, uint8_t value)
 {
-  Wire.beginTransmission(_address);
-  Wire.write(reg);
-  Wire.write(value);
+  bus->beginTransmission(_address);
+  bus->write(reg);
+  bus->write(value);
   // no need to do anything if not connected.
-  if (Wire.endTransmission() != 0) 
+  if (bus->endTransmission() != 0) 
   {
     _error = GY521_ERROR_WRITE;
     return _error;
@@ -227,29 +232,29 @@ uint8_t GY521::setRegister(uint8_t reg, uint8_t value)
 
 uint8_t GY521::getRegister(uint8_t reg)
 {
-  Wire.beginTransmission(_address);
-  Wire.write(reg);
-  if (Wire.endTransmission() != 0)
+  bus->beginTransmission(_address);
+  bus->write(reg);
+  if (bus->endTransmission() != 0)
   {
     _error = GY521_ERROR_WRITE;
     return _error;
   }
-  uint8_t n = Wire.requestFrom(_address, (uint8_t) 1);
+  uint8_t n = bus->requestFrom(_address, (uint8_t) 1);
   if (n != 1) 
   {
     _error = GY521_ERROR_READ;
     return _error;
   }
-  uint8_t val = Wire.read();
+  uint8_t val = bus->read();
   return val;
 }
 
 // to read register of 2 bytes.
 int16_t GY521::_WireRead2()
 {
-  int16_t tmp = Wire.read();
+  int16_t tmp = bus->read();
   tmp <<= 8;
-  tmp |= Wire.read();
+  tmp |= bus->read();
   return tmp;
 }
 
