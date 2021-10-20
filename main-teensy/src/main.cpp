@@ -46,12 +46,6 @@ void loop()
     Serial.println("\nCNT\tPITCH\tROLL\tYAW");
   }
 
-  Serial.print(counter);
-  Serial.print('\t');
-  Serial.print(pitch, 3);
-  Serial.print('\t');
-  Serial.print(roll, 3);
-  Serial.print('\t');
   Serial.print(yaw, 3);
   Serial.println();
   
@@ -60,6 +54,6 @@ void loop()
   Serial.print(sensor.getGyroX());Serial.print(" , ");
   Serial.println(sensor.getGyroX());
   */
-  delay(200);
+  delay(100);
   counter++;
 }
