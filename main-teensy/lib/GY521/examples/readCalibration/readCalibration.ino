@@ -7,7 +7,7 @@
 
 #include "GY521.h"
 
-GY521 sensor(0x69);
+GY521 sensor(0x68);
 
 uint32_t counter = 0;
 

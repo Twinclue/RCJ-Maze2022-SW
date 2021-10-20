@@ -26,21 +26,21 @@ void setup()
   Serial.println("start...");
   
   // set callibration values from calibration sketch.
-  sensor.axe = 0;
-  sensor.aye = 0;
-  sensor.aze = 0;
-  sensor.gxe = 0;
-  sensor.gye = 0;
-  sensor.gze = 0;
+  sensor.axe = -0.071;
+  sensor.aye = -0.008;
+  sensor.aze = 1.085;
+  sensor.gxe = -0.709;
+  sensor.gye = 0.479;
+  sensor.gze = 0.087;
 }
 
 void loop()
 {
   sensor.read();
+  
   float pitch = sensor.getPitch();
   float roll  = sensor.getRoll();
   float yaw   = sensor.getYaw();
-
   if (counter % 10 == 0)
   {
     Serial.println("\nCNT\tPITCH\tROLL\tYAW");
@@ -54,6 +54,12 @@ void loop()
   Serial.print('\t');
   Serial.print(yaw, 3);
   Serial.println();
-  delay(500)
+  
+ /*
+  Serial.print(sensor.getGyroX());Serial.print(" , ");
+  Serial.print(sensor.getGyroX());Serial.print(" , ");
+  Serial.println(sensor.getGyroX());
+  */
+  delay(200);
   counter++;
 }
