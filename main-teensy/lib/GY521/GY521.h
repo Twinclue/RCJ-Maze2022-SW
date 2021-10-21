@@ -34,7 +34,7 @@
 class GY521
 {
 public:
-  GY521(uint8_t address = 0x69); // 0x68 or 0x69
+  GY521(uint8_t address = 0x68); // 0x68 or 0x69
   void setBus(TwoWire * _bus);
 #if defined (ESP8266) || defined(ESP32)
   bool     begin(uint8_t sda, uint8_t scl);
@@ -90,8 +90,10 @@ public:
   float    gxe = 0, gye = 0, gze = 0;  // gyro errors
 
 
-private:
+protected:
   TwoWire * bus;
+
+private:
   uint8_t  _address;                // I2C address
   bool     _throttle = true;        // to prevent reading too fast
   uint16_t _throttleTime = GY521_THROTTLE_TIME;
