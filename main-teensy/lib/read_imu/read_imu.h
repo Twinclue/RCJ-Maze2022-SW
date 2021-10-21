@@ -9,7 +9,7 @@ private:
     const float caze = 1.085;
     const float cgxe = -0.709;
     const float cgye = 0.479;
-    const float cgze = 0.087;
+    const float cgze = 0.2;//マイナス方向にドリフト→値を大きく
 
 public:
     read_imu();

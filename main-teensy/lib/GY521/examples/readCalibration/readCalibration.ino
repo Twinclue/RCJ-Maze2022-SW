@@ -20,7 +20,8 @@ void setup()
   Serial.begin(115200);
   Serial.println(__FILE__);
 
-  Wire.begin();
+  Wire2.begin();
+  sensor.setBus(&Wire2);
   delay(100);
   if (sensor.wakeup() == false)
   {
