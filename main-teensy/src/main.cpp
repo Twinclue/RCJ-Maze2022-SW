@@ -16,7 +16,7 @@ void setup()
 }
 
 void loop()
-{
+{/*
   Serial.println();
   Serial.print("Front : ");
   for(int i=0;i<5;i++){
@@ -33,6 +33,7 @@ Serial.print("Behind : ");
     Serial.print(" : ");
   }
   Serial.println();
+  */
   Serial.println();
   delay(500);
 }
