@@ -35,5 +35,5 @@ Serial.print("Behind : ");
   Serial.println();
   */
   Serial.println(readRAngle(toff.read(0),tofb.read(3)));
-  delay(500);
+  delay(50);
 }
