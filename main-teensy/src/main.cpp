@@ -1,23 +1,39 @@
 #include <Arduino.h>
 #include "read_imu.h"
+#include "read_tof.h"
+#include "advanced_tof.h"
 
 read_imu sensor;
+read_tof toff(&Wire2);
+read_tof tofb(&Wire);
+
+
+const int port = 0;
 
 void setup()
 {
-  Serial.begin(115200);
-  Wire2.begin();
-
   delay(100);
-  sensor.begin(&Wire2);
 }
 
 void loop()
-{
-  sensor.read();
-  float yaw   = sensor.getYaw();
-
-  Serial.print(yaw, 3);
+{/*
   Serial.println();
-  delay(100);
+  Serial.print("Front : ");
+  for(int i=0;i<5;i++){
+    Serial.print(toff.read(i));
+    Serial.print(" : ");
+  }
+
+  Serial.println();
+
+
+Serial.print("Behind : ");
+  for(int i=0;i<5;i++){
+    Serial.print(tofb.read(i));
+    Serial.print(" : ");
+  }
+  Serial.println();
+  */
+  Serial.println(readRAngle(toff.read(0),tofb.read(3)));
+  delay(50);
 }
