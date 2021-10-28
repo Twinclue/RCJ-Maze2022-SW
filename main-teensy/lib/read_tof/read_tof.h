@@ -2,10 +2,18 @@
 #include <VL53L0X.h>
 #include <VL6180X.h>
 
-class read_imu{
-    public:
-        read_tof();
-        
-    private:
+#define VL61NUM 4
+#define VL53NUM 1
 
+class read_tof{
+    public:
+        read_tof(TwoWire *_bus);
+
+    private:
+        const int vl61Num = 4;
+        const int vl53Num = 1;
+        PCA9547 i2cSelect;
+        VL6180X vl61[VL61NUM];
+        VL53L0X vl53[VL53NUM];
+        TwoWire *bus;
 };
