@@ -2,13 +2,10 @@
 #include "read_imu.h"
 #include "read_tof.h"
 #include "advanced_tof.h"
+#include "drive_motor.h"
 
-read_imu sensor;
-read_tof toff(&Wire2);
-read_tof tofb(&Wire);
-
-
-const int port = 0;
+drive_motor left(35,36,37,15,16);
+drive_motor right(38,39,14,15,16);
 
 void setup()
 {
@@ -16,24 +13,7 @@ void setup()
 }
 
 void loop()
-{/*
-  Serial.println();
-  Serial.print("Front : ");
-  for(int i=0;i<5;i++){
-    Serial.print(toff.read(i));
-    Serial.print(" : ");
-  }
-
-  Serial.println();
-
-
-Serial.print("Behind : ");
-  for(int i=0;i<5;i++){
-    Serial.print(tofb.read(i));
-    Serial.print(" : ");
-  }
-  Serial.println();
-  */
-  Serial.println(readRAngle(toff.read(0),tofb.read(3)));
-  delay(50);
+{
+  left.on(250);
+  right.on(-250);
 }
