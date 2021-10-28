@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include "read_imu.h"
 #include "read_tof.h"
-
+#include "advanced_tof.h"
 
 read_imu sensor;
 read_tof toff(&Wire2);
@@ -34,6 +34,6 @@ Serial.print("Behind : ");
   }
   Serial.println();
   */
-  Serial.println();
+  Serial.println(readRAngle(toff.read(0),tofb.read(3)));
   delay(500);
 }
