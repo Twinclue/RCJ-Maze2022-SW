@@ -1,3 +1,7 @@
+#ifndef READ_TOF_H_
+#define READ_TOF_T_
+
+
 #include <PCA9547.h>
 #include <VL53L0X.h>
 #include <VL6180X.h>
@@ -18,3 +22,5 @@ class read_tof{
         TwoWire *bus;
         int dist;
 };
+
+#endif

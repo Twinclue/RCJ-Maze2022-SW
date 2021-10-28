@@ -4,7 +4,8 @@
 
 
 read_imu sensor;
-read_tof tof(&Wire2);
+read_tof toff(&Wire2);
+read_tof tofb(&Wire);
 
 
 const int port = 0;
@@ -16,13 +17,22 @@ void setup()
 
 void loop()
 {
-  
+  Serial.println();
+  Serial.print("Front : ");
   for(int i=0;i<5;i++){
-    Serial.print(tof.read(i));
+    Serial.print(toff.read(i));
     Serial.print(" : ");
   }
-  
-  //Serial.print(tof.read(4));
+
   Serial.println();
-  delay(100);
+
+
+Serial.print("Behind : ");
+  for(int i=0;i<5;i++){
+    Serial.print(tofb.read(i));
+    Serial.print(" : ");
+  }
+  Serial.println();
+  Serial.println();
+  delay(500);
 }
