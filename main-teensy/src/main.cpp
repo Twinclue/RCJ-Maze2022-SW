@@ -14,6 +14,6 @@ void setup()
 
 void loop()
 {
-  left.on(250);
-  right.on(-250);
+  left.on(0);
+  right.on(0);
 }
