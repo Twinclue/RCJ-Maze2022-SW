@@ -14,7 +14,9 @@ drive_motor::drive_motor(uint8_t _in1, uint8_t _in2, uint8_t _pwm, uint8_t _lo1,
 }
 
 int drive_motor::on(int power){
-    if(digitalRead(lo1)==1 && digitalRead(lo2)==1){
+    
+  Serial.println(digitalRead(lo2));
+    if(digitalRead(lo1)==1 && digitalRead(lo2)==0){
         if(power>0){
             digitalWrite(in1,HIGH);
             digitalWrite(in2,LOW);
