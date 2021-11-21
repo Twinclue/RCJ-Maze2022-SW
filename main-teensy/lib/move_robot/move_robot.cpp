@@ -20,15 +20,63 @@ short move_robot::fwd(short remDist = 300){
 
 void move_robot::corrDir(){
     float relativeAng = 0;
-    if(1){//front->read(fls) <= 400 && back->read(bls) <= 400
-        relativeAng = readRAngle(front->read(0),back->read(3));
-        Serial.println(relativeAng);
+    if(front->read(frs) <= 200 && back->read(brs) <= 200){
+        relativeAng = readRAngle(front->read(frs),back->read(brs));
+        corrDirPid->init();
         while(relativeAng <= -1 || 1 <= relativeAng){
-            relativeAng = readRAngle(front->read(0),back->read(3));
-            left->on(-kp*relativeAng);//
-            right->on(kp*relativeAng);//
+            relativeAng = readRAngle(front->read(frs),back->read(brs));
+            left->on(corrDirPid->calcPI(relativeAng,0));//
+            right->on(-1 * corrDirPid->calcPI(relativeAng,0));//
         }
-        left->on(0);
-        right->on(0);
     }
+    else if(front->read(fls) <= 200 && back->read(bls) <= 200){
+        relativeAng = readRAngle(front->read(fls),back->read(bls));
+        corrDirPid->init();
+        while(relativeAng <= -1 || 1 <= relativeAng){
+            relativeAng = readRAngle(front->read(fls),back->read(bls));
+            left->on(-1 * corrDirPid->calcPI(relativeAng,0));//
+            right->on(corrDirPid->calcPI(relativeAng,0));//
+        }
+    }
+    else if(front->read(flf) <= 200 && front->read(frf) <= 200){
+        relativeAng = readRAngle(front->read(flf),front->read(frf),125);
+        corrDirPid->init();
+        while(relativeAng <= -1 || 1 <= relativeAng){
+            relativeAng = readRAngle(front->read(flf),front->read(frf),125);
+            left->on(corrDirPid->calcPI(relativeAng,0));//
+            right->on(-1 * corrDirPid->calcPI(relativeAng,0));//
+        }
+    }
+    else if(back->read(blf) <= 200 && back->read(brf) <= 200){
+        relativeAng = readRAngle(back->read(blf),back->read(brf),125);
+        corrDirPid->init();
+        while(relativeAng <= -1 || 1 <= relativeAng){
+            relativeAng = readRAngle(back->read(blf),back->read(brf),125);
+            left->on(-1 * corrDirPid->calcPI(relativeAng,0));//
+            right->on(corrDirPid->calcPI(relativeAng,0));//
+        }
+    }
+    left->on(0);
+    right->on(0);
+}
+
+void move_robot::corrDist(){
+    while(((front->read(fls)+back->read(bls))/2) <= 50){
+        left->on(255);
+        right->on(0);
+        delay(70);
+        left->on(0);
+        right->on(255);
+        delay(70);
+        left->on(-255);
+        right->on(0);
+        delay(70);
+        left->on(0);
+        right->on(-255);
+        delay(70);
+    }
+    left->on(0);
+    right->on(0);
+    delay(100);
+    return;
 }

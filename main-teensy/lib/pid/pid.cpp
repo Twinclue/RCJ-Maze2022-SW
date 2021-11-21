@@ -6,7 +6,7 @@ pid::pid(float _kp,float _ki,float _kd){
     kd = _kd;
 }
 
-pid::init(){
+void pid::init(){
     initTime = millis();
     integral = 0;
 }

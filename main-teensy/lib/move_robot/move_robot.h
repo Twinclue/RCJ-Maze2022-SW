@@ -5,6 +5,7 @@
 #include "read_imu.h"
 #include "read_tof.h"
 #include "advanced_tof.h"
+#include "pid.h"
 
 class move_robot{
     public:
@@ -12,6 +13,7 @@ class move_robot{
         short fwd(short remDist = 300);
         short rev(short remDist = 300);
         void  corrDir();//correct direction
+        void  corrDist();
 
     private:
         drive_motor *left;
@@ -31,5 +33,6 @@ class move_robot{
         const byte bls = 3;
         const byte bc  = 4;
         const float kp = 20;
+        pid *corrDirPid = new pid(5,1,0);
 };
 #endif

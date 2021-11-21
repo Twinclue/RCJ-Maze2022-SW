@@ -5,7 +5,7 @@
 class pid{
     public:
         pid(float _kp,float _ki,float _kd);
-        init();
+        void init();
         float calcP(int feedBack,int target);
         float calcPI(int feedBack,int target);
         float calcPD(int feedBack,int target);

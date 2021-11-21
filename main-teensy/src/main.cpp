@@ -1,7 +1,6 @@
 #include <Arduino.h>
 #include <LiquidCrystal.h>
 #include "move_robot.h"
-#include "pid.h"
 
 
 read_tof toff(&Wire2);
@@ -13,7 +12,6 @@ move_robot move(&left,&right,&toff,&tofb);
 
 LiquidCrystal lcd(25,24,12,11,10,9);
 
-pid movePID(1,1,1);
 
 void setup()
 {
