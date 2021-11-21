@@ -1,24 +1,34 @@
 #include <Arduino.h>
-#include "read_imu.h"
-#include "read_tof.h"
-#include "advanced_tof.h"
-#include "drive_motor.h"
+#include <LiquidCrystal.h>
 #include "move_robot.h"
 
 read_tof toff(&Wire2);
 read_tof tofb(&Wire);
 
 drive_motor left(35,36,37,15,16);
-drive_motor right(38,39,14,15,16);
+drive_motor right(39,38,14,15,16);
 move_robot move(&left,&right,&toff,&tofb);
+
+LiquidCrystal lcd(25,24,12,11,10,9);
+
 
 
 void setup()
 {
+  pinMode(27,INPUT);
   delay(100);
+  lcd.begin(16,2);
 }
 
 void loop()
 {
-  move.fwd();
+  if(digitalRead(27) == HIGH){
+    move.corrDir();
+    while(1);
+  }
+  else{
+    lcd.print(readRAngle(toff.read(0),tofb.read(3)));
+    delay(100);
+    lcd.clear();
+  }
 }
