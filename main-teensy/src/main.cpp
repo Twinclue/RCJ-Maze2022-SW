@@ -24,11 +24,11 @@ void loop()
 {
   if(digitalRead(27) == HIGH){
     move.corrDir();
-    while(1);
   }
-  else{
+  else{/*
     lcd.print(readRAngle(toff.read(0),tofb.read(3)));
     delay(100);
     lcd.clear();
+    */
   }
 }

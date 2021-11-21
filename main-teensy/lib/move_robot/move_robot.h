@@ -30,6 +30,6 @@ class move_robot{
         const byte blf = 2;
         const byte bls = 3;
         const byte bc  = 4;
-        const float kp = 2;
+        const float kp = 20;
 };
 #endif

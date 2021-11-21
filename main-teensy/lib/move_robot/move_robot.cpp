@@ -20,11 +20,15 @@ short move_robot::fwd(short remDist = 300){
 
 void move_robot::corrDir(){
     float relativeAng = 0;
-    if(front->read(fls) <= 200 && back->read(bls) <= 200){
-        relativeAng = (front->read(fls),back->read(bls));
-        while(-3 <= relativeAng && relativeAng <= 3){
-            left->on(kp*relativeAng);
-            right->on(-kp*relativeAng);
+    if(1){//front->read(fls) <= 400 && back->read(bls) <= 400
+        relativeAng = readRAngle(front->read(0),back->read(3));
+        Serial.println(relativeAng);
+        while(relativeAng <= -1 || 1 <= relativeAng){
+            relativeAng = readRAngle(front->read(0),back->read(3));
+            left->on(-kp*relativeAng);//
+            right->on(kp*relativeAng);//
         }
+        left->on(0);
+        right->on(0);
     }
 }
