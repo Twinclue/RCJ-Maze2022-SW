@@ -1,10 +1,11 @@
 #include "move_robot.h"
 
-move_robot::move_robot(drive_motor *_left,drive_motor *_right,read_tof *_front,read_tof *_back){
+move_robot::move_robot(drive_motor *_left,drive_motor *_right,read_tof *_front,read_tof *_back,read_imu *_imu){
     left = _left;
     right = _right;
     front = _front;
     back = _back;
+    imu = _imu;
 }
 
 short move_robot::fwd(short remDist = 300){
@@ -16,6 +17,23 @@ short move_robot::fwd(short remDist = 300){
     left->on(0);
     right->on(0);
     return 1;
+}
+
+short move_robot::turn(short remAng = 90){
+    imu->read();
+    short startAng = imu->getYaw();
+    short errorAng = imu->getYaw() - startAng;
+    turnPid->init();
+    while(errorAng < remAng){
+        imu->read();
+        errorAng = imu->getYaw() - startAng;
+        left->on(-turnPid->calcPI(errorAng,remAng));
+        right->on(turnPid->calcPI(errorAng,remAng));
+        Serial.println(remAng);
+    }
+    left->on(0);
+    right->on(0);
+    return startAng;
 }
 
 void move_robot::corrDir(){

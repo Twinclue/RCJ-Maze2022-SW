@@ -9,9 +9,11 @@
 
 class move_robot{
     public:
-        move_robot(drive_motor *_left,drive_motor *_right,read_tof *_front,read_tof *_back);
+        move_robot(drive_motor *_left,drive_motor *_right,read_tof *_front,read_tof *_back,read_imu *_imu);
         short fwd(short remDist = 300);
         short rev(short remDist = 300);
+        short turn(short remAng = 90);
+
         void  corrDir();//correct direction
         void  corrDist();
 
@@ -20,6 +22,8 @@ class move_robot{
         drive_motor *right;
         read_tof *front;
         read_tof *back;
+
+        read_imu *imu;
 
         const byte fls = 0;
         const byte flf = 1;
@@ -34,5 +38,6 @@ class move_robot{
         const byte bc  = 4;
         const float kp = 20;
         pid *corrDirPid = new pid(5,1,0);
+        pid *turnPid = new pid(5,1,0);
 };
 #endif
