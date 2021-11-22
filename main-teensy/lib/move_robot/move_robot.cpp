@@ -24,12 +24,24 @@ short move_robot::turn(short remAng = 90){
     short startAng = imu->getYaw();
     short errorAng = imu->getYaw() - startAng;
     turnPid->init();
-    while(errorAng < remAng){
-        imu->read();
-        errorAng = imu->getYaw() - startAng;
-        left->on(-turnPid->calcPI(errorAng,remAng));
-        right->on(turnPid->calcPI(errorAng,remAng));
-        Serial.println(remAng);
+    if(remAng > 0){
+        while(errorAng < remAng){
+            imu->read();
+            errorAng = imu->getYaw() - startAng;
+            left->on(-turnPid->calcPI(errorAng,remAng));
+            right->on(turnPid->calcPI(errorAng,remAng));
+            delay(1);
+        }
+    }
+    else{
+        while(errorAng > remAng){
+            imu->read();
+            errorAng = imu->getYaw() - startAng;
+            left->on(turnPid->calcPI(-errorAng,-remAng));
+            right->on(-turnPid->calcPI(-errorAng,-remAng));
+            Serial.println(imu->getYaw());
+            delay(1);
+        }
     }
     left->on(0);
     right->on(0);

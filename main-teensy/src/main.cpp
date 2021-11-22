@@ -23,21 +23,31 @@ void setup()
   
   imu.begin(&Wire2);
 
+  pinMode(0,INPUT);
   pinMode(27,INPUT);
+  pinMode(1,OUTPUT);
+  pinMode(6,OUTPUT);
   delay(100);
   lcd.begin(16,2);
 }
 
 void loop()
 {
-  if(digitalRead(27) == HIGH){
-    lcd.home();
-    lcd.print(move.turn());
-    delay(100);
-    lcd.clear();
-    while(1);
+  if(digitalRead(0) == HIGH){
+    if(digitalRead(27) == HIGH){
+      digitalWrite(1,HIGH);
+      move.turn(90);
+    }
+    else{
+      digitalWrite(6,HIGH);
+      move.turn(-90);
+    }
+    
   }
-  else{/*
+  else{
+    digitalWrite(1,LOW);
+    digitalWrite(6,LOW);
+    /*
     lcd.print(readRAngle(toff.read(0),tofb.read(3)));
     delay(100);
     lcd.clear();
