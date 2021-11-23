@@ -35,8 +35,18 @@ void loop()
 {
   if(digitalRead(0) == HIGH){
     if(digitalRead(27) == HIGH){
-      digitalWrite(1,HIGH);
-      move.turn(90);
+        move.fwd();
+        move.turn(-90);
+        move.corrDir();
+        move.fwd();
+        move.turn(-90);
+        move.corrDir();
+        move.fwd();
+        move.turn(-90);
+        move.corrDir();
+        move.fwd();
+        move.turn(-90);
+        move.corrDir();
     }
     else{
       digitalWrite(6,HIGH);

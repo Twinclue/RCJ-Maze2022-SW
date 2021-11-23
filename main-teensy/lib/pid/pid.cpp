@@ -9,6 +9,8 @@ pid::pid(float _kp,float _ki,float _kd){
 void pid::init(){
     initTime = millis();
     integral = 0;
+    error = 0;
+    prevError = 0;
 }
 
 float pid::calcP(int feedBack,int target){

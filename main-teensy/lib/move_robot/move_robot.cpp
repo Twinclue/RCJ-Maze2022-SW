@@ -10,9 +10,19 @@ move_robot::move_robot(drive_motor *_left,drive_motor *_right,read_tof *_front,r
 
 short move_robot::fwd(short remDist = 300){
     int startDist = front->read(fc);
-    while(startDist - front->read(fc) < remDist){
-        left->on(255);
-        right->on(255);
+    int errorDist = 0;
+    imu->read();
+    short startAng = imu->getYaw();
+    short errorAng = startAng - imu->getYaw();
+    fwdPid->init();
+    while(errorDist < remDist){
+        imu->read();
+        errorAng = startAng - imu->getYaw();
+        errorDist = startDist  - front->read(fc);
+        left->on(255 + fwdPid->calcP(errorAng,0));
+        right->on(255 - fwdPid->calcP(errorAng,0));
+        //Serial.println(255 - fwdPid->calcP(errorAng,startAng));
+        delay(1);
     }
     left->on(0);
     right->on(0);
@@ -22,7 +32,7 @@ short move_robot::fwd(short remDist = 300){
 short move_robot::turn(short remAng = 90){
     imu->read();
     short startAng = imu->getYaw();
-    short errorAng = imu->getYaw() - startAng;
+    short errorAng = 0;
     turnPid->init();
     if(remAng > 0){
         while(errorAng < remAng){

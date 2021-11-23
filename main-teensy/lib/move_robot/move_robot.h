@@ -39,5 +39,6 @@ class move_robot{
         const float kp = 20;
         pid *corrDirPid = new pid(5,1,0);
         pid *turnPid = new pid(5,1,0);
+        pid *fwdPid = new pid(50,0,0);
 };
 #endif
