@@ -50,13 +50,14 @@ void loop()
     }
     else{
       digitalWrite(6,HIGH);
-      move.turn(-90);
+      move.corrDist();
     }
     
   }
   else{
-    digitalWrite(1,LOW);
-    digitalWrite(6,LOW);
+      left.on(255);
+      right.on(0);
+    //Serial.println(digitalRead(15));
     /*
     lcd.print(readRAngle(toff.read(0),tofb.read(3)));
     delay(100);

@@ -101,7 +101,7 @@ void move_robot::corrDir(){
 }
 
 void move_robot::corrDist(){
-    while(((front->read(fls)+back->read(bls))/2) <= 50){
+    while(((front->read(fls)+back->read(bls))/2) <= 70){
         left->on(255);
         right->on(0);
         delay(70);
@@ -117,6 +117,6 @@ void move_robot::corrDist(){
     }
     left->on(0);
     right->on(0);
-    delay(100);
+    this->corrDir();
     return;
 }
