@@ -16,8 +16,10 @@ class move_robot{
 
         void  corrDir();//correct direction
         void  corrDist();
+        bool avoidObstacle();
 
     private:
+
         drive_motor *left;
         drive_motor *right;
         read_tof *front;
@@ -40,5 +42,8 @@ class move_robot{
         pid *corrDirPid = new pid(5,1,0);
         pid *turnPid = new pid(5,1,0);
         pid *fwdPid = new pid(50,0,0);
+
+        const byte lTouch = 21;
+        const byte rTouch = 17;
 };
 #endif

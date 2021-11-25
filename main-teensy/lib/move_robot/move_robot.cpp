@@ -6,6 +6,8 @@ move_robot::move_robot(drive_motor *_left,drive_motor *_right,read_tof *_front,r
     front = _front;
     back = _back;
     imu = _imu;
+    pinMode(lTouch,INPUT);
+    pinMode(rTouch,INPUT);
 }
 
 short move_robot::fwd(short remDist = 300){
@@ -21,12 +23,15 @@ short move_robot::fwd(short remDist = 300){
         errorDist = startDist  - front->read(fc);
         left->on(255 + fwdPid->calcP(errorAng,0));
         right->on(255 - fwdPid->calcP(errorAng,0));
+        if(avoidObstacle()){
+            remDist = this->fwd(remDist - errorDist);
+        }
         //Serial.println(255 - fwdPid->calcP(errorAng,startAng));
         delay(1);
     }
     left->on(0);
     right->on(0);
-    return 1;
+    return 0;
 }
 
 short move_robot::turn(short remAng = 90){
@@ -119,4 +124,42 @@ void move_robot::corrDist(){
     right->on(0);
     this->corrDir();
     return;
+}
+
+bool move_robot::avoidObstacle(){
+    if(digitalRead(rTouch)){
+        right->on(-255);
+        left->on(0);
+        delay(500);
+        right->on(0);
+        left->on(-255);
+        delay(500);
+        right->on(255);
+        left->on(0);
+        delay(500);
+        right->on(0);
+        left->on(255);
+        delay(500);
+        left->on(0);
+        right->on(0);
+        return true;
+    }
+    else if(digitalRead(lTouch)){
+        left->on(-255);
+        right->on(0);
+        delay(500);
+        left->on(0);
+        right->on(-255);
+        delay(500);
+        left->on(255);
+        right->on(0);
+        delay(500);
+        left->on(0);
+        right->on(255);
+        delay(500);
+        left->on(0);
+        right->on(0);
+        return true;
+    }
+    return false;
 }
