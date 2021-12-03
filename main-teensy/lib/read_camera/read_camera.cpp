@@ -1,18 +1,33 @@
 #include "read_camera.h"
 
-read_camera::read_camera(uint8_t _txPin, uint8_t _rxPin){
-	txPin=_txPin;
-	rxPin=_rxPin;
-	pinMode(txPin, OUTPUT);
-	pinMode(rxPin, OUTPUT);
+read_camera::read_camera(HardwareSerial *_serial){
+	serial=_serial;
+	// init
+	serial->begin(9600);
 }
-
-int read_camera::read(){
-	bool txIn, rxIn;
-	txIn=digitalRead(txPin);
-	rxIn=digitalRead(rxPin);
-	if(txIn==0&&rxIn==0){return 0;} //no victim
-	if(txIn==1&&rxIn==0){return 1;} //alert
-	if(txIn==0&&rxIn==1){return 2;} //1 kit
-	if(txIn==1&&rxIn==1){return 3;} //2 kits
+int read_camera::victim_num(){
+	switch (this->read())
+	{
+	case 'H':
+		return 3;
+	case 'S':
+		return 2;
+	case 'R':
+	case 'Y':
+		return 1;
+	case 'U':
+	case 'G':
+		return 0;
+	case 'N':
+		return -1;
+	default:
+		return -2;
+	}
+}
+char read_camera::read(){
+	if(serial->available()){
+		return serial->read();
+	}else{
+		return -1;
+	}
 }

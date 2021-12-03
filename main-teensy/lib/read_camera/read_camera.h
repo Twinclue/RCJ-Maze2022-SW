@@ -5,11 +5,11 @@
 
 class read_camera{
 	public:
-		read_camera(uint8_t _txPin, uint8_t _rxPin);
-		int read();
+		read_camera(HardwareSerial *_serial);
+		char read();
+		int victim_num();
 	private:
-		uint8_t txPin //Comm2
-		uint8_t rxPin //Comm1
+		HardwareSerial *serial;
 };
 
 #endif
