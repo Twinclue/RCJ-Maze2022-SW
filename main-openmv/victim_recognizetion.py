@@ -1,7 +1,4 @@
-# Image Histogram Info Example
-#
-# This script computes the histogram of the image and prints it out.
-enable_lens_corr = True # turn on for straighter lines...
+enable_lens_corr = True
 
 import sensor, image, time,pyb
 from pyb import Pin
@@ -33,11 +30,7 @@ max_degree = 179
 while(True):
     clock.tick()
     img = sensor.snapshot()
-    if enable_lens_corr: img.lens_corr(1.8) # for 2.8mm lens...
-    # Gets the grayscale histogram for the image into 8 bins.
-    # Bins defaults to 256 and may be between 2 and 256.
-    #print(len(img.histogram(bin=8).a_bins()))
-    #print(clock.fps())
+    if enable_lens_corr: img.lens_corr(1.8)
 
     L = img.histogram(bin=8).bins()
     Lsum = 0
@@ -92,8 +85,3 @@ while(True):
             print("Yellow")
     else:
         print("White")
-
-    #print("FPS %f" % clock.fps())
-# You can also pass get_histogram() an "roi=" to get just the histogram of that area.
-# get_histogram() allows you to quickly determine the color channel information of
-# any any area in the image.
