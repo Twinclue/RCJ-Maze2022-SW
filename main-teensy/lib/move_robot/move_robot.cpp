@@ -1,11 +1,12 @@
 #include "move_robot.h"
 
-move_robot::move_robot(drive_motor *_left,drive_motor *_right,read_tof *_front,read_tof *_back,read_imu *_imu){
+move_robot::move_robot(drive_motor *_left,drive_motor *_right,read_tof *_front,read_tof *_back,read_imu *_imu,read_light, *_light){
     left = _left;
     right = _right;
     front = _front;
     back = _back;
     imu = _imu;
+    light = _light;
     pinMode(lTouch,INPUT);
     pinMode(rTouch,INPUT);
 }
@@ -23,8 +24,13 @@ short move_robot::fwd(short remDist = 300){
         errorDist = startDist  - front->read(fc);
         left->on(255 + fwdPid->calcP(errorAng,0));
         right->on(255 - fwdPid->calcP(errorAng,0));
+
         if(avoidObstacle()){
             remDist = this->fwd(remDist - errorDist);
+        }
+        if(light->getFloorColor == 1){
+            remDist = 0;
+            this->rev(errorDist);
         }
         //Serial.println(255 - fwdPid->calcP(errorAng,startAng));
         delay(1);
