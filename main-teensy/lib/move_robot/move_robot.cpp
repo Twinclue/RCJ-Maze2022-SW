@@ -31,6 +31,9 @@ short move_robot::fwd(short remDist = 300){
         if(light->getFloorColor() == 1){
             remDist = 0;
             this->rev(errorDist);
+            left->on(0);
+            right->on(0);
+            return -1;
         }
         //Serial.println(255 - fwdPid->calcP(errorAng,startAng));
         delay(1);

@@ -41,7 +41,7 @@ void loop()
 {
   if(digitalRead(0) == HIGH){
     if(digitalRead(27) == HIGH){
-        move.rev();
+        move.fwd();
     }
     else{
       digitalWrite(6,HIGH);
