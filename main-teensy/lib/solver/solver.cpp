@@ -1,13 +1,27 @@
 #include "solver.h"
 
-solver::solver(read_tof *_front,read_tof *_back,read_imu *_imu,read_light *_light,move_robot *_move){
-    front = _front;
-    back = _back;
+solver::solver(read_imu *_imu,read_light *_light,move_robot *_move,detect_wall *_wall){
     imu = _imu;
     light = _light;
     move = _move;
+    wall = _wall;
 }
 
-solver::rightHand(){
-
+int solver::rightHand(){
+    if(!wall->getSingleWall(right)){
+        move->turn(-90);
+        move->fwd();
+    }
+    else if(!wall->getSingleWall(front)){
+        move->fwd();
+    }
+    else if(!wall->getSingleWall(left)){
+        move->turn();
+        move->fwd();
+    }
+    else{
+        move->turn(180);
+        move->fwd();
+    }
+    return 0;
 }

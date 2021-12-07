@@ -2,34 +2,24 @@
 #define SOLVER_H_
 
 #include "move_robot.h"
-
+#include "detect_wall.h"
 
 
 class solver{
     public:
-        solver(read_tof *_front,read_tof *_back,read_imu *_imu,read_light *_light,move_robot *_move);
-        rightHand();
+        solver(read_imu *_imu,read_light *_light,move_robot *_move,detect_wall *_wall);
+        int rightHand();
     private:
-        read_tof *front;
-        read_tof *back;
 
         read_imu *imu;
-
         read_light *light;
-
         move_robot *move;
+        detect_wall *wall;
 
-        const byte fls = 0;
-        const byte flf = 1;
-        const byte frf = 2;
-        const byte frs = 3;
-        const byte fc  = 4;
-
-        const byte brs = 0;
-        const byte brf = 1;
-        const byte blf = 2;
-        const byte bls = 3;
-        const byte bc  = 4;
+        const uint8_t front = 0;
+        const uint8_t left = 1;
+        const uint8_t back = 2;
+        const uint8_t right = 3;
 };
 
 #endif
