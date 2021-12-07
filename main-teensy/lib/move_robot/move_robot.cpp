@@ -9,6 +9,10 @@ move_robot::move_robot(drive_motor *_left,drive_motor *_right,read_tof *_front,r
     light = _light;
     pinMode(lTouch,INPUT);
     pinMode(rTouch,INPUT);
+
+    flipper->attach(servo);
+    flipper->write(141);
+    delay(500);
 }
 
 short move_robot::fwd(short remDist = 300){
@@ -191,4 +195,34 @@ bool move_robot::avoidObstacle(){
         return true;
     }
     return false;
+}
+
+void move_robot::drop(bool dir){
+    if(rescueKitNum > 0){
+        if(dir){
+            flipper->write(141);
+            delay(500);
+            flipper->write(172);
+            delay(500);
+            flipper->write(130);
+            delay(200);
+            flipper->write(150);
+            delay(200);
+            flipper->write(141);
+            delay(500);
+        }
+        else{
+            flipper->write(141);
+            delay(500);
+            flipper->write(105);
+            delay(500);
+            flipper->write(150);
+            delay(200);
+            flipper->write(130);
+            delay(200);
+            flipper->write(141);
+            delay(500);
+        }
+        rescueKitNum--;
+    }
 }

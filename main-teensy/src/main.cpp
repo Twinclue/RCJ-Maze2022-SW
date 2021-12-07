@@ -41,11 +41,10 @@ void loop()
 {
   if(digitalRead(0) == HIGH){
     if(digitalRead(27) == HIGH){
-        move.fwd();
+      move.drop(false);
     }
     else{
-      digitalWrite(6,HIGH);
-      move.avoidObstacle();
+      move.drop(true);
     }
     
   }

@@ -7,6 +7,7 @@
 #include "advanced_tof.h"
 #include "pid.h"
 #include "read_light.h"
+#include <Servo.h>
 
 class move_robot{
     public:
@@ -19,6 +20,8 @@ class move_robot{
         void  corrDist();
         bool avoidObstacle();
 
+        void drop(bool dir);
+        uint8_t getRescueKitNum(){return rescueKitNum;}
     private:
 
         drive_motor *left;
@@ -48,5 +51,10 @@ class move_robot{
 
         const byte lTouch = 21;
         const byte rTouch = 17;
+
+        const uint8_t servo = 30;
+        Servo *flipper = new Servo();
+
+        uint8_t rescueKitNum = 12;
 };
 #endif
