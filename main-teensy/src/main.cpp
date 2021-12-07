@@ -11,7 +11,11 @@ drive_motor right(39,38,14,15,16);
 
 read_imu imu;
 
-move_robot move(&left,&right,&toff,&tofb,&imu);
+Adafruit_NeoPixel npix = Adafruit_NeoPixel(2,26, NEO_GRB + NEO_KHZ800);
+
+read_light light(&npix);
+
+move_robot move(&left,&right,&toff,&tofb,&imu,&light);
 
 LiquidCrystal lcd(25,24,12,11,10,9);
 
@@ -37,7 +41,7 @@ void loop()
 {
   if(digitalRead(0) == HIGH){
     if(digitalRead(27) == HIGH){
-        move.fwd();
+        move.rev();
     }
     else{
       digitalWrite(6,HIGH);

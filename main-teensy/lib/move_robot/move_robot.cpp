@@ -1,6 +1,6 @@
 #include "move_robot.h"
 
-move_robot::move_robot(drive_motor *_left,drive_motor *_right,read_tof *_front,read_tof *_back,read_imu *_imu,read_light, *_light){
+move_robot::move_robot(drive_motor *_left,drive_motor *_right,read_tof *_front,read_tof *_back,read_imu *_imu,read_light *_light){
     left = _left;
     right = _right;
     front = _front;
@@ -28,11 +28,31 @@ short move_robot::fwd(short remDist = 300){
         if(avoidObstacle()){
             remDist = this->fwd(remDist - errorDist);
         }
-        if(light->getFloorColor == 1){
+        if(light->getFloorColor() == 1){
             remDist = 0;
             this->rev(errorDist);
         }
         //Serial.println(255 - fwdPid->calcP(errorAng,startAng));
+        delay(1);
+    }
+    left->on(0);
+    right->on(0);
+    return 0;
+}
+
+short move_robot::rev(short remDist = 300){
+    int startDist = front->read(fc);
+    int errorDist = 0;
+    imu->read();
+    short startAng = imu->getYaw();
+    short errorAng = startAng - imu->getYaw();
+    fwdPid->init();
+    while(errorDist > -remDist){
+        imu->read();
+        errorAng = startAng - imu->getYaw();
+        errorDist = startDist  - front->read(fc);
+        left->on(-255 + fwdPid->calcP(errorAng,0));
+        right->on(-255 - fwdPid->calcP(errorAng,0));
         delay(1);
     }
     left->on(0);

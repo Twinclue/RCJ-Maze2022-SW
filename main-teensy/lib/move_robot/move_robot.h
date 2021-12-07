@@ -28,7 +28,7 @@ class move_robot{
 
         read_imu *imu;
 
-        read_light *light
+        read_light *light;
 
         const byte fls = 0;
         const byte flf = 1;
