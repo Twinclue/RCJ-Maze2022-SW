@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <LiquidCrystal.h>
 #include "move_robot.h"
-
+#include "detect_wall.h"
 
 read_tof toff(&Wire2);
 read_tof tofb(&Wire);
@@ -19,6 +19,7 @@ move_robot move(&left,&right,&toff,&tofb,&imu,&light);
 
 LiquidCrystal lcd(25,24,12,11,10,9);
 
+detect_wall wall(&toff,&tofb);
 
 void setup()
 {
@@ -41,10 +42,16 @@ void loop()
 {
   if(digitalRead(0) == HIGH){
     if(digitalRead(27) == HIGH){
-      move.drop(false);
+      Serial.print(wall.getSingleWall(0));
+      Serial.print(" : ");
+      Serial.print(wall.getSingleWall(1));
+      Serial.print(" : ");
+      Serial.print(wall.getSingleWall(2));
+      Serial.print(" : ");
+      Serial.println(wall.getSingleWall(3));
     }
     else{
-      move.drop(true);
+      
     }
     
   }
