@@ -22,7 +22,7 @@ short move_robot::fwd(short remDist = 300){
     short startAng = imu->getYaw();
     short errorAng = startAng - imu->getYaw();
     fwdPid->init();
-    while(errorDist < remDist){
+    while((errorDist < remDist) && (front->read(fc) > 50)){
         imu->read();
         errorAng = startAng - imu->getYaw();
         errorDist = startDist  - front->read(fc);
@@ -93,6 +93,7 @@ short move_robot::turn(short remAng = 90){
     }
     left->on(0);
     right->on(0);
+    this->corrDir();
     return startAng;
 }
 
