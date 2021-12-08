@@ -31,15 +31,13 @@ void setup()
   pinMode(27,INPUT);
   pinMode(1,OUTPUT);
   pinMode(6,OUTPUT);
-  pinMode(21,INPUT);
-  pinMode(17,INPUT);
   delay(100);
   lcd.begin(16,2);
 }
 
 void loop()
 {
-  if(digitalRead(0) == HIGH){
+  if(digitalRead(27) == HIGH){
     solver.rightHand();
   }
   else{

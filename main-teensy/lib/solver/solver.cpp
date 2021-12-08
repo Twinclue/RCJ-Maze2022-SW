@@ -9,14 +9,14 @@ solver::solver(read_imu *_imu,read_light *_light,move_robot *_move,detect_wall *
 
 int solver::rightHand(){
     if(!wall->getSingleWall(right)){
-        move->turn(-90);
+        move->turn();
         move->fwd();
     }
     else if(!wall->getSingleWall(front)){
         move->fwd();
     }
     else if(!wall->getSingleWall(left)){
-        move->turn();
+        move->turn(-90);
         move->fwd();
     }
     else{

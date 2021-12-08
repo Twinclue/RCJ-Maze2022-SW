@@ -93,6 +93,7 @@ short move_robot::turn(short remAng = 90){
     }
     left->on(0);
     right->on(0);
+    this->corrDir();
     return startAng;
 }
 
