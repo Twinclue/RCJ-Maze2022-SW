@@ -9,6 +9,7 @@ class solver{
     public:
         solver(read_imu *_imu,read_light *_light,move_robot *_move,detect_wall *_wall);
         int rightHand();
+        int EXrightHand();
     private:
 
         read_imu *imu;

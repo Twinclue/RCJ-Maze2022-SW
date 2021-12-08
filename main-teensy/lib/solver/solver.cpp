@@ -25,3 +25,7 @@ int solver::rightHand(){
     }
     return 0;
 }
+
+int solver::EXrightHand(){
+    
+}
