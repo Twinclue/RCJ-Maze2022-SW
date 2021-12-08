@@ -20,7 +20,7 @@ struct _block{
     coordinate p;
     short count = -1;
     uint8_t tile = 0;
-    unsigned short conn[4];//connected to
+    unsigned short conn[4];//connected to //North West South East
 };
 
 typedef struct _block block;
@@ -29,11 +29,22 @@ class node{
     public:
         node(/* args */);
         void updatePosition(uint8_t moveto);
-        coordinate convRXYZ_coor_lengh(uint8_t r,short x,short y,short z);
+        uint16_t makeNewNode(coordinate _p,uint8_t side);
+
+        short searchNode(coordinate _p);
+
+        short checkNodeCount(coordinate _p);
+        
+        coordinate convRXYZtoCoorAddLengh(uint8_t r,short x,short y,short z,short lengh = 1);
+        uint8_t kagome(uint8_t _r,uint8_t _side);//ロボットが_rをむいているとき,_sideはNESWで言うとどっちか
+        uint8_t convRtoArrnum(uint8_t _r);
+        
         uint8_t rotateToRight(uint8_t _r);
         uint8_t rotateToLeft(uint8_t _r);
+        uint8_t reverseR(uint8_t _r);
+
     private:
-        short searchNode(coordinate _p);
+
         block nodes[nodeNum];
         block now;
         uint8_t rotate = 1;

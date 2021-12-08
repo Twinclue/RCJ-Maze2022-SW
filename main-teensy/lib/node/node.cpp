@@ -7,19 +7,19 @@ void node::updatePosition(uint8_t moveto){
     short tempNodeNum;
     switch (moveto){
     case front:
-        
+
         break;
 
     case left:
-        
+        rotate = rotateToLeft(rotate);
         break;
 
     case back:
-        
+        rotate = reverseR(rotate);
         break;
 
     case right:
-        
+        rotate = rotateToRight(rotate);
         break;
 
     default:
@@ -29,8 +29,17 @@ void node::updatePosition(uint8_t moveto){
 
 short node::searchNode(coordinate _p){
     for(int i = 0;i<nodeNum;i++){
-        if((nodes[i].x == _p.x) && (nodes[i].y == _p.y) && (nodes[i].z == _p.z)){
+        if((nodes[i].p.x == _p.x) && (nodes[i].p.y == _p.y) && (nodes[i].p.z == _p.z)){
             return i;
+        }
+    }
+    return -1;
+}
+
+short node::checkNodeCount(coordinate _p){
+    for(int i = 0;i<nodeNum;i++){
+        if((nodes[i].p.x == _p.x) && (nodes[i].p.y == _p.y) && (nodes[i].p.z == _p.z)){
+            return nodes[i].count;
         }
     }
     return -1;
@@ -62,8 +71,8 @@ coordinate node::convRXYZtoCoorAddLengh(uint8_t r,short x,short y,short z,short 
         break;
     default:
         break;
-    return temp;
     }
+    return temp;
 }
 
 uint8_t node::rotateToRight(uint8_t _r){
@@ -82,4 +91,126 @@ uint8_t node::rotateToLeft(uint8_t _r){
     else{
         return _r<<1;
     }
+}
+
+uint8_t node::reverseR(uint8_t _r){
+    uint8_t temp = _r;
+    for(int i = 0;i < 2;i++){
+        if(temp==8){
+            temp = 1;
+        }
+        else{
+            temp = temp<<1;
+        }
+    }
+    return temp;
+}
+
+uint16_t node::makeNewNode(coordinate _p, uint8_t side){
+    lastNodeNum++;
+    nodes[lastNodeNum].count = 0;
+    nodes[lastNodeNum].p = _p;
+    nodes[lastNodeNum].conn[convRtoArrnum(reverseR(kagome(rotate,side)))] = nowNodeNum;
+    nodes[nowNodeNum].conn[convRtoArrnum(kagome(rotate,side))] = lastNodeNum;
+    return lastNodeNum;
+}
+
+uint8_t node::kagome(uint8_t _r,uint8_t _side){
+    switch (_r){
+    case 1:
+        switch (_side){
+        case front:
+            return 1;
+            break;
+        case left:
+            return 2;
+            break;
+        case back:
+            return 4;
+            break;
+        case right:
+            return 8;
+            break;
+        default:
+            break;
+        }
+        break;
+    case 2:
+        switch (_side){
+        case front:
+            return 2;
+            break;
+        case left:
+            return 4;
+            break;
+        case back:
+            return 8;
+            break;
+        case right:
+            return 1;
+            break;
+        default:
+            break;
+        }
+        break;
+    case 4:
+        switch (_side){
+        case front:
+            return 4;
+            break;
+        case left:
+            return 8;
+            break;
+        case back:
+            return 1;
+            break;
+        case right:
+            return 2;
+            break;
+        default:
+            break;
+        }
+        break;
+    case 8:
+        switch (_side){
+        case front:
+            return 8;
+            break;
+        case left:
+            return 1;
+            break;
+        case back:
+            return 2;
+            break;
+        case right:
+            return 4;
+            break;
+        default:
+            break;
+        }
+        break;
+    default:
+        break;
+    }
+}
+
+uint8_t node::convRtoArrnum(uint8_t _r){
+    switch (_r)
+    {
+    case 1:
+        return 0;
+        break;
+    case 2:
+        return 1;
+        break;
+    case 4:
+        return 2;
+        break;
+    case 8:
+        return 3;
+        break;
+    default:
+        break;
+    }
+    return 0;
 }

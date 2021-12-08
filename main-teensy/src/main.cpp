@@ -21,6 +21,8 @@ detect_wall wall(&toff,&tofb);
 
 solver solver(&imu,&light,&move,&wall);
 
+node n;
+
 void setup()
 {
   Wire.begin();
@@ -35,12 +37,15 @@ void setup()
   delay(100);
   lcd.begin(16,2);
 }
-
+uint8_t a = 0;
+coordinate b;
 void loop()
 {
   if(digitalRead(27) == HIGH){
-    solver.rightHand();
+    if(digitalRead(0) == HIGH){
+    }
   }
   else{
   }
+  delay(500);
 }
