@@ -38,6 +38,7 @@ class node{
         block now;
         uint8_t rotate = 1;
         uint16_t nowNodeNum = 0;
+        uint16_t lastNodeNum = 0;
 
 };
 

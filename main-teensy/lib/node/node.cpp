@@ -7,6 +7,7 @@ void node::updatePosition(uint8_t moveto){
     short tempNodeNum;
     switch (moveto){
     case front:
+        
         break;
 
     case left:
@@ -35,19 +36,33 @@ short node::searchNode(coordinate _p){
     return -1;
 }
 
-coordinate node::convRXYZtoCoorAddLengh(uint8_t r,short x,short y,short z,short lengh){
+coordinate node::convRXYZtoCoorAddLengh(uint8_t r,short x,short y,short z,short lengh = 1){
+    coordinate temp;
     switch (r)
     {
     case 1:
+        temp.x = x;
+        temp.y = y + lengh;
+        temp.z = z;
         break;
     case 2:
+        temp.x = x - lengh;
+        temp.y = y;
+        temp.z = z;
         break;
     case 4:
+        temp.x = x;
+        temp.y = y - lengh;
+        temp.z = z;
         break;
     case 8:
+        temp.x = x + lengh;
+        temp.y = y;
+        temp.z = z;
         break;
     default:
         break;
+    return temp;
     }
 }
 
