@@ -3,6 +3,7 @@
 #include "read_tof.h"
 #include "advanced_tof.h"
 #include "drive_motor.h"
+#include "read_temperature.h"
 
 drive_motor left(35,36,37,15,16);
 drive_motor right(38,39,14,15,16);
