@@ -27,6 +27,7 @@ bool detect_wall::getSingleWall(uint8_t dir){
         if(front->read(frs) < wallThreshold || back->read(brs) < wallThreshold){
             return true;
         }
+        break;
     default:
         return true;
         break;
