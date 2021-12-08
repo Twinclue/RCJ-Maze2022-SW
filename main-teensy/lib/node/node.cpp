@@ -27,6 +27,15 @@ void node::updatePosition(uint8_t moveto){
     }
 }
 
+uint16_t node::makeNewNode(coordinate _p, uint8_t side){
+    lastNodeNum++;
+    nodes[lastNodeNum].count = 0;
+    nodes[lastNodeNum].p = _p;
+    nodes[lastNodeNum].conn[convRtoArrnum(reverseR(kagome(rotate,side)))] = nowNodeNum;
+    nodes[nowNodeNum].conn[convRtoArrnum(kagome(rotate,side))] = lastNodeNum;
+    return lastNodeNum;
+}
+
 short node::searchNode(coordinate _p){
     for(int i = 0;i<nodeNum;i++){
         if((nodes[i].p.x == _p.x) && (nodes[i].p.y == _p.y) && (nodes[i].p.z == _p.z)){
@@ -43,6 +52,27 @@ short node::checkNodeCount(coordinate _p){
         }
     }
     return -1;
+}
+
+uint8_t node::convRtoArrnum(uint8_t _r){
+    switch (_r)
+    {
+    case 1:
+        return 0;
+        break;
+    case 2:
+        return 1;
+        break;
+    case 4:
+        return 2;
+        break;
+    case 8:
+        return 3;
+        break;
+    default:
+        break;
+    }
+    return 0;
 }
 
 coordinate node::convRXYZtoCoorAddLengh(uint8_t r,short x,short y,short z,short lengh = 1){
@@ -104,15 +134,6 @@ uint8_t node::reverseR(uint8_t _r){
         }
     }
     return temp;
-}
-
-uint16_t node::makeNewNode(coordinate _p, uint8_t side){
-    lastNodeNum++;
-    nodes[lastNodeNum].count = 0;
-    nodes[lastNodeNum].p = _p;
-    nodes[lastNodeNum].conn[convRtoArrnum(reverseR(kagome(rotate,side)))] = nowNodeNum;
-    nodes[nowNodeNum].conn[convRtoArrnum(kagome(rotate,side))] = lastNodeNum;
-    return lastNodeNum;
 }
 
 uint8_t node::kagome(uint8_t _r,uint8_t _side){
@@ -192,25 +213,4 @@ uint8_t node::kagome(uint8_t _r,uint8_t _side){
     default:
         break;
     }
-}
-
-uint8_t node::convRtoArrnum(uint8_t _r){
-    switch (_r)
-    {
-    case 1:
-        return 0;
-        break;
-    case 2:
-        return 1;
-        break;
-    case 4:
-        return 2;
-        break;
-    case 8:
-        return 3;
-        break;
-    default:
-        break;
-    }
-    return 0;
 }
