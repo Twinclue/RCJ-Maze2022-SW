@@ -4,7 +4,8 @@ node::node(){
 }
 
 void node::updatePosition(uint8_t moveto){
-    short tempNodeNum;
+    now.p = convRXYZtoCoorAddLengh(kagome(rotate,moveto),now.p.x,now.p.y,now.p.z);
+    nowNodeNum = searchNode(now.p);
     switch (moveto){
     case front:
         break;
