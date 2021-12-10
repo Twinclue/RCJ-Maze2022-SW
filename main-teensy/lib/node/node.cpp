@@ -7,7 +7,6 @@ void node::updatePosition(uint8_t moveto){
     short tempNodeNum;
     switch (moveto){
     case front:
-
         break;
 
     case left:
@@ -52,6 +51,44 @@ short node::checkNodeCount(coordinate _p){
         }
     }
     return -1;
+}
+
+uint8_t node::getMinCountDir(){
+    
+}
+
+void node::searchAroundNodes(bool rWall,bool fWall,bool lWall){
+    if(rWall == false){
+        tempNode[right] = searchNode(convRXYZtoCoorAddLengh(rotateToRight(rotate)),now.p.x,now.p.y,now.p.z);
+        if(tempNode[right] == -1){
+            tempNode[right] = makeNewNode(convRXYZtoCoorAddLengh(rotateToRight(rotate),now.p.x,now.p.y,now.p.z),rotateToRight(rotate));
+        }
+    }
+    else{
+        tempNode[right] = -1;
+    }
+
+    if(fwall == false){
+        tempNode[front] = searchNode(convRXYZtoCoorAddLengh(rotate,now.p.x,now.p.y,now.p.z));
+        if(tempNode[front] == -1){
+            tempNode[front] = makeNewNode(convRXYZtoCoorAddLengh(rotate,now.p.x,now.p.y,now.p.z),rotate);
+        }
+    }
+    else{
+        tempNode[front] = -1;
+    }
+
+    if(lWall == false){
+        tempNode[left] = searchNode(convRXYZtoCoorAddLengh(rotateToLeft(rotate)),now.p.x,now.p.y,now.p.z);
+        if(tempNode[left] == -1){
+            tempNode[left] = makeNewNode(convRXYZtoCoorAddLengh(rotateToLeft(rotate),now.p.x,now.p.y,now.p.z),rotateToLeft(rotate));
+        }
+    }
+    else{
+        tempNode[left] = -1;
+    }
+
+    tempNode[back] = -1;
 }
 
 uint8_t node::convRtoArrnum(uint8_t _r){
@@ -214,3 +251,4 @@ uint8_t node::kagome(uint8_t _r,uint8_t _side){
         break;
     }
 }
+

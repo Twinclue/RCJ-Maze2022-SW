@@ -30,27 +30,24 @@ class node{
         node(/* args */);
         void updatePosition(uint8_t moveto);
         uint16_t makeNewNode(coordinate _p,uint8_t side);
-
         short searchNode(coordinate _p);
-
         short checkNodeCount(coordinate _p);
-        
+        uint8_t getMinCountDir();
+
+    private:
         coordinate convRXYZtoCoorAddLengh(uint8_t r,short x,short y,short z,short lengh = 1);
         uint8_t kagome(uint8_t _r,uint8_t _side);//ロボットが_rをむいているとき,_sideはNESWで言うとどっちか
         uint8_t convRtoArrnum(uint8_t _r);
-        
         uint8_t rotateToRight(uint8_t _r);
         uint8_t rotateToLeft(uint8_t _r);
         uint8_t reverseR(uint8_t _r);
-
-    private:
-
+        void searchAroundNodes(bool rWall,bool fWall,bool lWall);
         block nodes[nodeNum];
         block now;
         uint8_t rotate = 1;
         uint16_t nowNodeNum = 0;
         uint16_t lastNodeNum = 0;
-
+        short tempNode[4];
 };
 
 
