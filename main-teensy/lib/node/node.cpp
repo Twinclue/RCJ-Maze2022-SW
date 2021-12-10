@@ -36,7 +36,7 @@ uint16_t node::makeNewNode(coordinate _p, uint8_t side){
 }
 
 short node::searchNode(coordinate _p){
-    for(int i = 0;i<nodeNum;i++){
+    for(int i = 0;i < nodeNum;i++){
         if((nodes[i].p.x == _p.x) && (nodes[i].p.y == _p.y) && (nodes[i].p.z == _p.z)){
             return i;
         }
@@ -54,12 +54,22 @@ short node::checkNodeCount(coordinate _p){
 }
 
 uint8_t node::getMinCountDir(){
-    
+    short compare[4];
+    for(int n = 0;n < 4;n++){
+        compare[n] = ((tempNode[n]==-1) ? 255 : nodes[tempNode[n]].count);
+    }
+    uint8_t mini = 0;
+    for(int i = 0;i < 4;i++){
+        if(nodes[compare[mini]].count > nodes[compare[i]].count){
+            mini = i;
+        }
+    }
+    return mini;
 }
 
-void node::searchAroundNodes(bool rWall,bool fWall,bool lWall){
+void node::searchAroundNodes(bool fWall,bool lWall,bool bWall,bool rWall){
     if(rWall == false){
-        tempNode[right] = searchNode(convRXYZtoCoorAddLengh(rotateToRight(rotate)),now.p.x,now.p.y,now.p.z);
+        tempNode[right] = searchNode(convRXYZtoCoorAddLengh(rotateToRight(rotate),now.p.x,now.p.y,now.p.z));
         if(tempNode[right] == -1){
             tempNode[right] = makeNewNode(convRXYZtoCoorAddLengh(rotateToRight(rotate),now.p.x,now.p.y,now.p.z),rotateToRight(rotate));
         }
@@ -68,7 +78,7 @@ void node::searchAroundNodes(bool rWall,bool fWall,bool lWall){
         tempNode[right] = -1;
     }
 
-    if(fwall == false){
+    if(fWall == false){
         tempNode[front] = searchNode(convRXYZtoCoorAddLengh(rotate,now.p.x,now.p.y,now.p.z));
         if(tempNode[front] == -1){
             tempNode[front] = makeNewNode(convRXYZtoCoorAddLengh(rotate,now.p.x,now.p.y,now.p.z),rotate);
@@ -79,7 +89,7 @@ void node::searchAroundNodes(bool rWall,bool fWall,bool lWall){
     }
 
     if(lWall == false){
-        tempNode[left] = searchNode(convRXYZtoCoorAddLengh(rotateToLeft(rotate)),now.p.x,now.p.y,now.p.z);
+        tempNode[left] = searchNode(convRXYZtoCoorAddLengh(rotateToLeft(rotate),now.p.x,now.p.y,now.p.z));
         if(tempNode[left] == -1){
             tempNode[left] = makeNewNode(convRXYZtoCoorAddLengh(rotateToLeft(rotate),now.p.x,now.p.y,now.p.z),rotateToLeft(rotate));
         }
@@ -88,7 +98,13 @@ void node::searchAroundNodes(bool rWall,bool fWall,bool lWall){
         tempNode[left] = -1;
     }
 
-    tempNode[back] = -1;
+    if(bWall == false){
+        tempNode[back] = searchNode(convRXYZtoCoorAddLengh(reverseR(rotate),now.p.x,now.p.y,now.p.z));
+        if(tempNode[back] == -1){
+            tempNode[back] = makeNewNode(convRXYZtoCoorAddLengh(reverseR(rotate),now.p.x,now.p.y,now.p.z),reverseR(rotate));
+        }
+    }
+
 }
 
 uint8_t node::convRtoArrnum(uint8_t _r){

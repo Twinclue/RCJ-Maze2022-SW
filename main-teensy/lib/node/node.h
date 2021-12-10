@@ -33,6 +33,7 @@ class node{
         short searchNode(coordinate _p);
         short checkNodeCount(coordinate _p);
         uint8_t getMinCountDir();
+        void searchAroundNodes(bool fWall,bool lWall,bool bWall,bool rWall);
 
     private:
         coordinate convRXYZtoCoorAddLengh(uint8_t r,short x,short y,short z,short lengh = 1);
@@ -41,7 +42,6 @@ class node{
         uint8_t rotateToRight(uint8_t _r);
         uint8_t rotateToLeft(uint8_t _r);
         uint8_t reverseR(uint8_t _r);
-        void searchAroundNodes(bool rWall,bool fWall,bool lWall);
         block nodes[nodeNum];
         block now;
         uint8_t rotate = 1;
