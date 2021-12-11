@@ -1,6 +1,9 @@
 #include "node.h"
 
 node::node(){
+    now.p.x = 0;
+    now.p.y = 0;
+    now.p.z = 0;
 }
 
 void node::updatePosition(uint8_t moveto){
