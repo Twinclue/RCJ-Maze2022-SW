@@ -3,7 +3,7 @@
 
 #include "move_robot.h"
 #include "detect_wall.h"
-
+#include "node.h"
 
 class solver{
     public:
@@ -17,10 +17,7 @@ class solver{
         move_robot *move;
         detect_wall *wall;
 
-        const uint8_t front = 0;
-        const uint8_t left = 1;
-        const uint8_t back = 2;
-        const uint8_t right = 3;
+
 };
 
 #endif

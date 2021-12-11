@@ -3,22 +3,25 @@
 #include "move_robot.h"
 #include "detect_wall.h"
 #include "solver.h"
+#include "node.h"
 
 read_tof toff(&Wire2);
 read_tof tofb(&Wire);
 
-drive_motor left(35,36,37,15,16);
-drive_motor right(39,38,14,15,16);
+drive_motor leftM(35,36,37,15,16);
+drive_motor rightM(39,38,14,15,16);
 
 read_imu imu;
 Adafruit_NeoPixel npix = Adafruit_NeoPixel(2,26, NEO_GRB + NEO_KHZ800);
 read_light light(&npix);
 
-move_robot move(&left,&right,&toff,&tofb,&imu,&light);
+move_robot move(&leftM,&rightM,&toff,&tofb,&imu,&light);
 LiquidCrystal lcd(25,24,12,11,10,9);
 detect_wall wall(&toff,&tofb);
 
 solver solver(&imu,&light,&move,&wall);
+
+node n;
 
 void setup()
 {
@@ -34,12 +37,15 @@ void setup()
   delay(100);
   lcd.begin(16,2);
 }
-
+uint8_t a = 0;
+coordinate b;
 void loop()
 {
   if(digitalRead(27) == HIGH){
-    solver.rightHand();
+    if(digitalRead(0) == HIGH){
+    }
   }
   else{
   }
+  delay(500);
 }
