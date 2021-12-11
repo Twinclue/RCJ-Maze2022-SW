@@ -31,15 +31,15 @@ class node{
         node(/* args */);
         void updatePosition(uint8_t moveto);
         void updateRotation(uint8_t moveto);
-        uint16_t makeNewNode(coordinate _p,uint8_t side);
-        short searchNode(coordinate _p);
-        short checkNodeCount(coordinate _p);
         uint8_t getMinCountDir();
         void searchAroundNodes(bool fWall,bool lWall,bool bWall,bool rWall);
         void setTile(uint8_t color);
         void setTile(uint8_t color,uint8_t dir);
 
     private:
+        uint16_t makeNewNode(coordinate _p,uint8_t side);
+        short searchNode(coordinate _p);
+        short checkNodeCount(coordinate _p);
         coordinate convRXYZtoCoorAddLengh(uint8_t r,short x,short y,short z,short lengh = 1);
         uint8_t kagome(uint8_t _r,uint8_t _side);//ロボットが_rをむいているとき,_sideはNESWで言うとどっちか
         uint8_t convRtoArrnum(uint8_t _r);
