@@ -6,6 +6,7 @@ node::node(){
 void node::updatePosition(uint8_t moveto){
     now.p = convRXYZtoCoorAddLengh(kagome(rotate,moveto),now.p.x,now.p.y,now.p.z);
     nowNodeNum = searchNode(now.p);
+    nodes[nowNodeNum].count++;
     switch (moveto){
     case front:
         break;
@@ -106,6 +107,10 @@ void node::searchAroundNodes(bool fWall,bool lWall,bool bWall,bool rWall){
         }
     }
 
+}
+
+void node::setTile(uint8_t color){
+    nodes[nowNodeNum].tile = color;
 }
 
 uint8_t node::convRtoArrnum(uint8_t _r){
@@ -267,5 +272,6 @@ uint8_t node::kagome(uint8_t _r,uint8_t _side){
     default:
         break;
     }
+    return 1;
 }
 

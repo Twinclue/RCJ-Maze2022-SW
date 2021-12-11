@@ -34,6 +34,7 @@ class node{
         short checkNodeCount(coordinate _p);
         uint8_t getMinCountDir();
         void searchAroundNodes(bool fWall,bool lWall,bool bWall,bool rWall);
+        void setTile(uint8_t color);
 
     private:
         coordinate convRXYZtoCoorAddLengh(uint8_t r,short x,short y,short z,short lengh = 1);
