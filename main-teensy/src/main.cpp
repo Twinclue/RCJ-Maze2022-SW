@@ -19,9 +19,11 @@ move_robot move(&leftM,&rightM,&toff,&tofb,&imu,&light);
 LiquidCrystal lcd(25,24,12,11,10,9);
 detect_wall wall(&toff,&tofb);
 
-solver solver(&imu,&light,&move,&wall);
-
 node n;
+
+solver solver(&imu,&light,&move,&wall,&n);
+
+
 
 void setup()
 {

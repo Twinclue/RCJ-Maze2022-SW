@@ -1,11 +1,11 @@
 #include "solver.h"
 
-solver::solver(read_imu *_imu,read_light *_light,move_robot *_move,detect_wall *_wall){
+solver::solver(read_imu *_imu,read_light *_light,move_robot *_move,detect_wall *_wall,node *_node){
     imu = _imu;
     light = _light;
     move = _move;
     wall = _wall;
-    node = _node;
+    n = _node;
 }
 
 int solver::rightHand(){
@@ -30,10 +30,10 @@ int solver::rightHand(){
 int solver::EXrightHand(){
     bool blackFlag;
     for(int i =0;i < 0;i++){
-        walls[i] = wall->getSingleWall[i];
+        walls[i] = wall->getSingleWall(i);
     }
-    node->searchAroundNodes(walls[front],walls[left],walls[back],walls[right]);
-    moveto = node->getMinCountDir();
+    n->searchAroundNodes(walls[front],walls[left],walls[back],walls[right]);
+    moveto = n->getMinCountDir();
     switch (moveto){
     case front:
         blackFlag = (move->fwd() == -1) ? true : false;
@@ -54,11 +54,11 @@ int solver::EXrightHand(){
         break;
     }
     if(blackFlag == false){
-        node->updatePosition(moveto);
-        node->setTile(light->getFloorColor());
+        n->updatePosition(moveto);
+        n->setTile(light->getFloorColor());
     }
     else{
-        node->setTile(light->getFloorColor(),moveto);
-        node->updateRotation(moveto);
+        n->setTile(light->getFloorColor(),moveto);
+        n->updateRotation(moveto);
     }
 }

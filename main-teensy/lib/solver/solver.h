@@ -16,7 +16,7 @@ class solver{
         read_light *light;
         move_robot *move;
         detect_wall *wall;
-        node *node;
+        node *n;
 
         bool walls[4];
         uint8_t moveto;
