@@ -28,6 +28,28 @@ void node::updatePosition(uint8_t moveto){
     }
 }
 
+void node::updateRotation(uint8_t moveto){
+    switch (moveto){
+    case front:
+        break;
+
+    case left:
+        rotate = rotateToLeft(rotate);
+        break;
+
+    case back:
+        rotate = reverseR(rotate);
+        break;
+
+    case right:
+        rotate = rotateToRight(rotate);
+        break;
+
+    default:
+        break;
+    }
+}
+
 uint16_t node::makeNewNode(coordinate _p, uint8_t side){
     lastNodeNum++;
     nodes[lastNodeNum].count = 0;
@@ -110,23 +132,30 @@ void node::searchAroundNodes(bool fWall,bool lWall,bool bWall,bool rWall){
 }
 
 void node::setTile(uint8_t color){
+    if(color == silver){
+        lastCheckPoint = nowNodeNum;
+    }
     nodes[nowNodeNum].tile = color;
+}
+
+void node::setTile(uint8_t color,uint8_t dir){
+    nodes[tempNode[dir]].tile = color;
 }
 
 uint8_t node::convRtoArrnum(uint8_t _r){
     switch (_r)
     {
     case 1:
-        return 0;
+        return front;
         break;
     case 2:
-        return 1;
+        return left;
         break;
     case 4:
-        return 2;
+        return back;
         break;
     case 8:
-        return 3;
+        return right;
         break;
     default:
         break;

@@ -2,6 +2,10 @@
 #define READ_LIGHT_H_
 #include <Adafruit_NeoPixel.h>
 
+const uint8_t silver = 2;
+const uint8_t black = 1;
+const uint8_t whilte = 0;
+
 class read_light{
     public:
         read_light(Adafruit_NeoPixel *_led);
