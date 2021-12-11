@@ -21,6 +21,8 @@ detect_wall wall(&toff,&tofb);
 
 node n;
 
+coordinate debug;
+
 solver solver(&imu,&light,&move,&wall,&n);
 
 
@@ -44,8 +46,13 @@ coordinate b;
 void loop()
 {
   if(digitalRead(27) == HIGH){
-    if(digitalRead(0) == HIGH){
-    }
+    debug = n.getNowCoor();
+    lcd.clear();
+    lcd.home();
+    lcd.print(debug.x);
+    lcd.print(":");
+    lcd.print(debug.y);
+    solver.EXrightHand();
   }
   else{
   }

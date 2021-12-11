@@ -4,6 +4,7 @@ node::node(){
     now.p.x = 0;
     now.p.y = 0;
     now.p.z = 0;
+    nodes[0].count = 1;
 }
 
 void node::updatePosition(uint8_t moveto){
@@ -84,14 +85,20 @@ uint8_t node::getMinCountDir(){
     short compare[4];
     for(int n = 0;n < 4;n++){
         compare[n] = ((tempNode[n]==-1) ? 255 : nodes[tempNode[n]].count);
+        Serial.println(compare[n]);
     }
-    uint8_t mini = 0;
-    for(int i = 0;i < 4;i++){
-        if(nodes[compare[mini]].count > nodes[compare[i]].count){
-            mini = i;
-        }
+    if(compare[right] <= compare[front] && compare[right] <= compare[left]){
+        return right;
     }
-    return mini;
+    else if(compare[front] <= compare[left]){
+        return front;
+    }
+    else if(compare[left] <= compare[back]){
+        return left;
+    }
+    else{
+        return back;
+    }
 }
 
 void node::searchAroundNodes(bool fWall,bool lWall,bool bWall,bool rWall){
@@ -130,6 +137,9 @@ void node::searchAroundNodes(bool fWall,bool lWall,bool bWall,bool rWall){
         if(tempNode[back] == -1){
             tempNode[back] = makeNewNode(convRXYZtoCoorAddLengh(reverseR(rotate),now.p.x,now.p.y,now.p.z),reverseR(rotate));
         }
+    }
+    else{
+        tempNode[back] = -1;
     }
 
 }
@@ -197,7 +207,7 @@ coordinate node::convRXYZtoCoorAddLengh(uint8_t r,short x,short y,short z,short 
 }
 
 uint8_t node::rotateToRight(uint8_t _r){
-    if(_r==1){
+    if(_r<=1){
         return 8;
     }
     else{
@@ -206,7 +216,7 @@ uint8_t node::rotateToRight(uint8_t _r){
 }
 
 uint8_t node::rotateToLeft(uint8_t _r){
-    if(_r==8){
+    if(_r>=8){
         return 1;
     }
     else{
@@ -217,7 +227,7 @@ uint8_t node::rotateToLeft(uint8_t _r){
 uint8_t node::reverseR(uint8_t _r){
     uint8_t temp = _r;
     for(int i = 0;i < 2;i++){
-        if(temp==8){
+        if(temp>=8){
             temp = 1;
         }
         else{

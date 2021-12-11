@@ -29,7 +29,7 @@ int solver::rightHand(){
 
 int solver::EXrightHand(){
     bool blackFlag;
-    for(int i =0;i < 0;i++){
+    for(int i =0;i < 4;i++){
         walls[i] = wall->getSingleWall(i);
     }
     n->searchAroundNodes(walls[front],walls[left],walls[back],walls[right]);
