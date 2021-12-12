@@ -58,7 +58,7 @@ int solver::EXrightHand(){
         n->setTile(light->getFloorColor());
     }
     else{
-        n->setTile(light->getFloorColor(),moveto);
+        n->setTile(black,moveto);
         n->updateRotation(moveto);
     }
 }

@@ -107,6 +107,9 @@ void node::searchAroundNodes(bool fWall,bool lWall,bool bWall,bool rWall){
         if(tempNode[right] == -1){
             tempNode[right] = makeNewNode(convRXYZtoCoorAddLengh(rotateToRight(rotate),now.p.x,now.p.y,now.p.z),rotateToRight(rotate));
         }
+        if(nodes[tempNode[right]].tile == black){
+            tempNode[right] = -1;
+        }
     }
     else{
         tempNode[right] = -1;
@@ -116,6 +119,9 @@ void node::searchAroundNodes(bool fWall,bool lWall,bool bWall,bool rWall){
         tempNode[front] = searchNode(convRXYZtoCoorAddLengh(rotate,now.p.x,now.p.y,now.p.z));
         if(tempNode[front] == -1){
             tempNode[front] = makeNewNode(convRXYZtoCoorAddLengh(rotate,now.p.x,now.p.y,now.p.z),rotate);
+        }
+        if(nodes[tempNode[front]].tile == black){
+            tempNode[front] = -1;
         }
     }
     else{
@@ -127,6 +133,9 @@ void node::searchAroundNodes(bool fWall,bool lWall,bool bWall,bool rWall){
         if(tempNode[left] == -1){
             tempNode[left] = makeNewNode(convRXYZtoCoorAddLengh(rotateToLeft(rotate),now.p.x,now.p.y,now.p.z),rotateToLeft(rotate));
         }
+        if(nodes[tempNode[left]].tile == black){
+            tempNode[left] = -1;
+        }
     }
     else{
         tempNode[left] = -1;
@@ -136,6 +145,9 @@ void node::searchAroundNodes(bool fWall,bool lWall,bool bWall,bool rWall){
         tempNode[back] = searchNode(convRXYZtoCoorAddLengh(reverseR(rotate),now.p.x,now.p.y,now.p.z));
         if(tempNode[back] == -1){
             tempNode[back] = makeNewNode(convRXYZtoCoorAddLengh(reverseR(rotate),now.p.x,now.p.y,now.p.z),reverseR(rotate));
+        }
+        if(nodes[tempNode[back]].tile == black){
+            tempNode[back] = -1;
         }
     }
     else{
