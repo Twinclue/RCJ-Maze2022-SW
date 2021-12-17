@@ -16,34 +16,67 @@ move_robot::move_robot(drive_motor *_left,drive_motor *_right,read_tof *_front,r
 }
 
 short move_robot::fwd(short remDist = 300){
-    int startDist = front->read(fc);
-    int errorDist = 0;
-    imu->read();
-    short startAng = imu->getYaw();
-    short errorAng = startAng - imu->getYaw();
-    fwdPid->init();
-    while((errorDist < remDist) && (front->read(fc) > 50)){
-        imu->read();
-        errorAng = startAng - imu->getYaw();
-        errorDist = startDist  - front->read(fc);
-        left->on(255 + fwdPid->calcP(errorAng,0));
-        right->on(255 - fwdPid->calcP(errorAng,0));
 
-        if(avoidObstacle()){
-            remDist = this->fwd(remDist - errorDist);
+    if(front->read(fc) < back->read(bc)){
+        int startDist = front->read(fc);
+        int errorDist = 0;
+        imu->read();
+        short startAng = imu->getYaw();
+        short errorAng = startAng - imu->getYaw();
+        fwdPid->init();
+        while((errorDist < remDist) && (front->read(fc) > 50)){
+            imu->read();
+            errorAng = startAng - imu->getYaw();
+            errorDist = startDist  - front->read(fc);
+            left->on(255 + fwdPid->calcP(errorAng,0));
+            right->on(255 - fwdPid->calcP(errorAng,0));
+
+            if(avoidObstacle()){
+                remDist = this->fwd(remDist - errorDist);
+            }
+            if(light->getFloorColor() == 1){
+                remDist = 0;
+                this->rev(errorDist);
+                left->on(0);
+                right->on(0);
+                return -1;
+            }
+            //Serial.println(255 - fwdPid->calcP(errorAng,startAng));
+            delay(1);
         }
-        if(light->getFloorColor() == 1){
-            remDist = 0;
-            this->rev(errorDist);
-            left->on(0);
-            right->on(0);
-            return -1;
-        }
-        //Serial.println(255 - fwdPid->calcP(errorAng,startAng));
-        delay(1);
     }
+    else{
+        int startDist = back->read(bc);
+        int errorDist = 0;
+        imu->read();
+        short startAng = imu->getYaw();
+        short errorAng = startAng - imu->getYaw();
+        fwdPid->init();
+        while((errorDist < remDist) && (front->read(fc) > 50)){
+            imu->read();
+            errorAng = startAng - imu->getYaw();
+            errorDist = back->read(bc) - startDist;
+            left->on(255 + fwdPid->calcP(errorAng,0));
+            right->on(255 - fwdPid->calcP(errorAng,0));
+
+            if(avoidObstacle()){
+                remDist = this->fwd(remDist - errorDist);
+            }
+            if(light->getFloorColor() == 1){
+                remDist = 0;
+                this->rev(errorDist);
+                left->on(0);
+                right->on(0);
+                return -1;
+            }
+            //Serial.println(255 - fwdPid->calcP(errorAng,startAng));
+            delay(1);
+        }
+    }
+
     left->on(0);
     right->on(0);
+    this->corrDir();
     return 0;
 }
 
