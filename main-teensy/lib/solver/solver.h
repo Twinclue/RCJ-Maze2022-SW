@@ -21,6 +21,8 @@ class solver{
         bool walls[4];
         uint8_t moveto;
 
+        bool slopeFlag = false;
+
 };
 
 #endif

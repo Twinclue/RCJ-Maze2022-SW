@@ -4,12 +4,12 @@
 class read_imu : public GY521
 {
 private:
-    const float caxe = -0.071;
-    const float caye = -0.008;
-    const float caze = 1.085;
-    const float cgxe = -0.709;
-    const float cgye = 0.479;
-    const float cgze = 0.2;//マイナス方向にドリフト→値を大きく
+    const float caxe = -0.086;
+    const float caye = -0.014;
+    const float caze = 1.080;
+    const float cgxe = -0.653;
+    const float cgye = 0.344;
+    const float cgze = 0.295;//マイナス方向にドリフト→値を大きく
 
 public:
     read_imu();

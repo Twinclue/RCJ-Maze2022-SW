@@ -20,7 +20,7 @@ typedef struct _coordinate coordinate;
 struct _block{
     coordinate p;
     short count = -1;
-    uint8_t tile = 0;
+    uint8_t tile = 0;// returns 0 on W,1 on B, 2 on S, 3 on slope
     unsigned short conn[4];//connected to //North West South East
 };
 
@@ -36,6 +36,7 @@ class node{
         void setTile(uint8_t color);
         void setTile(uint8_t color,uint8_t dir);
         coordinate getNowCoor(){return now.p;}
+        uint8_t getTile(uint8_t dir);
     private:
         uint16_t makeNewNode(coordinate _p,uint8_t side);
         short searchNode(coordinate _p);

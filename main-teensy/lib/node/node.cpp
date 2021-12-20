@@ -167,6 +167,10 @@ void node::setTile(uint8_t color,uint8_t dir){
     nodes[tempNode[dir]].tile = color;
 }
 
+uint8_t node::getTile(uint8_t dir){
+    return nodes[tempNode[dir]].tile;
+}
+
 uint8_t node::convRtoArrnum(uint8_t _r){
     switch (_r)
     {

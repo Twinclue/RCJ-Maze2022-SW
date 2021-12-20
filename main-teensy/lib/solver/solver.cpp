@@ -28,7 +28,7 @@ int solver::rightHand(){
 }
 
 int solver::EXrightHand(){
-    bool blackFlag;
+    short moveResult;
     for(int i =0;i < 4;i++){
         walls[i] = wall->getSingleWall(i);
     }
@@ -36,26 +36,35 @@ int solver::EXrightHand(){
     moveto = n->getMinCountDir();
     switch (moveto){
     case front:
-        blackFlag = (move->fwd() == -1) ? true : false;
+        if(slopeFlag){
+            moveResult = move->goUp();
+        }
+        else{
+            moveResult =  move->fwd();
+        }
         break;
     case left:
         move->turn(-90);
-        blackFlag = (move->fwd() == -1) ? true : false;
+        moveResult =  move->fwd();
         break;
     case back:
         move->turn(180);
-        blackFlag = (move->fwd() == -1) ? true : false;
+        moveResult =  move->fwd();
         break;
     case right:
         move->turn();
-        blackFlag = (move->fwd() == -1) ? true : false;
+        moveResult =  move->fwd();
         break;
     default:
         break;
     }
-    if(blackFlag == false){
+    if(moveResult == 0){
         n->updatePosition(moveto);
         n->setTile(light->getFloorColor());
+    }
+    else if(moveResult == -2){
+        slopeFlag = true;
+        n->setTile(3);
     }
     else{
         n->setTile(black,moveto);
