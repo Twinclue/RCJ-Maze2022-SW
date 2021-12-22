@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <LiquidCrystal.h>
+#include <MPU6050.h>
 #include "move_robot.h"
 #include "detect_wall.h"
 #include "solver.h"
@@ -25,7 +26,7 @@ coordinate debug;
 
 solver solver(&imu,&light,&move,&wall,&n);
 
-
+MPU6050 mpu;
 
 void setup()
 {
