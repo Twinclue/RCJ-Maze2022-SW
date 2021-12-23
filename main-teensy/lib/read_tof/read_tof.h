@@ -1,5 +1,5 @@
 #ifndef READ_TOF_H_
-#define READ_TOF_T_
+#define READ_TOF_H_
 
 
 #include <PCA9547.h>

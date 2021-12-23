@@ -1,4 +1,5 @@
 #include <Arduino.h>
+
 /*
 #include "read_imu.h"
 #include "read_tof.h"
@@ -15,17 +16,26 @@ read_temperature d6tR(&Wire);
 read_temperature d6tR(&Wire);
 read_temperature d6tL(&Wire2);
 
+
 void setup()
 {
-  delay(100);
-  Serial.begin(9600);
   Wire.begin();
   Wire2.begin();
-}
+  
+  imu.begin();
 
+  pinMode(0,INPUT);
+  pinMode(27,INPUT);
+  pinMode(1,OUTPUT);
+  pinMode(6,OUTPUT);
+  delay(100);
+}
+uint8_t a = 0;
+coordinate b;
 void loop()
 {
   float temp=d6tL.temp();
   Serial.println(temp);
   delay(50);
+
 }
