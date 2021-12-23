@@ -6,8 +6,12 @@
 
 class read_temperature{
     public:
-    read_temperature();
+    read_temperature(TwoWire* _bus);
+    float temp();
+
     private:
+    TwoWire* bus;
+    D6Tarduino* sensor = new D6Tarduino();
 
 };
 #endif
