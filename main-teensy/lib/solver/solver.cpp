@@ -1,10 +1,11 @@
 #include "solver.h"
 
-solver::solver(read_imu *_imu,read_light *_light,move_robot *_move,detect_wall *_wall){
+solver::solver(read_imu *_imu,read_light *_light,move_robot *_move,detect_wall *_wall,node *_node){
     imu = _imu;
     light = _light;
     move = _move;
     wall = _wall;
+    n = _node;
 }
 
 int solver::rightHand(){
@@ -27,5 +28,46 @@ int solver::rightHand(){
 }
 
 int solver::EXrightHand(){
-    
+    short moveResult;
+    for(int i =0;i < 4;i++){
+        walls[i] = wall->getSingleWall(i);
+    }
+    n->searchAroundNodes(walls[front],walls[left],walls[back],walls[right]);
+    moveto = n->getMinCountDir();
+    switch (moveto){
+    case front:
+        if(slopeFlag){
+            moveResult = move->goUp();
+        }
+        else{
+            moveResult =  move->fwd();
+        }
+        break;
+    case left:
+        move->turn(-90);
+        moveResult =  move->fwd();
+        break;
+    case back:
+        move->turn(180);
+        moveResult =  move->fwd();
+        break;
+    case right:
+        move->turn();
+        moveResult =  move->fwd();
+        break;
+    default:
+        break;
+    }
+    if(moveResult == 0){
+        n->updatePosition(moveto);
+        n->setTile(light->getFloorColor());
+    }
+    else if(moveResult == -2){
+        slopeFlag = true;
+        n->setTile(3);
+    }
+    else{
+        n->setTile(black,moveto);
+        n->updateRotation(moveto);
+    }
 }

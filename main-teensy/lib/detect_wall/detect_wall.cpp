@@ -1,30 +1,30 @@
 #include "detect_wall.h"
 
-detect_wall::detect_wall(read_tof *_front,read_tof *_back){
-    front = _front;
-    back = _back;
+detect_wall::detect_wall(read_tof *_toff,read_tof *_tofb){
+    toff = _toff;
+    tofb = _tofb;
 }
 
 bool detect_wall::getSingleWall(uint8_t dir){
     switch (dir)
     {
-    case 0://front
-        if(front->read(fc) < wallThreshold){
+    case front://front
+        if(toff->read(fc) < wallThreshold){
             return true;
         }
         break;
-    case 1://left
-        if(front->read(fls) < wallThreshold || back->read(bls) < wallThreshold){
+    case left://left
+        if(toff->read(fls) < wallThreshold || tofb->read(bls) < wallThreshold){
             return true;
         }
         break;
-    case 2://back
-        if(back->read(bc) < wallThreshold){
+    case back://back
+        if(tofb->read(bc) < wallThreshold){
             return true;
         }
         break;
-    case 3://right
-        if(front->read(frs) < wallThreshold || back->read(brs) < wallThreshold){
+    case right://right
+        if(toff->read(frs) < wallThreshold || tofb->read(brs) < wallThreshold){
             return true;
         }
         break;

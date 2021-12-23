@@ -2,14 +2,15 @@
 #define DETECT_WALL_H_
 #include "read_tof.h"
 #include <Arduino.h>
+#include "node.h"
 
 class detect_wall{
     public:
-        detect_wall(read_tof *_front,read_tof *_back);
+        detect_wall(read_tof *_toff,read_tof *_tofb);
         bool getSingleWall(uint8_t dir);
     private:
-        read_tof *front;
-        read_tof *back;
+        read_tof *toff;
+        read_tof *tofb;
 
         const byte fls = 0;
         const byte flf = 1;
