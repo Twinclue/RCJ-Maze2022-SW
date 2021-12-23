@@ -1,30 +1,20 @@
 #include <Arduino.h>
-#include <LiquidCrystal.h>
-#include "move_robot.h"
-#include "detect_wall.h"
-#include "solver.h"
-#include "node.h"
 
-read_tof toff(&Wire2);
-read_tof tofb(&Wire);
+/*
+#include "read_imu.h"
+#include "read_tof.h"
+#include "advanced_tof.h"
+#include "drive_motor.h"
+#include "read_temperature.h"
 
-drive_motor leftM(35,36,37,15,16);
-drive_motor rightM(39,38,14,15,16);
-
-read_imu imu;
-Adafruit_NeoPixel npix = Adafruit_NeoPixel(2,26, NEO_GRB + NEO_KHZ800);
-read_light light(&npix);
-
-move_robot move(&leftM,&rightM,&toff,&tofb,&imu,&light);
-LiquidCrystal lcd(25,24,12,11,10,9);
-detect_wall wall(&toff,&tofb);
-
-node n;
-
-coordinate debug;
-
-solver solver(&imu,&light,&move,&wall,&n);
-
+drive_motor left(35,36,37,15,16);
+drive_motor right(38,39,14,15,16);
+read_temperature d6tR(&Wire);
+*/
+//#include "D6Tarduino.h"
+#include "read_temperature.h"
+read_temperature d6tR(&Wire);
+read_temperature d6tL(&Wire2);
 
 
 void setup()
@@ -39,35 +29,13 @@ void setup()
   pinMode(1,OUTPUT);
   pinMode(6,OUTPUT);
   delay(100);
-  lcd.begin(16,2);
 }
 uint8_t a = 0;
 coordinate b;
 void loop()
 {
-  if(digitalRead(0) == HIGH){
-    /*
-    debug = n.getNowCoor();
-    lcd.clear();
-    lcd.home();
-    lcd.print(debug.x);
-    lcd.print(":");
-    lcd.print(debug.y);
-    solver.EXrightHand();*/
-    move.turn();
-    delay(500);
-  }
-  else{
-    imu.update();
-    lcd.clear();
-    lcd.home();
-    lcd.print(imu.getFPitch());
-    if(abs(imu.getFPitch()) >= 20){
-      digitalWrite(6,HIGH);
-    }
-    else{
-      digitalWrite(6,LOW);
-    }
-    delay(10);
-  }
+  float temp=d6tL.temp();
+  Serial.println(temp);
+  delay(50);
+
 }
