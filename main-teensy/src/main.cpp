@@ -1,6 +1,5 @@
 #include <Arduino.h>
 #include <LiquidCrystal.h>
-#include "MPU6050.h"
 #include "move_robot.h"
 #include "detect_wall.h"
 #include "solver.h"
@@ -26,14 +25,14 @@ coordinate debug;
 
 solver solver(&imu,&light,&move,&wall,&n);
 
-MPU6050 mpu;
+
 
 void setup()
 {
   Wire.begin();
   Wire2.begin();
   
-  imu.begin(&Wire2);
+  imu.begin();
 
   pinMode(0,INPUT);
   pinMode(27,INPUT);
@@ -46,16 +45,29 @@ uint8_t a = 0;
 coordinate b;
 void loop()
 {
-  if(digitalRead(27) == HIGH){
+  if(digitalRead(0) == HIGH){
+    /*
     debug = n.getNowCoor();
     lcd.clear();
     lcd.home();
     lcd.print(debug.x);
     lcd.print(":");
     lcd.print(debug.y);
-    solver.EXrightHand();
+    solver.EXrightHand();*/
+    move.turn();
+    delay(500);
   }
   else{
+    imu.update();
+    lcd.clear();
+    lcd.home();
+    lcd.print(imu.getFPitch());
+    if(abs(imu.getFPitch()) >= 20){
+      digitalWrite(6,HIGH);
+    }
+    else{
+      digitalWrite(6,LOW);
+    }
+    delay(10);
   }
-  delay(500);
 }
