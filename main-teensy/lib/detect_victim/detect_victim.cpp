@@ -5,27 +5,52 @@ detect_victim::detect_victim(HardwareSerial *_serialR, HardwareSerial *_serialL,
     serialL = _serialL;
     busR = _busR;
     busL = _busL;
+    d6tL = new read_temperature(busL);
+    d6tR = new read_temperature(busR);
+    camR = new read_camera(serialR);
+    camL = new read_camera(serialL);
 }
 
-detect_victim::bool isHeatedVictim(){
-    if(d6tR.temp()>temp_th || d6tL.temp()>temp_th){
-        return true;
-    }else{
-        return false;
-    }
-}
-
-detect_victim:: int8_t kitNumOneSide(bool rightSide){
-    int8_t kitNum=0;
-    if(){
-        kitNum += 1;
-    }
+int8_t detect_victim::isHeatedVictim(bool rightSide){
     if(rightSide){
-        camR -> victim_num();
+        return d6tR->temp()>=temp_th;
     }else{
-
+        return d6tL->temp()>=temp_th;
     }
 }
-detect_victim:: int8_t[2] kitNumBothSide(){
 
+int8_t detect_victim::kitNumOneSide(bool rightSide){
+    int8_t kitNum=-1;
+    if(rightSide){
+        if(camR->victim_num()==3){kitNum=3;}
+        if(camR->victim_num()==2){kitNum=2;}
+        if(camR->victim_num()==1||this->isHeatedVictim(true)){kitNum = 1;}
+        if(camR->victim_num()==0){kitNum=0;}
+        if(camR->victim_num()==-1){kitNum=-1;}
+    }else{
+        if(camL->victim_num()==3){kitNum=3;}
+        if(camL->victim_num()==2){kitNum=2;}
+        if(camL->victim_num()==1||this->isHeatedVictim(false)){kitNum = 1;}
+        if(camL->victim_num()==0){kitNum=0;}
+        if(camL->victim_num()==-1){kitNum=-1;}
+    }
+    return kitNum;
 }
+/*
+int8_t[2] detect_victim:: kitNumBothSide(){
+    int8_t kitNum[2]={-1,-1};
+    if(camR->victim_num()==3){kitNum[1]=3;}
+    if(camR->victim_num()==2){kitNum[1]=2;}
+    if(camR->victim_num()==1||this->isHeatedVictim(true)){kitNum[1] = 1;}
+    if(camR->victim_num()==0){kitNum[1]=0;}
+    if(camR->victim_num()==-1){kitNum[1]=-1;}
+
+    if(camL->victim_num()==3){kitNum[0]=3;}
+    if(camL->victim_num()==2){kitNum[0]=2;}
+    if(camL->victim_num()==1||this->isHeatedVictim(false)){kitNum[0] = 1;}
+    if(camL->victim_num()==0){kitNum[0]=0;}
+    if(camL->victim_num()==-1){kitNum[0]=-1;}
+
+    return &kitNum;
+}
+*/

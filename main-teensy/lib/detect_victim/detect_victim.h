@@ -9,15 +9,16 @@ class detect_victim{
     public:
         detect_victim(HardwareSerial *_serialR, HardwareSerial *_serialL, TwoWire *_busR, TwoWire *_busL);
         int8_t kitNumOneSide(bool rightSide);
-        int8_t[2] kitNumBothSide(); 
-        bool isHeatedVictim();
+        //int8_t[2] kitNumBothSide(); 
     private:
-        float temp_th = 28.0;
-        HardwareSerial* serialR, serialL;
-        TwoWire* busR, busL;
-        read_camera* camR = new read_camera(serialR);
-        read_camera* camL = new read_camera(serialL);
-        read_temperature* d6tR = new read_temperature(busR);
-        read_temperature* d6tL = new read_temperature(busL);
-}
+        const float temp_th = 28.0;
+        const bool camFirst = true;
+        int8_t isHeatedVictim(bool rightSide);
+        HardwareSerial* serialR, *serialL;
+        TwoWire* busR, *busL;
+        read_camera* camR;
+        read_camera* camL;
+        read_temperature* d6tR;
+        read_temperature* d6tL;
+};
 #endif
