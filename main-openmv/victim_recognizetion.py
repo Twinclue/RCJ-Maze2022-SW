@@ -1,18 +1,26 @@
 enable_lens_corr = True
 
 import sensor, image, time,pyb
-from pyb import Pin
+from pyb import Pin ,UART,LED
 
 
 led = Pin('P3',Pin.OUT_PP,Pin.PULL_NONE)
 start = Pin('P0',Pin.IN,Pin.PULL_UP)
 lighton = Pin('P1',Pin.IN,Pin.PULL_UP)
+status = Pin('P7',Pin.OUT_PP,Pin.PULL_NONE)
+
+status.off()
+uart = UART(3,9600)
+
+red_led   = LED(1)
+green_led = LED(2)
+blue_led  = LED(3)
+
 led.value(False)
 while(start.value() == False):
     if lighton.value() == True:
         led.value(not led.value())
         time.sleep_ms(500)
-
 
 
 sensor.reset()
@@ -28,6 +36,7 @@ max_degree = 179
 
 
 while(True):
+    status.on()
     clock.tick()
     img = sensor.snapshot()
     if enable_lens_corr: img.lens_corr(1.8)
@@ -54,10 +63,10 @@ while(True):
     for m in range(168,209):
         bsum += b[m]
 
-    #print(Lsum)
-    #print(asum_neg)
-    #print(asum_pos)
-    #print(bsum)
+    #uart.write(Lsum)
+    #uart.write(asum_neg)
+    #uart.write(asum_pos)
+    #uart.write(bsum)
 
     if Lsum >= 0.01:
         linecount = 0
@@ -68,20 +77,54 @@ while(True):
 
         #print(linecount)
         if linecount == 1:
+            uart.write("S")
             print("S")
+            red_led.on()
+            blue_led.on()
+            green_led.off()
         elif linecount == 2:
+            uart.write("U")
             print("U")
+            green_led.on()
+            red_led.off()
+            blue_led.off()
         elif linecount ==3:
+            uart.write("H")
             print("H")
+            red_led.on()
+            green_led.off()
+            blue_led.off()
+        else:
+            uart.write("N")
+            print("N")
+            green_led.on()
+            red_led.on()
+            blue_led.on()
         #else:
-            #print("Black")
+            #uart.write("Black")
 
     elif bsum >= 0.2:
         if asum_neg >= 0.2:
-            print("Green")
+            uart.write("G")
+            print("G")
+            green_led.on()
+            red_led.off()
+            blue_led.off()
         elif asum_pos >= 0.2:
-            print("Red")
+            uart.write("R")
+            print("R")
+            red_led.on()
+            green_led.off()
+            blue_led.off()
         else:
-            print("Yellow")
+            uart.write("Y")
+            print("Y")
+            red_led.on()
+            blue_led.on()
+            green_led.off()
     else:
-        print("White")
+        uart.write("N")
+        print("N")
+        green_led.on()
+        red_led.on()
+        blue_led.on()
