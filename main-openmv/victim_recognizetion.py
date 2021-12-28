@@ -68,9 +68,9 @@ while(True):
     #uart.write(asum_pos)
     #uart.write(bsum)
 
-    if Lsum >= 0.01:
+    if Lsum >= 0.01:#黒しきい値
         linecount = 0
-        for l in img.find_lines(threshold = 750, theta_margin = 70, rho_margin = 20):
+        for l in img.find_lines(threshold = 750, theta_margin = 70, rho_margin = 20):#直線検知しきい値 あまりいじる必要なし
             if (min_degree <= l.theta()) and (l.theta() <= max_degree):
                 img.draw_line(l.line(), color = (255, 0, 0))
                 linecount += 1
@@ -103,14 +103,14 @@ while(True):
         #else:
             #uart.write("Black")
 
-    elif bsum >= 0.2:
-        if asum_neg >= 0.2:
+    elif bsum >= 0.2:#その他色しきい値
+        if asum_neg >= 0.2:#緑しきい値
             uart.write("G")
             print("G")
             green_led.on()
             red_led.off()
             blue_led.off()
-        elif asum_pos >= 0.2:
+        elif asum_pos >= 0.2:#赤しきい値
             uart.write("R")
             print("R")
             red_led.on()
