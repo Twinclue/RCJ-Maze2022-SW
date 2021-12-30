@@ -6,6 +6,7 @@ read_camera::read_camera(HardwareSerial *_serial){
 	serial->begin(9600);
 }
 int read_camera::victim_num(){
+	while(serial->available() == -1);
 	switch (this->read())
 	{
 	case 'H':

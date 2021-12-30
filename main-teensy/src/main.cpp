@@ -1,35 +1,36 @@
 #include <Arduino.h>
-#include <LiquidCrystal.h>
-#include "MPU6050.h"
-#include "move_robot.h"
-#include "detect_wall.h"
-#include "solver.h"
-#include "node.h"
+#include <Wire.h>
+#include "read_camera.h"
+/*
+#include "read_imu.h"
+#include "read_tof.h"
+#include "advanced_tof.h"
+#include "drive_motor.h"
+#include "read_temperature.h"
 
-read_tof toff(&Wire2);
-read_tof tofb(&Wire);
+drive_motor left(35,36,37,15,16);
+drive_motor right(38,39,14,15,16);
+read_temperature d6tR(&Wire);
+*/
+/*
+#include "D6Tarduino.h"
+#include "read_temperature.h"
+read_temperature d6tR(&Wire);
+read_temperature d6tL(&Wire2);
+*/
+#include "detect_victim.h"
+detect_victim victim(&Serial4, &Serial5, &Wire2, &Wire); 
+// read_temperature d6tR(&Wire2);
+// read_temperature d6tL(&Wire);
+//D6Tarduino d6tR;
 
-drive_motor leftM(35,36,37,15,16);
-drive_motor rightM(39,38,14,15,16);
 
-read_imu imu;
-Adafruit_NeoPixel npix = Adafruit_NeoPixel(2,26, NEO_GRB + NEO_KHZ800);
-read_light light(&npix);
-
-move_robot move(&leftM,&rightM,&toff,&tofb,&imu,&light);
-LiquidCrystal lcd(25,24,12,11,10,9);
-detect_wall wall(&toff,&tofb);
-
-node n;
-
-coordinate debug;
-
-solver solver(&imu,&light,&move,&wall,&n);
-
-MPU6050 mpu;
+// read_camera camR(&Serial5);
+// read_camera camL(&Serial4);
 
 void setup()
 {
+  //Serial.begin(9600);
   Wire.begin();
   Wire2.begin();
   
@@ -40,27 +41,19 @@ void setup()
   pinMode(1,OUTPUT);
   pinMode(6,OUTPUT);
   delay(100);
-  lcd.begin(16,2);
 }
 uint8_t a = 0;
-coordinate b;
+//coordinate b;
+
 void loop()
 {
-  if(digitalRead(27) == HIGH){
-    debug = n.getNowCoor();
-    lcd.clear();
-    lcd.home();
-    lcd.print(debug.x);
-    lcd.print(":");
-    lcd.print(debug.y);
-    solver.EXrightHand();
-    delay(500);
-  }
-  else{
-    imu.read();
-    Serial.print(imu.getGPitch());
-    Serial.print(",");
-    Serial.println(imu.getGYaw());
-    delay(10);
-  }
+  // Serial.print(camR.read());
+  // Serial.println(camL.read());
+  // int8_t kitNumR;
+  Serial.println("Hello");
+  Serial.print(victim.kitNumOneSide(true));
+  Serial.print(victim.kitNumOneSide(false));
+  // Serial.println(kitNumR);
+  //Serial.println(camR.victim_num());
+  delay(50);
 }
