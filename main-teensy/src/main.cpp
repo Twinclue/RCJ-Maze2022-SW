@@ -44,12 +44,6 @@ void setup()
 }
 uint8_t a = 0;
 coordinate b;
-float preangle = 0;
-float angle;
-unsigned long t;
-unsigned long pret;
-float deltat;
-float cangle = 0;
 void loop()
 {
   if(digitalRead(27) == HIGH){
@@ -63,16 +57,10 @@ void loop()
     delay(500);
   }
   else{
-    t = micros();
-    deltat = (t - pret) * 0.000001;
-    pret = t;
     imu.read();
-    cangle += imu.getGyroZ() * deltat;
-    angle = (preangle * 0.90) + (cangle * 0.1);
-    preangle = angle;
-    Serial.print(cangle);
+    Serial.print(imu.getYaw());
     Serial.print(",");
-    Serial.println(angle);
+    Serial.println(imu.getGYaw());
     delay(10);
   }
 }

@@ -19,3 +19,25 @@ bool read_imu::begin(TwoWire *_bus){
     gze = cgze;
     return isConnected();
 }
+
+float read_imu::getGPitch(){
+    t = micros();
+    deltat = (t - pret) * 0.000001;
+    pret = t;
+    this->read();
+    cangle += this->getGyroY() * deltat;
+    angle = (preangle * 0.90) + (cangle * 0.1);
+    preangle = angle;
+    return angle;
+}
+
+float read_imu::getGYaw(){
+    t = micros();
+    deltat = (t - pret) * 0.000001;
+    pret = t;
+    this->read();
+    cangle += this->getGyroZ() * deltat;
+    angle = (preangle * 0.90) + (cangle * 0.1);
+    preangle = angle;
+    return angle;
+}
