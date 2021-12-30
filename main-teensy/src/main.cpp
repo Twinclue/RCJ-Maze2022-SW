@@ -33,8 +33,8 @@ void setup()
   //Serial.begin(9600);
   Wire.begin();
   Wire2.begin();
-  //d6tR.setBus(&Wire2);
-  //imu.begin();
+  
+  imu.begin(&Wire2);
 
   pinMode(0,INPUT);
   pinMode(27,INPUT);
