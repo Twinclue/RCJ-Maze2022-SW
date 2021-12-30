@@ -5,6 +5,8 @@
 #include "read_tof.h"
 #include "advanced_tof.h"
 #include "drive_motor.h"
+#include "D6Tarduino.h"
+#include "detect_victim.h"
 
 read_imu imu;
 read_tof toff(&Wire2);
@@ -23,6 +25,11 @@ LiquidCrystal lcd(25,24,12,11,10,9);
 
 Encoder enc(8,7);
 
+D6Tarduino rightTempRaw;
+D6Tarduino leftTempRaw;
+
+detect_victim victim(&Serial4, &Serial5, &Wire2, &Wire);
+
 const byte lTouch = 21;
 const byte rTouch = 17;
 
@@ -35,9 +42,12 @@ void setup()
   Wire.begin();
   imu.begin(&Wire2);
   lcd.begin(16,2);
+  rightTempRaw.setBus(&Wire2);
+  leftTempRaw.setBus(&Wire);
   pinMode(rTouch,INPUT);
   pinMode(lTouch,INPUT);
   delay(100);
+
 }
 
 void loop()
@@ -140,6 +150,7 @@ void loop()
     lcd.print(toff.read(4));
     lcd.setCursor(13,1);
     lcd.print(toff.read(1));
+    delay(450);
     break;
   case 12:
     lcd.print(tofb.read(1));
@@ -154,6 +165,7 @@ void loop()
     lcd.print("Back");
     lcd.setCursor(13,1);
     lcd.print(tofb.read(3));
+    delay(450);
     break;
   case 16:
     lcd.print("Touch");
@@ -164,10 +176,31 @@ void loop()
     break;
   case 20:
     lcd.print("Pitch: ");
-    lcd.print(imu.getPitch());
+    lcd.print(imu.getGPitch());
     lcd.setCursor(0,1);
     lcd.print("Yaw  : ");
-    lcd.print(imu.getYaw());
+    lcd.print(imu.getGYaw());
+    break;
+   case 24:
+    lcd.print("Right TEMP: ");
+    lcd.print(rightTempRaw.getTEMP());
+    lcd.setCursor(0,1);
+    lcd.print("Left  TEMP: ");
+    lcd.print(leftTempRaw.getTEMP());
+    break;
+  case 28:
+    lcd.print("Right PTAT: ");
+    lcd.print(rightTempRaw.getPTAT());
+    lcd.setCursor(0,1);
+    lcd.print("Left  PTAT: ");
+    lcd.print(leftTempRaw.getPTAT());
+    break;
+  case 32:
+    lcd.print("Right KitNum: ");
+    lcd.print(victim.kitNumOneSide(true));
+    lcd.setCursor(0,1);
+    lcd.print("Left  KitNum: ");
+    lcd.print(victim.kitNumOneSide(false));
     break;
   default:
     lcd.print(enc.read());
@@ -223,6 +256,6 @@ void loop()
 
   Serial.println();
 */
-  delay(500);
+  delay(50);
 }
 
