@@ -21,23 +21,23 @@ bool read_imu::begin(TwoWire *_bus){
 }
 
 float read_imu::getGPitch(){
-    t = micros();
-    deltat = (t - pret) * 0.000001;
-    pret = t;
+    tP = micros();
+    deltatP = (tP - pretP) * 0.000001;
+    pretP = tP;
     this->read();
-    cangle += this->getGyroY() * deltat;
-    angle = (preangle * 0.90) + (cangle * 0.1);
-    preangle = angle;
-    return angle;
+    cangleP += this->getGyroY() * deltatP;
+    angleP = (preangleP * 0.90) + (cangleP * 0.1);
+    preangleP = angleP;
+    return angleP;
 }
 
 float read_imu::getGYaw(){
-    t = micros();
-    deltat = (t - pret) * 0.000001;
-    pret = t;
+    tY = micros();
+    deltatY = (tY - pretY) * 0.000001;
+    pretY = tY;
     this->read();
-    cangle += this->getGyroZ() * deltat;
-    angle = (preangle * 0.90) + (cangle * 0.1);
-    preangle = angle;
-    return angle;
+    cangleY += this->getGyroZ() * deltatY;
+    angleY = (preangleY * 0.90) + (cangleY * 0.1);
+    preangleY = angleY;
+    return angleY;
 }

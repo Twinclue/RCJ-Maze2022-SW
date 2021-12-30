@@ -58,7 +58,7 @@ void loop()
   }
   else{
     imu.read();
-    Serial.print(imu.getYaw());
+    Serial.print(imu.getGPitch());
     Serial.print(",");
     Serial.println(imu.getGYaw());
     delay(10);
