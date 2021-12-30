@@ -15,6 +15,7 @@ class move_robot{
         short fwd(short remDist = 300);
         short rev(short remDist = 300);
         short turn(short remAng = 90);
+        short goUp();
 
         void  corrDir();//correct direction
         void  corrDist();
@@ -56,5 +57,6 @@ class move_robot{
         Servo *flipper = new Servo();
 
         uint8_t rescueKitNum = 12;
+        short prePitch = 0;
 };
 #endif

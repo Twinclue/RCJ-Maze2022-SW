@@ -1,18 +1,26 @@
-#include <GY521.h>
+#include <MadgwickAHRS.h>
+#include "MPU6050.h"
 
 
-class read_imu : public GY521
+class read_imu : public MPU6050
 {
 private:
-    const float caxe = -0.071;
-    const float caye = -0.008;
-    const float caze = 1.085;
-    const float cgxe = -0.709;
-    const float cgye = 0.479;
-    const float cgze = 0.2;//マイナス方向にドリフト→値を大きく
+    Madgwick *filter = new Madgwick;
+    int16_t ax, ay, az;//加速度 int16_tは2バイトの符号付き整数
+    int16_t gx, gy, gz;//角速度 同上
+
+    float preYaw=0,prePitch=0,preRoll=0;
+    int over0countYaw = 0,over0countPitch = 0,over0countRoll = 0;
+    unsigned long premicros;
+    const uint16_t rate = 55;
 
 public:
     read_imu();
-    bool begin(TwoWire * _bus);
+    bool begin();
+    void update();
+    float getFPitch();
+    float getFRoll();
+    float getFYaw();
+    int getO0cY(){return over0countYaw;}
 };
 

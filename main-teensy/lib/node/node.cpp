@@ -1,12 +1,38 @@
 #include "node.h"
 
 node::node(){
+    now.p.x = 0;
+    now.p.y = 0;
+    now.p.z = 0;
+    nodes[0].count = 1;
 }
 
 void node::updatePosition(uint8_t moveto){
     now.p = convRXYZtoCoorAddLengh(kagome(rotate,moveto),now.p.x,now.p.y,now.p.z);
     nowNodeNum = searchNode(now.p);
     nodes[nowNodeNum].count++;
+    switch (moveto){
+    case front:
+        break;
+
+    case left:
+        rotate = rotateToLeft(rotate);
+        break;
+
+    case back:
+        rotate = reverseR(rotate);
+        break;
+
+    case right:
+        rotate = rotateToRight(rotate);
+        break;
+
+    default:
+        break;
+    }
+}
+
+void node::updateRotation(uint8_t moveto){
     switch (moveto){
     case front:
         break;
@@ -59,14 +85,20 @@ uint8_t node::getMinCountDir(){
     short compare[4];
     for(int n = 0;n < 4;n++){
         compare[n] = ((tempNode[n]==-1) ? 255 : nodes[tempNode[n]].count);
+        Serial.println(compare[n]);
     }
-    uint8_t mini = 0;
-    for(int i = 0;i < 4;i++){
-        if(nodes[compare[mini]].count > nodes[compare[i]].count){
-            mini = i;
-        }
+    if(compare[right] <= compare[front] && compare[right] <= compare[left]){
+        return right;
     }
-    return mini;
+    else if(compare[front] <= compare[left]){
+        return front;
+    }
+    else if(compare[left] <= compare[back]){
+        return left;
+    }
+    else{
+        return back;
+    }
 }
 
 void node::searchAroundNodes(bool fWall,bool lWall,bool bWall,bool rWall){
@@ -74,6 +106,9 @@ void node::searchAroundNodes(bool fWall,bool lWall,bool bWall,bool rWall){
         tempNode[right] = searchNode(convRXYZtoCoorAddLengh(rotateToRight(rotate),now.p.x,now.p.y,now.p.z));
         if(tempNode[right] == -1){
             tempNode[right] = makeNewNode(convRXYZtoCoorAddLengh(rotateToRight(rotate),now.p.x,now.p.y,now.p.z),rotateToRight(rotate));
+        }
+        if(nodes[tempNode[right]].tile == black){
+            tempNode[right] = -1;
         }
     }
     else{
@@ -85,6 +120,9 @@ void node::searchAroundNodes(bool fWall,bool lWall,bool bWall,bool rWall){
         if(tempNode[front] == -1){
             tempNode[front] = makeNewNode(convRXYZtoCoorAddLengh(rotate,now.p.x,now.p.y,now.p.z),rotate);
         }
+        if(nodes[tempNode[front]].tile == black){
+            tempNode[front] = -1;
+        }
     }
     else{
         tempNode[front] = -1;
@@ -94,6 +132,9 @@ void node::searchAroundNodes(bool fWall,bool lWall,bool bWall,bool rWall){
         tempNode[left] = searchNode(convRXYZtoCoorAddLengh(rotateToLeft(rotate),now.p.x,now.p.y,now.p.z));
         if(tempNode[left] == -1){
             tempNode[left] = makeNewNode(convRXYZtoCoorAddLengh(rotateToLeft(rotate),now.p.x,now.p.y,now.p.z),rotateToLeft(rotate));
+        }
+        if(nodes[tempNode[left]].tile == black){
+            tempNode[left] = -1;
         }
     }
     else{
@@ -105,28 +146,45 @@ void node::searchAroundNodes(bool fWall,bool lWall,bool bWall,bool rWall){
         if(tempNode[back] == -1){
             tempNode[back] = makeNewNode(convRXYZtoCoorAddLengh(reverseR(rotate),now.p.x,now.p.y,now.p.z),reverseR(rotate));
         }
+        if(nodes[tempNode[back]].tile == black){
+            tempNode[back] = -1;
+        }
+    }
+    else{
+        tempNode[back] = -1;
     }
 
 }
 
 void node::setTile(uint8_t color){
+    if(color == silver){
+        lastCheckPoint = nowNodeNum;
+    }
     nodes[nowNodeNum].tile = color;
+}
+
+void node::setTile(uint8_t color,uint8_t dir){
+    nodes[tempNode[dir]].tile = color;
+}
+
+uint8_t node::getTile(uint8_t dir){
+    return nodes[tempNode[dir]].tile;
 }
 
 uint8_t node::convRtoArrnum(uint8_t _r){
     switch (_r)
     {
     case 1:
-        return 0;
+        return front;
         break;
     case 2:
-        return 1;
+        return left;
         break;
     case 4:
-        return 2;
+        return back;
         break;
     case 8:
-        return 3;
+        return right;
         break;
     default:
         break;
@@ -165,7 +223,7 @@ coordinate node::convRXYZtoCoorAddLengh(uint8_t r,short x,short y,short z,short 
 }
 
 uint8_t node::rotateToRight(uint8_t _r){
-    if(_r==1){
+    if(_r<=1){
         return 8;
     }
     else{
@@ -174,7 +232,7 @@ uint8_t node::rotateToRight(uint8_t _r){
 }
 
 uint8_t node::rotateToLeft(uint8_t _r){
-    if(_r==8){
+    if(_r>=8){
         return 1;
     }
     else{
@@ -185,7 +243,7 @@ uint8_t node::rotateToLeft(uint8_t _r){
 uint8_t node::reverseR(uint8_t _r){
     uint8_t temp = _r;
     for(int i = 0;i < 2;i++){
-        if(temp==8){
+        if(temp>=8){
             temp = 1;
         }
         else{
