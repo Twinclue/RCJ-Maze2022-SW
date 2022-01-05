@@ -87,10 +87,10 @@ uint8_t node::getMinCountDir(){
         compare[n] = ((tempNode[n]==-1) ? 255 : nodes[tempNode[n]].count);
         Serial.println(compare[n]);
     }
-    if(compare[right] <= compare[front] && compare[right] <= compare[left]){
+    if(compare[right] <= compare[front] && compare[right] <= compare[left] && compare[right] <= compare[back]){
         return right;
     }
-    else if(compare[front] <= compare[left]){
+    else if(compare[front] <= compare[left] && compare[front] <= compare[back]){
         return front;
     }
     else if(compare[left] <= compare[back]){

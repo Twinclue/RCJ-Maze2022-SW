@@ -30,9 +30,10 @@ short move_robot::fwd(short remDist = 300){
         while((errorDist < remDist) && (front->read(fc) > 50)){
             imu->read();
             errorAng = startAng - imu->getYaw();
-            disp->home();
-            disp->clear();
-            disp->print(abs(prePitch - imu->getGPitch()));
+            // disp->home();
+            // disp->clear();
+            Serial.print("Pitch : ");
+            Serial.println(abs(prePitch - imu->getGPitch()));
             errorDist = startDist  - front->read(fc);
             left->on(255 + fwdPid->calcP(errorAng,0));
             right->on(255 - fwdPid->calcP(errorAng,0));
@@ -61,9 +62,10 @@ short move_robot::fwd(short remDist = 300){
         while((errorDist < remDist) && (front->read(fc) > 50)){
             imu->read();
             errorAng = startAng - imu->getYaw();
-            disp->home();
-            disp->clear();
-            disp->print(abs(prePitch - imu->getGPitch()));
+            // disp->home();
+            // disp->clear();
+            Serial.print("Pitch : ");
+            Serial.println(abs(prePitch - imu->getGPitch()));
             errorDist = back->read(bc) - startDist;
             left->on(255 + fwdPid->calcP(errorAng,0));
             right->on(255 - fwdPid->calcP(errorAng,0));

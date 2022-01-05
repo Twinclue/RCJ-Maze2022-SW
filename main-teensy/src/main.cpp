@@ -48,30 +48,27 @@ uint8_t a = 0;
 
 void loop()
 {
-  if(digitalRead(0) == HIGH){
-  //   debug = n.getNowCoor();
-  //   lcd.clear();
-  //   lcd.home();
-  //   lcd.print(debug.x);
-  //   lcd.print(":");
-  //   lcd.print(debug.y);
-    imu.read();
-    short pp = imu.getGPitch();
-    solver.EXrightHand();
-    imu.read();
+  if(digitalRead(27) == HIGH){
+    debug = n.getNowCoor();
     lcd.clear();
     lcd.home();
-    imu.getGPitch();
-    lcd.print(abs(pp-imu.getGPitch()));
+    lcd.print(debug.x);
+    lcd.print(":");
+    lcd.print(debug.y);
+    Serial.print("X:");
+    Serial.println(debug.x);
+    Serial.print("Y:");
+    Serial.println(debug.y);
+    solver.EXrightHand();
     delay(50);
   }
   else{
-  //   imu.read();
-  //   lcd.clear();
-  //   lcd.home();
-  //   lcd.print(imu.getGPitch());
-  //   lcd.print(",");
-  //   lcd.print(imu.getGYaw());
-  //   delay(10);
+    debug = n.getNowCoor();
+    lcd.clear();
+    lcd.home();
+    lcd.print(debug.x);
+    lcd.print(":");
+    lcd.print(debug.y);
+    delay(10);
   }
 }
