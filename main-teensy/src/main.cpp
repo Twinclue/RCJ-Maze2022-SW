@@ -47,13 +47,21 @@ uint8_t a = 0;
 
 void loop()
 {
-  // Serial.print(camR.read());
-  // Serial.println(camL.read());
-  // int8_t kitNumR;
-  Serial.println("Hello");
-  Serial.print(victim.kitNumOneSide(true));
-  Serial.print(victim.kitNumOneSide(false));
-  // Serial.println(kitNumR);
-  //Serial.println(camR.victim_num());
-  delay(50);
+  if(digitalRead(27) == HIGH){
+    debug = n.getNowCoor();
+    lcd.clear();
+    lcd.home();
+    lcd.print(debug.x);
+    lcd.print(":");
+    lcd.print(debug.y);
+    solver.EXrightHand();
+    delay(500);
+  }
+  else{
+    imu.read();
+    Serial.print(imu.getGPitch());
+    Serial.print(",");
+    Serial.println(imu.getGYaw());
+    delay(10);
+  }
 }

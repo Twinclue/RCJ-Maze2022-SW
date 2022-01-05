@@ -16,7 +16,7 @@ move_robot::move_robot(drive_motor *_left,drive_motor *_right,read_tof *_front,r
 }
 
 short move_robot::fwd(short remDist = 300){
-    prePitch = imu->getPitch();
+    prePitch = imu->getGPitch();
     if(front->read(fc) < back->read(bc)){
         int startDist = front->read(fc);
         int errorDist = 0;
@@ -77,7 +77,7 @@ short move_robot::fwd(short remDist = 300){
     left->on(0);
     right->on(0);
     this->corrDir();
-    if(abs(prePitch - imu->getPitch()) >= 15){
+    if(abs(prePitch - imu->getGPitch()) >= 15){
         return -2;
     }
     return 0;
@@ -134,10 +134,10 @@ short move_robot::turn(short remAng = 90){
 }
 
 short move_robot::goUp(){
-    short prePitch = imu->getPitch();
-    while(abs(prePitch-imu->getPitch()) <= 10){
+    short prePitch = imu->getGPitch();
+    while(abs(prePitch-imu->getGPitch()) <= 10){
         imu->read();
-        Serial.println(prePitch - imu->getPitch());
+        Serial.println(prePitch - imu->getGPitch());
         left->on(255);
         right->on(255);
     }
