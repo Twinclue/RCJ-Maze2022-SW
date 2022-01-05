@@ -151,11 +151,14 @@ short move_robot::turn(short remAng = 90){
 short move_robot::goUp(){
     imu->read();
     short prePitch = imu->getGPitch();
-    while(abs(prePitch-imu->getGPitch()) <= 15){
+    short startAng = imu->getYaw();
+    short errorAng = startAng - imu->getYaw();
+    fwdPid->init();
+    while(abs(prePitch-imu->getGPitch()) <= 15 && front->read(frf) >= 250 && front->read(flf) >= 250){
         imu->read();
         Serial.println(prePitch - imu->getGPitch());
-        left->on(255);
-        right->on(255);
+        left->on(255 + fwdPid->calcP(errorAng,0));
+        right->on(255 - fwdPid->calcP(errorAng,0));
     }
     left->on(0);
     right->on(0);

@@ -34,7 +34,6 @@ void setup()
   //Serial.begin(9600);
   Wire.begin();
   Wire2.begin();
-  
   imu.begin(&Wire2);
 
   pinMode(0,INPUT);

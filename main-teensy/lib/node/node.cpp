@@ -333,3 +333,7 @@ uint8_t node::kagome(uint8_t _r,uint8_t _side){
     return 1;
 }
 
+void node::lackOfProgress(){
+    now = nodes[lastCheckPoint];
+    nowNodeNum = lastCheckPoint;
+}
