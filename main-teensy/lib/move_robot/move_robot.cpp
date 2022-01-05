@@ -1,12 +1,13 @@
 #include "move_robot.h"
 
-move_robot::move_robot(drive_motor *_left,drive_motor *_right,read_tof *_front,read_tof *_back,read_imu *_imu,read_light *_light){
+move_robot::move_robot(drive_motor *_left,drive_motor *_right,read_tof *_front,read_tof *_back,read_imu *_imu,read_light *_light,LiquidCrystal *_disp){
     left = _left;
     right = _right;
     front = _front;
     back = _back;
     imu = _imu;
     light = _light;
+    disp = _disp;
     pinMode(lTouch,INPUT);
     pinMode(rTouch,INPUT);
 
@@ -16,6 +17,8 @@ move_robot::move_robot(drive_motor *_left,drive_motor *_right,read_tof *_front,r
 }
 
 short move_robot::fwd(short remDist = 300){
+    imu->read();
+    imu->getGPitch();
     prePitch = imu->getGPitch();
     if(front->read(fc) < back->read(bc)){
         int startDist = front->read(fc);
@@ -27,6 +30,9 @@ short move_robot::fwd(short remDist = 300){
         while((errorDist < remDist) && (front->read(fc) > 50)){
             imu->read();
             errorAng = startAng - imu->getYaw();
+            disp->home();
+            disp->clear();
+            disp->print(abs(prePitch - imu->getGPitch()));
             errorDist = startDist  - front->read(fc);
             left->on(255 + fwdPid->calcP(errorAng,0));
             right->on(255 - fwdPid->calcP(errorAng,0));
@@ -55,6 +61,9 @@ short move_robot::fwd(short remDist = 300){
         while((errorDist < remDist) && (front->read(fc) > 50)){
             imu->read();
             errorAng = startAng - imu->getYaw();
+            disp->home();
+            disp->clear();
+            disp->print(abs(prePitch - imu->getGPitch()));
             errorDist = back->read(bc) - startDist;
             left->on(255 + fwdPid->calcP(errorAng,0));
             right->on(255 - fwdPid->calcP(errorAng,0));
@@ -77,9 +86,13 @@ short move_robot::fwd(short remDist = 300){
     left->on(0);
     right->on(0);
     this->corrDir();
-    if(abs(prePitch - imu->getGPitch()) >= 15){
+    imu->read();
+    imu->getGPitch();
+    if(abs(prePitch - imu->getGPitch()) >= 10){
+        digitalWrite(6,HIGH);
         return -2;
     }
+    digitalWrite(6,LOW);
     return 0;
 }
 
@@ -134,8 +147,9 @@ short move_robot::turn(short remAng = 90){
 }
 
 short move_robot::goUp(){
+    imu->read();
     short prePitch = imu->getGPitch();
-    while(abs(prePitch-imu->getGPitch()) <= 10){
+    while(abs(prePitch-imu->getGPitch()) <= 15){
         imu->read();
         Serial.println(prePitch - imu->getGPitch());
         left->on(255);

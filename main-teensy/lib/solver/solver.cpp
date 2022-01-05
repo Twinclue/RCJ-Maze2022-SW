@@ -61,6 +61,7 @@ int solver::EXrightHand(){
     if(moveResult == 0){
         n->updatePosition(moveto);
         n->setTile(light->getFloorColor());
+        slopeFlag = false;
     }
     else if(moveResult == -2){
         slopeFlag = true;

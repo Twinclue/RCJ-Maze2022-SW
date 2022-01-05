@@ -18,10 +18,10 @@ read_imu imu;
 Adafruit_NeoPixel npix = Adafruit_NeoPixel(2,26, NEO_GRB + NEO_KHZ800);
 read_light light(&npix);
 
-move_robot move(&leftM,&rightM,&toff,&tofb,&imu,&light);
 LiquidCrystal lcd(25,24,12,11,10,9);
 detect_wall wall(&toff,&tofb);
 
+move_robot move(&leftM,&rightM,&toff,&tofb,&imu,&light,&lcd);
 node n;
 detect_victim victim(&Serial4, &Serial5, &Wire2, &Wire); 
 coordinate debug;
@@ -48,21 +48,30 @@ uint8_t a = 0;
 
 void loop()
 {
-  if(digitalRead(27) == HIGH){
-    debug = n.getNowCoor();
+  if(digitalRead(0) == HIGH){
+  //   debug = n.getNowCoor();
+  //   lcd.clear();
+  //   lcd.home();
+  //   lcd.print(debug.x);
+  //   lcd.print(":");
+  //   lcd.print(debug.y);
+    imu.read();
+    short pp = imu.getGPitch();
+    solver.EXrightHand();
+    imu.read();
     lcd.clear();
     lcd.home();
-    lcd.print(debug.x);
-    lcd.print(":");
-    lcd.print(debug.y);
-    solver.EXrightHand();
-    delay(500);
+    imu.getGPitch();
+    lcd.print(abs(pp-imu.getGPitch()));
+    delay(50);
   }
   else{
-    imu.read();
-    Serial.print(imu.getGPitch());
-    Serial.print(",");
-    Serial.println(imu.getGYaw());
-    delay(10);
+  //   imu.read();
+  //   lcd.clear();
+  //   lcd.home();
+  //   lcd.print(imu.getGPitch());
+  //   lcd.print(",");
+  //   lcd.print(imu.getGYaw());
+  //   delay(10);
   }
 }
