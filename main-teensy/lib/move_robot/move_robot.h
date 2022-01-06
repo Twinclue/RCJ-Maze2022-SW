@@ -1,6 +1,7 @@
 #ifndef MOVE_ROBOT_H_
 #define MOVE_ROBOT_H_
 
+#include <LiquidCrystal.h>
 #include "drive_motor.h"
 #include "read_imu.h"
 #include "read_tof.h"
@@ -8,10 +9,12 @@
 #include "pid.h"
 #include "read_light.h"
 #include <Servo.h>
+#include "detect_victim.h"
+#include "detect_wall.h"
 
 class move_robot{
     public:
-        move_robot(drive_motor *_left,drive_motor *_right,read_tof *_front,read_tof *_back,read_imu *_imu,read_light *_light);
+        move_robot(drive_motor *_left,drive_motor *_right,read_tof *_front,read_tof *_back,read_imu *_imu,read_light *_light,LiquidCrystal *_disp,Adafruit_NeoPixel *_led);
         short fwd(short remDist = 300);
         short rev(short remDist = 300);
         short turn(short remAng = 90);
@@ -23,6 +26,8 @@ class move_robot{
 
         void drop(bool dir);
         uint8_t getRescueKitNum(){return rescueKitNum;}
+        
+        void blink();
     private:
 
         drive_motor *left;
@@ -33,6 +38,8 @@ class move_robot{
         read_imu *imu;
 
         read_light *light;
+        LiquidCrystal *disp;
+        Adafruit_NeoPixel *led;
 
         const byte fls = 0;
         const byte flf = 1;
@@ -56,7 +63,10 @@ class move_robot{
         const uint8_t servo = 30;
         Servo *flipper = new Servo();
 
+        detect_victim *vic = new detect_victim(&Serial4, &Serial5, &Wire2, &Wire);
+        detect_wall *mwall;
         uint8_t rescueKitNum = 12;
         short prePitch = 0;
+
 };
 #endif

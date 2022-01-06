@@ -1,22 +1,26 @@
 #include "move_robot.h"
 
-move_robot::move_robot(drive_motor *_left,drive_motor *_right,read_tof *_front,read_tof *_back,read_imu *_imu,read_light *_light){
+move_robot::move_robot(drive_motor *_left,drive_motor *_right,read_tof *_front,read_tof *_back,read_imu *_imu,read_light *_light,LiquidCrystal *_disp,Adafruit_NeoPixel *_led){
     left = _left;
     right = _right;
     front = _front;
     back = _back;
     imu = _imu;
     light = _light;
+    disp = _disp;
+    led = _led;
     pinMode(lTouch,INPUT);
     pinMode(rTouch,INPUT);
-
+    mwall = new detect_wall(front,back);
     flipper->attach(servo);
     flipper->write(141);
     delay(500);
 }
 
 short move_robot::fwd(short remDist = 300){
-    prePitch = imu->getPitch();
+    imu->read();
+    imu->getGPitch();
+    prePitch = imu->getGPitch();
     if(front->read(fc) < back->read(bc)){
         int startDist = front->read(fc);
         int errorDist = 0;
@@ -27,6 +31,10 @@ short move_robot::fwd(short remDist = 300){
         while((errorDist < remDist) && (front->read(fc) > 50)){
             imu->read();
             errorAng = startAng - imu->getYaw();
+            // disp->home();
+            // disp->clear();
+            Serial.print("Pitch : ");
+            Serial.println(abs(prePitch - imu->getGPitch()));
             errorDist = startDist  - front->read(fc);
             left->on(255 + fwdPid->calcP(errorAng,0));
             right->on(255 - fwdPid->calcP(errorAng,0));
@@ -34,6 +42,26 @@ short move_robot::fwd(short remDist = 300){
             if(avoidObstacle()){
                 remDist = this->fwd(remDist - errorDist);
             }
+
+            int8_t rVic = vic->kitNumOneSide(true);
+            int8_t lVic = vic->kitNumOneSide(false);
+            if((rVic != -1) &&  mwall->getSingleWall(0)==true){
+                left->on(0);
+                right->on(0);
+                blink();
+                for(int count = 0;count<rVic;count++){
+                    drop(false);
+                }
+            }
+            if(lVic != -1 &&  mwall->getSingleWall(2)==true){
+                left->on(0);
+                right->on(0);
+                blink();
+                for(int count = 0;count<lVic;count++){
+                    drop(true);
+                }
+            }
+
             if(light->getFloorColor() == 1){
                 remDist = 0;
                 this->rev(errorDist);
@@ -55,6 +83,10 @@ short move_robot::fwd(short remDist = 300){
         while((errorDist < remDist) && (front->read(fc) > 50)){
             imu->read();
             errorAng = startAng - imu->getYaw();
+            // disp->home();
+            // disp->clear();
+            Serial.print("Pitch : ");
+            Serial.println(abs(prePitch - imu->getGPitch()));
             errorDist = back->read(bc) - startDist;
             left->on(255 + fwdPid->calcP(errorAng,0));
             right->on(255 - fwdPid->calcP(errorAng,0));
@@ -62,6 +94,26 @@ short move_robot::fwd(short remDist = 300){
             if(avoidObstacle()){
                 remDist = this->fwd(remDist - errorDist);
             }
+
+            int8_t rVic = vic->kitNumOneSide(true);
+            int8_t lVic = vic->kitNumOneSide(false);
+            if((rVic != -1) &&  mwall->getSingleWall(0)==true){
+                left->on(0);
+                right->on(0);
+                blink();
+                for(int count = 0;count<rVic;count++){
+                    drop(false);
+                }
+            }
+            if(lVic != -1 &&  mwall->getSingleWall(2)==true){
+                left->on(0);
+                right->on(0);
+                blink();
+                for(int count = 0;count<lVic;count++){
+                    drop(true);
+                }
+            }
+
             if(light->getFloorColor() == 1){
                 remDist = 0;
                 this->rev(errorDist);
@@ -77,9 +129,13 @@ short move_robot::fwd(short remDist = 300){
     left->on(0);
     right->on(0);
     this->corrDir();
-    if(abs(prePitch - imu->getPitch()) >= 15){
+    imu->read();
+    imu->getGPitch();
+    if(abs(prePitch - imu->getGPitch()) >= 10){
+        digitalWrite(6,HIGH);
         return -2;
     }
+    digitalWrite(6,LOW);
     return 0;
 }
 
@@ -134,12 +190,16 @@ short move_robot::turn(short remAng = 90){
 }
 
 short move_robot::goUp(){
-    short prePitch = imu->getPitch();
-    while(abs(prePitch-imu->getPitch()) <= 10){
+    imu->read();
+    short prePitch = imu->getGPitch();
+    short startAng = imu->getYaw();
+    short errorAng = startAng - imu->getYaw();
+    fwdPid->init();
+    while(abs(prePitch-imu->getGPitch()) <= 15 && front->read(frf) >= 250 && front->read(flf) >= 250){
         imu->read();
-        Serial.println(prePitch - imu->getPitch());
-        left->on(255);
-        right->on(255);
+        Serial.println(prePitch - imu->getGPitch());
+        left->on(255 + fwdPid->calcP(errorAng,0));
+        right->on(255 - fwdPid->calcP(errorAng,0));
     }
     left->on(0);
     right->on(0);
@@ -274,5 +334,18 @@ void move_robot::drop(bool dir){
             delay(500);
         }
         rescueKitNum--;
+    }
+}
+
+void move_robot::blink(){
+    for(int i = 0;i<12;i++){
+        tone(23,422,50);
+        led->setPixelColor(0,led->Color(255,0,0));
+        led->show();
+        delay(250);
+        tone(23,844,50);
+        led->setPixelColor(0,led->Color(0,0,0));
+        led->show();
+        delay(250);
     }
 }

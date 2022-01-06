@@ -28,12 +28,14 @@ int solver::rightHand(){
 }
 
 int solver::EXrightHand(){
-    short moveResult;
+    short moveResult = 0;;
     for(int i =0;i < 4;i++){
         walls[i] = wall->getSingleWall(i);
     }
     n->searchAroundNodes(walls[front],walls[left],walls[back],walls[right]);
     moveto = n->getMinCountDir();
+    Serial.print("Move to :");
+    Serial.println(moveto);
     switch (moveto){
     case front:
         if(slopeFlag){
@@ -61,10 +63,12 @@ int solver::EXrightHand(){
     if(moveResult == 0){
         n->updatePosition(moveto);
         n->setTile(light->getFloorColor());
+        slopeFlag = false;
     }
     else if(moveResult == -2){
+        n->updatePosition(moveto);
+        //n->setTile(3);
         slopeFlag = true;
-        n->setTile(3);
     }
     else{
         n->setTile(black,moveto);
