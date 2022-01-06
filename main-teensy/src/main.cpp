@@ -21,7 +21,7 @@ read_light light(&npix);
 LiquidCrystal lcd(25,24,12,11,10,9);
 detect_wall wall(&toff,&tofb);
 
-move_robot move(&leftM,&rightM,&toff,&tofb,&imu,&light,&lcd);
+move_robot move(&leftM,&rightM,&toff,&tofb,&imu,&light,&lcd,&npix);
 node n;
 detect_victim victim(&Serial4, &Serial5, &Wire2, &Wire); 
 coordinate debug;
@@ -48,20 +48,24 @@ uint8_t a = 0;
 void loop()
 {
   if(digitalRead(27) == HIGH){
-    debug = n.getNowCoor();
-    lcd.clear();
-    lcd.home();
-    lcd.print(debug.x);
-    lcd.print(":");
-    lcd.print(debug.y);
-    Serial.print("X:");
-    Serial.println(debug.x);
-    Serial.print("Y:");
-    Serial.println(debug.y);
-    solver.EXrightHand();
-    delay(50);
+    // debug = n.getNowCoor();
+    // lcd.clear();
+    // lcd.home();
+    // lcd.print(debug.x);
+    // lcd.print(":");
+    // lcd.print(debug.y);
+    // Serial.print("X:");
+    // Serial.println(debug.x);
+    // Serial.print("Y:");
+    // Serial.println(debug.y);
+    // solver.EXrightHand();
+    move.fwd();
+    delay(500);
   }
   else{
+    if(digitalRead(0)){
+      move.blink();
+    }
     debug = n.getNowCoor();
     lcd.clear();
     lcd.home();

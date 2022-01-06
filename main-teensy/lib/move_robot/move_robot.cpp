@@ -1,6 +1,6 @@
 #include "move_robot.h"
 
-move_robot::move_robot(drive_motor *_left,drive_motor *_right,read_tof *_front,read_tof *_back,read_imu *_imu,read_light *_light,LiquidCrystal *_disp){
+move_robot::move_robot(drive_motor *_left,drive_motor *_right,read_tof *_front,read_tof *_back,read_imu *_imu,read_light *_light,LiquidCrystal *_disp,Adafruit_NeoPixel *_led){
     left = _left;
     right = _right;
     front = _front;
@@ -8,6 +8,7 @@ move_robot::move_robot(drive_motor *_left,drive_motor *_right,read_tof *_front,r
     imu = _imu;
     light = _light;
     disp = _disp;
+    led = _led;
     pinMode(lTouch,INPUT);
     pinMode(rTouch,INPUT);
 
@@ -41,6 +42,26 @@ short move_robot::fwd(short remDist = 300){
             if(avoidObstacle()){
                 remDist = this->fwd(remDist - errorDist);
             }
+
+            int8_t rVic = vic->kitNumOneSide(true);
+            int8_t lVic = vic->kitNumOneSide(false);
+            if(!(rVic == -1)){
+                left->on(0);
+                right->on(0);
+                blink();
+                for(int count = 0;count<rVic;count++){
+                    drop(false);
+                }
+            }
+            if(!(lVic == -1)){
+                left->on(0);
+                right->on(0);
+                blink();
+                for(int count = 0;count<lVic;count++){
+                    drop(true);
+                }
+            }
+
             if(light->getFloorColor() == 1){
                 remDist = 0;
                 this->rev(errorDist);
@@ -73,6 +94,26 @@ short move_robot::fwd(short remDist = 300){
             if(avoidObstacle()){
                 remDist = this->fwd(remDist - errorDist);
             }
+
+            int8_t rVic = vic->kitNumOneSide(true);
+            int8_t lVic = vic->kitNumOneSide(false);
+            if(!(rVic == -1)){
+                left->on(0);
+                right->on(0);
+                blink();
+                for(int count = 0;count<rVic;count++){
+                    drop(false);
+                }
+            }
+            if(!(lVic == -1)){
+                left->on(0);
+                right->on(0);
+                blink();
+                for(int count = 0;count<lVic;count++){
+                    drop(true);
+                }
+            }
+
             if(light->getFloorColor() == 1){
                 remDist = 0;
                 this->rev(errorDist);
@@ -293,5 +334,18 @@ void move_robot::drop(bool dir){
             delay(500);
         }
         rescueKitNum--;
+    }
+}
+
+void move_robot::blink(){
+    for(int i = 0;i<12;i++){
+        tone(23,422,50);
+        led->setPixelColor(0,led->Color(255,0,0));
+        led->show();
+        delay(250);
+        tone(23,844,50);
+        led->setPixelColor(0,led->Color(0,0,0));
+        led->show();
+        delay(250);
     }
 }
