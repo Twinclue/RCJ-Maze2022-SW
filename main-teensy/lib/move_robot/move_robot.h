@@ -10,6 +10,7 @@
 #include "read_light.h"
 #include <Servo.h>
 #include "detect_victim.h"
+#include "detect_wall.h"
 
 class move_robot{
     public:
@@ -63,7 +64,7 @@ class move_robot{
         Servo *flipper = new Servo();
 
         detect_victim *vic = new detect_victim(&Serial4, &Serial5, &Wire2, &Wire);
-
+        detect_wall *mwall;
         uint8_t rescueKitNum = 12;
         short prePitch = 0;
 

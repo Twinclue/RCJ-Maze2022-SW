@@ -66,12 +66,17 @@ void loop()
     if(digitalRead(0)){
       move.blink();
     }
-    debug = n.getNowCoor();
+    // debug = n.getNowCoor();
+    // lcd.clear();
+    // lcd.home();
+    // lcd.print(debug.x);
+    // lcd.print(":");
+    // lcd.print(debug.y);
     lcd.clear();
     lcd.home();
-    lcd.print(debug.x);
+    lcd.print(victim.kitNumOneSide(true));
     lcd.print(":");
-    lcd.print(debug.y);
-    delay(10);
+    lcd.print(victim.kitNumOneSide(false));
+    delay(100);
   }
 }

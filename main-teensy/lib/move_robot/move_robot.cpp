@@ -11,7 +11,7 @@ move_robot::move_robot(drive_motor *_left,drive_motor *_right,read_tof *_front,r
     led = _led;
     pinMode(lTouch,INPUT);
     pinMode(rTouch,INPUT);
-
+    mwall = new detect_wall(front,back);
     flipper->attach(servo);
     flipper->write(141);
     delay(500);
@@ -45,7 +45,7 @@ short move_robot::fwd(short remDist = 300){
 
             int8_t rVic = vic->kitNumOneSide(true);
             int8_t lVic = vic->kitNumOneSide(false);
-            if(!(rVic == -1)){
+            if((rVic != -1) &&  mwall->getSingleWall(0)==true){
                 left->on(0);
                 right->on(0);
                 blink();
@@ -53,7 +53,7 @@ short move_robot::fwd(short remDist = 300){
                     drop(false);
                 }
             }
-            if(!(lVic == -1)){
+            if(lVic != -1 &&  mwall->getSingleWall(2)==true){
                 left->on(0);
                 right->on(0);
                 blink();
@@ -97,7 +97,7 @@ short move_robot::fwd(short remDist = 300){
 
             int8_t rVic = vic->kitNumOneSide(true);
             int8_t lVic = vic->kitNumOneSide(false);
-            if(!(rVic == -1)){
+            if((rVic != -1) &&  mwall->getSingleWall(0)==true){
                 left->on(0);
                 right->on(0);
                 blink();
@@ -105,7 +105,7 @@ short move_robot::fwd(short remDist = 300){
                     drop(false);
                 }
             }
-            if(!(lVic == -1)){
+            if(lVic != -1 &&  mwall->getSingleWall(2)==true){
                 left->on(0);
                 right->on(0);
                 blink();
