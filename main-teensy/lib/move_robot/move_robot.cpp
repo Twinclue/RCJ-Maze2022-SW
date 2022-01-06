@@ -19,8 +19,6 @@ move_robot::move_robot(drive_motor *_left,drive_motor *_right,read_tof *_front,r
 
 short move_robot::fwd(short remDist = 300){
     imu->read();
-    imu->getGPitch();
-    prePitch = imu->getGPitch();
     if(front->read(fc) < back->read(bc)){
         int startDist = front->read(fc);
         int errorDist = 0;
@@ -129,13 +127,6 @@ short move_robot::fwd(short remDist = 300){
     left->on(0);
     right->on(0);
     this->corrDir();
-    imu->read();
-    imu->getGPitch();
-    if(abs(prePitch - imu->getGPitch()) >= 10){
-        digitalWrite(6,HIGH);
-        return -2;
-    }
-    digitalWrite(6,LOW);
     return 0;
 }
 
