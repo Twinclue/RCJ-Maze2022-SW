@@ -7,6 +7,7 @@
 #include "drive_motor.h"
 #include "D6Tarduino.h"
 #include "detect_victim.h"
+#include "solver.h"
 
 Encoder enc(8,7);
 
