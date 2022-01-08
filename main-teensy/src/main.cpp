@@ -48,18 +48,17 @@ uint8_t a = 0;
 void loop()
 {
   if(digitalRead(27) == HIGH){
-    // debug = n.getNowCoor();
-    // lcd.clear();
-    // lcd.home();
-    // lcd.print(debug.x);
-    // lcd.print(":");
-    // lcd.print(debug.y);
-    // Serial.print("X:");
-    // Serial.println(debug.x);
-    // Serial.print("Y:");
-    // Serial.println(debug.y);
-    // solver.EXrightHand();
-    move.fwd();
+    debug = n.getNowCoor();
+    lcd.clear();
+    lcd.home();
+    lcd.print(debug.x);
+    lcd.print(":");
+    lcd.print(debug.y);
+    Serial.print("X:");
+    Serial.println(debug.x);
+    Serial.print("Y:");
+    Serial.println(debug.y);
+    solver.EXrightHand();
     delay(500);
   }
   else{
