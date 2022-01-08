@@ -37,6 +37,7 @@ class node{
         void setTile(uint8_t color,uint8_t dir);
         coordinate getNowCoor(){return now.p;}
         uint8_t getTile(uint8_t dir);
+        void lackOfProgress();
     private:
         uint16_t makeNewNode(coordinate _p,uint8_t side);
         short searchNode(coordinate _p);
