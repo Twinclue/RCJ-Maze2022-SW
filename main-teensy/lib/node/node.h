@@ -38,6 +38,7 @@ class node{
         coordinate getNowCoor(){return now.p;}
         uint8_t getTile(uint8_t dir);
         void lackOfProgress();
+        uint8_t getNowCount(){return now.count;}
     private:
         uint16_t makeNewNode(coordinate _p,uint8_t side);
         short searchNode(coordinate _p);

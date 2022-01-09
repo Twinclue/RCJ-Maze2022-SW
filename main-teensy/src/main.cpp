@@ -24,9 +24,9 @@ read_light light(&npix);
 
 LiquidCrystal lcd(25, 24, 12, 11, 10, 9);
 detect_wall wall(&toff, &tofb);
-
-move_robot move(&leftM, &rightM, &toff, &tofb, &imu, &light, &lcd, &npix);
 node n;
+move_robot move(&leftM, &rightM, &toff, &tofb, &imu, &light, &lcd, &npix,&n);
+
 detect_victim victim(&Serial4, &Serial5, &Wire2, &Wire);
 coordinate debug;
 
@@ -67,7 +67,7 @@ void loop() {
     Serial.println(debug.y);
     solver.EXrightHand();
     delay(500);
-  } else {
+  }else {
     imu.read();
     lcd.home();
     lcd.clear();

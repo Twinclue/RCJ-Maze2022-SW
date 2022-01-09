@@ -1,6 +1,6 @@
 #include "move_robot.h"
 
-move_robot::move_robot(drive_motor *_left,drive_motor *_right,read_tof *_front,read_tof *_back,read_imu *_imu,read_light *_light,LiquidCrystal *_disp,Adafruit_NeoPixel *_led){
+move_robot::move_robot(drive_motor *_left,drive_motor *_right,read_tof *_front,read_tof *_back,read_imu *_imu,read_light *_light,LiquidCrystal *_disp,Adafruit_NeoPixel *_led,node *_n){
     left = _left;
     right = _right;
     front = _front;
@@ -9,6 +9,7 @@ move_robot::move_robot(drive_motor *_left,drive_motor *_right,read_tof *_front,r
     light = _light;
     disp = _disp;
     led = _led;
+    n = _n;
     pinMode(lTouch,INPUT);
     pinMode(rTouch,INPUT);
     mwall = new detect_wall(front,back);
@@ -18,6 +19,7 @@ move_robot::move_robot(drive_motor *_left,drive_motor *_right,read_tof *_front,r
 }
 
 short move_robot::fwd(short remDist = 300){
+    bool vicFlag=false;
     imu->read();
     if(front->read(fc) < back->read(bc)){
         int startDist = front->read(fc);
@@ -43,13 +45,14 @@ short move_robot::fwd(short remDist = 300){
 
             int8_t rVic = vic->kitNumOneSide(true);
             int8_t lVic = vic->kitNumOneSide(false);
-            if((rVic != -1) &&  mwall->getSingleWall(0)==true){
+            if((rVic != -1) &&  mwall->getSingleWall(0)==true && vicFlag == false & n->getNowCount()==0){
                 left->on(0);
                 right->on(0);
                 blink();
                 for(int count = 0;count<rVic;count++){
                     drop(false);
                 }
+                vicFlag = true;
             }
             if(lVic != -1 &&  mwall->getSingleWall(2)==true){
                 left->on(0);
@@ -95,13 +98,14 @@ short move_robot::fwd(short remDist = 300){
 
             int8_t rVic = vic->kitNumOneSide(true);
             int8_t lVic = vic->kitNumOneSide(false);
-            if((rVic != -1) &&  mwall->getSingleWall(0)==true){
+            if((rVic != -1) &&  mwall->getSingleWall(0)==true && vicFlag == false& n->getNowCount()==0){
                 left->on(0);
                 right->on(0);
                 blink();
                 for(int count = 0;count<rVic;count++){
                     drop(false);
                 }
+                vicFlag = true;
             }
             if(lVic != -1 &&  mwall->getSingleWall(2)==true){
                 left->on(0);
