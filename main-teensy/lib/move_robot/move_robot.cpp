@@ -29,12 +29,13 @@ short move_robot::fwd(short remDist = 300){
         short errorAng = startAng - imu->getYaw();
         fwdPid->init();
         while((errorDist < remDist) && (front->read(fc) > 50)){
+            unsigned long start = millis();
             imu->read();
             errorAng = startAng - imu->getYaw();
             // disp->home();
             // disp->clear();
-            Serial.print("Pitch : ");
-            Serial.println(abs(prePitch - imu->getGPitch()));
+            // Serial.print("Pitch : ");
+            // Serial.println(abs(prePitch - imu->getGPitch()));
             errorDist = startDist  - front->read(fc);
             left->on(255 + fwdPid->calcP(errorAng,0));
             right->on(255 - fwdPid->calcP(errorAng,0));
@@ -45,7 +46,7 @@ short move_robot::fwd(short remDist = 300){
 
             int8_t rVic = vic->kitNumOneSide(true);
             int8_t lVic = vic->kitNumOneSide(false);
-            if((rVic != -1) &&  mwall->getSingleWall(0)==true && vicFlag == false & n->getNowCount()==0){
+            if((rVic != -1) &&  mwall->getSingleWall(0)==true && vicFlag == false && n->getNowCount()==0){
                 left->on(0);
                 right->on(0);
                 blink();
@@ -54,13 +55,14 @@ short move_robot::fwd(short remDist = 300){
                 }
                 vicFlag = true;
             }
-            if(lVic != -1 &&  mwall->getSingleWall(2)==true){
+            if((lVic != -1) &&  mwall->getSingleWall(2)==true && vicFlag == false && n->getNowCount()==0){
                 left->on(0);
                 right->on(0);
                 blink();
                 for(int count = 0;count<lVic;count++){
                     drop(true);
                 }
+                vicFlag = true;
             }
 
             if(light->getFloorColor() == 1){
@@ -72,6 +74,7 @@ short move_robot::fwd(short remDist = 300){
             }
             //Serial.println(255 - fwdPid->calcP(errorAng,startAng));
             delay(1);
+            Serial.println(millis()-start);
         }
     }
     else{
@@ -82,12 +85,13 @@ short move_robot::fwd(short remDist = 300){
         short errorAng = startAng - imu->getYaw();
         fwdPid->init();
         while((errorDist < remDist) && (front->read(fc) > 50)){
+            unsigned long start = millis();
             imu->read();
             errorAng = startAng - imu->getYaw();
             // disp->home();
             // disp->clear();
-            Serial.print("Pitch : ");
-            Serial.println(abs(prePitch - imu->getGPitch()));
+            // Serial.print("Pitch : ");
+            // Serial.println(abs(prePitch - imu->getGPitch()));
             errorDist = back->read(bc) - startDist;
             left->on(255 + fwdPid->calcP(errorAng,0));
             right->on(255 - fwdPid->calcP(errorAng,0));
@@ -98,7 +102,7 @@ short move_robot::fwd(short remDist = 300){
 
             int8_t rVic = vic->kitNumOneSide(true);
             int8_t lVic = vic->kitNumOneSide(false);
-            if((rVic != -1) &&  mwall->getSingleWall(0)==true && vicFlag == false& n->getNowCount()==0){
+            if((rVic != -1) &&  mwall->getSingleWall(0)==true && vicFlag == false && n->getNowCount()==0){
                 left->on(0);
                 right->on(0);
                 blink();
@@ -107,13 +111,14 @@ short move_robot::fwd(short remDist = 300){
                 }
                 vicFlag = true;
             }
-            if(lVic != -1 &&  mwall->getSingleWall(2)==true){
+            if((lVic != -1) &&  mwall->getSingleWall(2)==true && vicFlag == false && n->getNowCount()==0){
                 left->on(0);
                 right->on(0);
                 blink();
                 for(int count = 0;count<lVic;count++){
                     drop(true);
                 }
+                vicFlag = true;
             }
 
             if(light->getFloorColor() == 1){
@@ -125,6 +130,7 @@ short move_robot::fwd(short remDist = 300){
             }
             //Serial.println(255 - fwdPid->calcP(errorAng,startAng));
             delay(1);
+            Serial.println(millis()-start);
         }
     }
 

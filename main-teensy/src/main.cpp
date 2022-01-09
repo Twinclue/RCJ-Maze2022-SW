@@ -50,6 +50,8 @@ void setup() {
   leftTempRaw.setBus(&Wire);
   pinMode(rTouch, INPUT);
   pinMode(lTouch, INPUT);
+  pinMode(27,INPUT);
+  pinMode(0,INPUT);
   delay(100);
 }
 

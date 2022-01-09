@@ -28,7 +28,7 @@ int solver::rightHand(){
 }
 
 int solver::EXrightHand(){
-    short moveResult = 0;;
+    short moveResult = 0;
     for(int i =0;i < 4;i++){
         walls[i] = wall->getSingleWall(i);
     }
@@ -38,7 +38,10 @@ int solver::EXrightHand(){
     Serial.println(moveto);
     switch (moveto){
     case front:
-        moveResult =  move->fwd();
+        moveResult =  move->fwd(150);
+        //検知
+        moveResult = move->fwd(150);
+        //検知
         break;
     case left:
         move->turn(-90);
