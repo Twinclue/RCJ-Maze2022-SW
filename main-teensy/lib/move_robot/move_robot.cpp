@@ -14,12 +14,11 @@ move_robot::move_robot(drive_motor *_left,drive_motor *_right,read_tof *_front,r
     pinMode(rTouch,INPUT);
     mwall = new detect_wall(front,back);
     flipper->attach(servo);
-    flipper->write(140);
+    flipper->write(152);
     delay(500);
 }
 
 short move_robot::fwd(short remDist = 300){
-    bool vicFlag=false;
     imu->read();
     if(front->read(fc) < back->read(bc)){
         int startDist = front->read(fc);
@@ -42,27 +41,6 @@ short move_robot::fwd(short remDist = 300){
 
             if(avoidObstacle()){
                 remDist = this->fwd(remDist - errorDist);
-            }
-
-            int8_t rVic = vic->kitNumOneSide(true);
-            int8_t lVic = vic->kitNumOneSide(false);
-            if((rVic != -1) &&  mwall->getSingleWall(0)==true && vicFlag == false && n->getNowCount()==0){
-                left->on(0);
-                right->on(0);
-                blink();
-                for(int count = 0;count<rVic;count++){
-                    drop(false);
-                }
-                vicFlag = true;
-            }
-            if((lVic != -1) &&  mwall->getSingleWall(2)==true && vicFlag == false && n->getNowCount()==0){
-                left->on(0);
-                right->on(0);
-                blink();
-                for(int count = 0;count<lVic;count++){
-                    drop(true);
-                }
-                vicFlag = true;
             }
 
             if(light->getFloorColor() == 1){
@@ -100,27 +78,6 @@ short move_robot::fwd(short remDist = 300){
                 remDist = this->fwd(remDist - errorDist);
             }
 
-            int8_t rVic = vic->kitNumOneSide(true);
-            int8_t lVic = vic->kitNumOneSide(false);
-            if((rVic != -1) &&  mwall->getSingleWall(0)==true && vicFlag == false && n->getNowCount()==0){
-                left->on(0);
-                right->on(0);
-                blink();
-                for(int count = 0;count<rVic;count++){
-                    drop(false);
-                }
-                vicFlag = true;
-            }
-            if((lVic != -1) &&  mwall->getSingleWall(2)==true && vicFlag == false && n->getNowCount()==0){
-                left->on(0);
-                right->on(0);
-                blink();
-                for(int count = 0;count<lVic;count++){
-                    drop(true);
-                }
-                vicFlag = true;
-            }
-
             if(light->getFloorColor() == 1){
                 remDist = 0;
                 this->rev(errorDist);
@@ -136,6 +93,25 @@ short move_robot::fwd(short remDist = 300){
 
     left->on(0);
     right->on(0);
+    delay(50);
+    int8_t rVic = vic->kitNumOneSide(true);
+    int8_t lVic = vic->kitNumOneSide(false);
+    if((rVic != -1) &&  mwall->getSingleWall(0)==true){
+            left->on(0);
+            right->on(0);
+            blink();
+            for(int count = 0;count<rVic;count++){
+                drop(false);
+            }
+    }
+    if((lVic != -1) &&  mwall->getSingleWall(2)==true){
+        left->on(0);
+        right->on(0);
+        blink();
+        for(int count = 0;count<lVic;count++){
+            drop(true);
+        }
+    }
     this->corrDir();
     return 0;
 }
@@ -186,6 +162,24 @@ short move_robot::turn(short remAng = 90){
     }
     left->on(0);
     right->on(0);
+    int8_t rVic = vic->kitNumOneSide(true);
+    int8_t lVic = vic->kitNumOneSide(false);
+    if((rVic != -1) &&  mwall->getSingleWall(0)==true){
+            left->on(0);
+            right->on(0);
+            blink();
+            for(int count = 0;count<rVic;count++){
+                drop(false);
+            }
+    }
+    if((lVic != -1) &&  mwall->getSingleWall(2)==true){
+        left->on(0);
+        right->on(0);
+        blink();
+        for(int count = 0;count<lVic;count++){
+            drop(true);
+        }
+    }
     this->corrDir();
     return startAng;
 }
@@ -311,27 +305,27 @@ bool move_robot::avoidObstacle(){
 void move_robot::drop(bool dir){
     if(rescueKitNum > 0){
         if(dir){
-            flipper->write(140);
+            flipper->write(152);
             delay(500);
-            flipper->write(172);
+            flipper->write(184);
             delay(500);
-            flipper->write(130);
+            flipper->write(142);
             delay(200);
-            flipper->write(150);
+            flipper->write(162);
             delay(200);
-            flipper->write(140);
+            flipper->write(152);
             delay(500);
         }
         else{
-            flipper->write(140);
+            flipper->write(152);
             delay(500);
-            flipper->write(105);
+            flipper->write(117);
             delay(500);
-            flipper->write(150);
+            flipper->write(162);
             delay(200);
-            flipper->write(130);
+            flipper->write(142);
             delay(200);
-            flipper->write(140);
+            flipper->write(152);
             delay(500);
         }
         rescueKitNum--;

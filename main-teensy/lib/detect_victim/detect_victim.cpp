@@ -37,50 +37,50 @@ int8_t detect_victim::kitNumOneSide(bool rightSide){
     return kitNum;
 }
 
-// int8_t detect_victim::kitNumOneSideMode(bool rightSide){
-//     const uint8_t sampleNum = 10;
-//     int8_t kitNum[sampleNum];
-//     for(int c=0;c<sampleNum;c++){
-//         kitNum[c] = this->kitNumOneSide(rightSide);
-//         Serial.print(kitNum[c]);
-//         Serial.print(" , ");
-//         delay(10);
-//     }
-//     Serial.println();
-//     uint8_t count[4] = {0,0,0,0};
-//     for(int k =0;k<sampleNum;k++){
-//         switch (kitNum[k])
-//         {
-//         case -1:
-//             count[4]++;
-//             break;
-//         case 0:
-//             count[0]++;
-//             break;
-//         case 1:
-//             count[1]++;
-//             break;
-//         case 2:
-//             count[2]++;
-//             break;
-//         case 3:
-//             count[3]++;
-//             break;
-//         default:
-//             break;
-//         }
-//     }
-//     int8_t mode = -1;
-//     int8_t max = 0;
-//     for(int i=0;i<4;i++){
-//         if(max<count[i]){
-//             max = count[i];
-//             mode = i;
-//         }
-//     }
-//     return mode==4?-1:mode;
+int8_t detect_victim::kitNumOneSideMode(bool rightSide){
+    const uint8_t sampleNum = 10;
+    int8_t kitNum[sampleNum];
+    for(int c=0;c<sampleNum;c++){
+        kitNum[c] = this->kitNumOneSide(rightSide);
+        Serial.print(kitNum[c]);
+        Serial.print(" , ");
+        delay(10);
+    }
+    Serial.println();
+    uint8_t count[4] = {0,0,0,0};
+    for(int k =0;k<sampleNum;k++){
+        switch (kitNum[k])
+        {
+        case -1:
+            count[4]++;
+            break;
+        case 0:
+            count[0]++;
+            break;
+        case 1:
+            count[1]++;
+            break;
+        case 2:
+            count[2]++;
+            break;
+        case 3:
+            count[3]++;
+            break;
+        default:
+            break;
+        }
+    }
+    int8_t mode = -1;
+    int8_t max = 0;
+    for(int i=0;i<4;i++){
+        if(max<count[i]){
+            max = count[i];
+            mode = i;
+        }
+    }
+    return mode==4?-1:mode;
 
-// }
+}
 /*
 int8_t[2] detect_victim:: kitNumBothSide(){
     int8_t kitNum[2]={-1,-1};
