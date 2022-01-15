@@ -68,7 +68,7 @@ void loop() {
     Serial.print("Y:");
     Serial.println(debug.y);
     solver.EXrightHand();
-    delay(500);
+    delay(50);
   }else {
     imu.read();
     lcd.home();
@@ -215,10 +215,10 @@ void loop() {
         break;
       case 32:
         lcd.print("Right KitNum: ");
-        lcd.print(victim.kitNumOneSide(true));
+        lcd.print(victim.kitNumOneSideMode(true));
         lcd.setCursor(0, 1);
         lcd.print("Left  KitNum: ");
-        lcd.print(victim.kitNumOneSide(false));
+        lcd.print(victim.kitNumOneSideMode(false));
         break;
       case 36:
         enc.write(-24);

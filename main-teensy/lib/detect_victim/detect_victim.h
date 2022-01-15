@@ -13,7 +13,7 @@ class detect_victim{
         int8_t kitNumOneSideMode(bool rightSide);
         //int8_t[2] kitNumBothSide(); 
     private:
-        const float temp_th = 25.0;
+        const float temp_th = 25.5;
         const bool camFirst = true;
         HardwareSerial* serialR, *serialL;
         TwoWire* busR, *busL;

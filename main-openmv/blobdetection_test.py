@@ -34,11 +34,11 @@ sensor.set_auto_whitebal(False) # must be turned off for color tracking
 sensor.set_brightness(2)
 sensor.set_contrast(3)
 sensor.set_saturation(3)
-thr = [(0, 30, -128, 127, -128, 127),(70,90,-90,-65,60,80),(60,80,-30,15,60,80),(45,55,70,85,65,75)]#code 1,2,4,8/Black Green,Yellow,Red
+thr = [(0, 30, -128, 127, -128, 127),(36, 65, -94, 3, 14, 82),(60,80,-30,15,60,80),(0, 56, 60, 100, 20, 80)]#code 1,2,4,8/Black Green,Yellow,Red
 #llo,lhi,alo,ahi,blo,bhi
 min_degree = 0
 max_degree = 179
-result = ''
+result = 'N'
 status.on()
 clock = time.clock()
 while(True):
@@ -46,18 +46,17 @@ while(True):
     img = sensor.snapshot()
     img.lens_corr(1.8)
     blobcode = 0
-    for blob in img.find_blobs(thr, pixels_threshold=5, area_threshold=5,merge = True):
+    for blob in img.find_blobs(thr, pixels_threshold=500, area_threshold=500,merge = True):
         #print(blob.code())
         blobcode = blob.code()
         if blobcode==1:#black
             linecount = 0
-            for l in img.find_lines(roi = blob.rect() ,threshold = 1000, theta_margin = 50, rho_margin = 15):#直線検知しきい値 あまりいじる必要なし
+            for l in img.find_lines(roi = blob.rect() ,threshold = 1200, theta_margin = 50, rho_margin = 20):#直線検知しきい値 あまりいじる必要なし
                 if (min_degree <= l.theta()) and (l.theta() <= max_degree):
                     img.draw_line(l.line(), color = (255, 0, 0))
-                    img.draw_rectangle(blob.rect())
                     linecount += 1
             if linecount == 0:
-                result = 'N'
+                result = 'U'
             elif linecount == 1:
                 result = 'S'
             elif linecount == 2:
@@ -70,9 +69,13 @@ while(True):
             result = 'G'
         elif blobcode==4:#Yellow
             result = 'Y'
+        elif blobcode==6:
+            result = 'Y'
         elif blobcode==8:#Red
             result = 'R'
-        elif blobcode==0:
+        else:
             result = 'N'
-    print(result)
+        img.draw_rectangle(blob.rect())
+    print(blobcode)
     uart.write(result)
+    result = 'N'

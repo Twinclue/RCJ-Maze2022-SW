@@ -20,7 +20,7 @@ class read_light{
 
         const uint8_t emitter = 22;
 
-        const uint16_t thresholdBW = 20;
+        const uint16_t thresholdBW = 80;
         const uint16_t thresholdWS = 500;
 };
 
