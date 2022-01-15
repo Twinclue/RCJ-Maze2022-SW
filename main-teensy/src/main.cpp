@@ -7,6 +7,7 @@
 #include "drive_motor.h"
 #include "D6Tarduino.h"
 #include "detect_victim.h"
+#include "solver.h"
 
 Encoder enc(8,7);
 
@@ -25,7 +26,7 @@ detect_wall wall(&toff,&tofb);
 
 move_robot move(&leftM,&rightM,&toff,&tofb,&imu,&light,&lcd,&npix);
 node n;
-detect_victim victim(&Serial4, &Serial5, &Wire2, &Wire); 
+//detect_victim victim(&Serial4, &Serial5, &Wire2, &Wire); 
 coordinate debug;
 
 solver solver(&imu,&light,&move,&wall,&n);
@@ -38,6 +39,27 @@ const byte rTouch = 17;
 
 char buff[30];
 int i=0;
+
+volatile bool pinStatus;
+
+void intr(){
+  pinStatus = digitalRead(34);
+  if(pinStatus){
+    tone(23,442,50);
+    digitalWrite(6,HIGH);
+    leftM.on(0);
+    rightM.on(0);
+    interrupts();
+    //delay(5000);
+    move.blink();
+    digitalWrite(6,LOW);
+  }
+  else{
+    digitalWrite(6,LOW);
+  }
+  return;
+}
+
 void setup()
 {
   Serial.begin(19200);
@@ -49,6 +71,10 @@ void setup()
   leftTempRaw.setBus(&Wire);
   pinMode(rTouch,INPUT);
   pinMode(lTouch,INPUT);
+  pinMode(34,INPUT);
+  pinMode(33,INPUT);
+  pinMode(6,OUTPUT);
+  attachInterrupt(digitalPinToInterrupt(33),intr,RISING);
   delay(100);
 
 }
@@ -215,10 +241,12 @@ void loop()
         break;
       case 32:
         lcd.print("Right KitNum: ");
-        lcd.print(victim.kitNumOneSide(true));
+        lcd.print(digitalRead(34));
+        //lcd.print(victim.kitNumOneSide(true));
         lcd.setCursor(0,1);
         lcd.print("Left  KitNum: ");
-        lcd.print(victim.kitNumOneSide(false));
+        //lcd.print(victim.kitNumOneSide(false));
+        lcd.print(pinStatus);
         break;
       default:
         lcd.print(enc.read());
