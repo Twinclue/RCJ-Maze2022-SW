@@ -94,8 +94,8 @@ short move_robot::fwd(short remDist = 300){
     left->on(0);
     right->on(0);
     delay(50);
-    int8_t rVic = vic->kitNumOneSide(true);
-    int8_t lVic = vic->kitNumOneSide(false);
+    int8_t rVic = vic->kitNumOneSideMode(true);
+    int8_t lVic = vic->kitNumOneSideMode(false);
     if((rVic != -1) &&  mwall->getSingleWall(0)==true){
             left->on(0);
             right->on(0);
@@ -162,8 +162,8 @@ short move_robot::turn(short remAng = 90){
     }
     left->on(0);
     right->on(0);
-    int8_t rVic = vic->kitNumOneSide(true);
-    int8_t lVic = vic->kitNumOneSide(false);
+    int8_t rVic = vic->kitNumOneSideMode(true);
+    int8_t lVic = vic->kitNumOneSideMode(false);
     if((rVic != -1) &&  mwall->getSingleWall(0)==true){
             left->on(0);
             right->on(0);

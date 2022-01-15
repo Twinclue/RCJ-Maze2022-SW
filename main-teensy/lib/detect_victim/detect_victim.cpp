@@ -38,7 +38,7 @@ int8_t detect_victim::kitNumOneSide(bool rightSide){
 }
 
 int8_t detect_victim::kitNumOneSideMode(bool rightSide){
-    const uint8_t sampleNum = 10;
+    const uint8_t sampleNum = 25;
     int8_t kitNum[sampleNum];
     for(int c=0;c<sampleNum;c++){
         kitNum[c] = this->kitNumOneSide(rightSide);
