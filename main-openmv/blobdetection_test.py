@@ -55,16 +55,21 @@ while(True):
                 if (min_degree <= l.theta()) and (l.theta() <= max_degree):
                     img.draw_line(l.line(), color = (255, 0, 0))
                     linecount += 1
-            if linecount == 0:
+            circlecount = 0
+            for c in img.find_circles(roi = blob.rect(), threshold = 1800, x_margin = 10, y_margin = 20, r_margin = 100,
+            r_min = 10, r_max = 20, r_step = 2):
+                img.draw_circle(c.x(), c.y(), c.r(), color = (255, 0, 0))
+                circlecount += 1
+            if linecount == 0 and circlecount == 0:
                 result = 'U'
-            elif linecount == 1:
+            elif circlecount >= 2 and linecount <= 1:
                 result = 'S'
-            elif linecount == 2:
+            elif linecount == 2 and circlecount >= 1:
                 result = 'U'
             elif linecount == 3:
                 result = 'H'
             else:
-                result = 'U'
+                result = 'N'
         elif blobcode==2:#green
             result = 'G'
         elif blobcode==4:#Yellow
@@ -76,6 +81,6 @@ while(True):
         else:
             result = 'N'
         img.draw_rectangle(blob.rect())
-    print(blobcode)
+    print(result)
     uart.write(result)
     result = 'N'
