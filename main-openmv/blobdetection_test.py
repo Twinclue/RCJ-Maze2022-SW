@@ -40,13 +40,24 @@ min_degree = 0
 max_degree = 179
 result = 'N'
 status.on()
+
 clock = time.clock()
 while(True):
+    divhist = []
+    divstati = []
     clock.tick()
     img = sensor.snapshot()
     img.lens_corr(1.8)
     blobcode = 0
     for blob in img.find_blobs(thr, pixels_threshold=500, area_threshold=500,merge = True):
+        linecoor = [0,0]
+        for i in range(0,len(linecoor)):
+            linecoor[i] = blob.x() + (blob.w()*(i+1))/3
+            divhist.append(img.get_histogram(roi = [blob.x(),blob.y(),int(linecoor[i]),blob.h()]))
+            img.draw_line(int(linecoor[i]),blob.y(),int(linecoor[i]),blob.y() + blob.h())
+            divstati.append(divhist[i].get_statistics())
+            print(divstati[i].l_mean())
+
         #print(blob.code())
         blobcode = blob.code()
         if blobcode==1:#black
@@ -81,6 +92,9 @@ while(True):
         else:
             result = 'N'
         img.draw_rectangle(blob.rect())
+        #for k in range(2):
+
+
     print(result)
     uart.write(result)
     result = 'N'
