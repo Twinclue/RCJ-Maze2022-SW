@@ -5,6 +5,8 @@
 #include "detect_wall.h"
 #include "node.h"
 
+#define DEBUG_NODE_
+
 class solver{
     public:
         solver(read_imu *_imu,read_light *_light,move_robot *_move,detect_wall *_wall,node *_node);

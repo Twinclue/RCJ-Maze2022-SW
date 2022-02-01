@@ -8,6 +8,8 @@
 #include "detect_victim.h"
 
 
+#define DEBUG
+
 read_tof toff(&Wire2);
 read_tof tofb(&Wire);
 
@@ -41,25 +43,41 @@ void setup()
   pinMode(1,OUTPUT);
   pinMode(6,OUTPUT);
   delay(100);
+  #ifdef DEBUG
+  lcd.clear();
+  lcd.home();
+  lcd.print("DEBUG MODE!");
+  Serial.println("DEBUG MODE CLICK TO START");
+  while(!digitalRead(0));
+  Serial.println("START!");
+  #endif
 }
 uint8_t a = 0;
 //coordinate b;
-
+#ifdef DEBUG
+unsigned int debugLoopCount = 0;
+#endif
 void loop()
 {
   if(digitalRead(27) == HIGH){
-    // debug = n.getNowCoor();
-    // lcd.clear();
-    // lcd.home();
-    // lcd.print(debug.x);
-    // lcd.print(":");
-    // lcd.print(debug.y);
-    // Serial.print("X:");
-    // Serial.println(debug.x);
-    // Serial.print("Y:");
-    // Serial.println(debug.y);
-    // solver.EXrightHand();
-    move.fwd();
+    #ifdef DEBUG
+    Serial.println("-----------------");
+    Serial.print("SYS TIME : ");
+    Serial.println(millis());
+    Serial.print("LOOP COUNT : ");
+    Serial.println(debugLoopCount);
+    Serial.println("-----------------");
+    Serial.print("X : ");
+    Serial.print(debug.x);
+    Serial.print(" | Y : ");
+    Serial.print(debug.y);
+    Serial.print(" | Z : ");
+    Serial.println(debug.z);
+    debugLoopCount++;
+    Serial.println("-----------------");
+    while(!digitalRead(0));
+    #endif
+    solver.EXrightHand();
     delay(500);
   }
   else{

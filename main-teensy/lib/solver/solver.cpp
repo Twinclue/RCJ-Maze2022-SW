@@ -1,5 +1,4 @@
 #include "solver.h"
-
 solver::solver(read_imu *_imu,read_light *_light,move_robot *_move,detect_wall *_wall,node *_node){
     imu = _imu;
     light = _light;
@@ -34,8 +33,6 @@ int solver::EXrightHand(){
     }
     n->searchAroundNodes(walls[front],walls[left],walls[back],walls[right]);
     moveto = n->getMinCountDir();
-    Serial.print("Move to :");
-    Serial.println(moveto);
     switch (moveto){
     case front:
         if(slopeFlag){
@@ -74,4 +71,45 @@ int solver::EXrightHand(){
         n->setTile(black,moveto);
         n->updateRotation(moveto);
     }
+
+    #ifdef DEBUG_NODE_
+
+    Serial.print("WALLS :: ");
+    Serial.print("RIGHT : ");
+    Serial.print(walls[right]);
+    Serial.print(" | FRONT : ");
+    Serial.print(walls[front]);
+    Serial.print(" | LEFT : ");
+    Serial.print(walls[left]);
+    Serial.print(" | BACK : ");
+    Serial.println(walls[back]);
+    
+
+
+    Serial.print("MOVE TO : ");
+    switch (moveto)
+    {
+    case right:
+        Serial.print("RIGHT");
+        break;
+    case front:
+        Serial.print("FRONT");
+        break;
+    case left:
+        Serial.print("LEFT");
+        break;
+    case back:
+        Serial.print("BACK");
+        break;
+    default:
+        Serial.print("ERROR");
+        break;
+    }
+    Serial.print(" | MOVE RESULT : ");
+    Serial.print(moveResult);
+    Serial.print(" | SLOPE FLAG : ");
+    Serial.println(slopeFlag);
+    Serial.println("-----------------");
+    Serial.println("");
+    #endif
 }
