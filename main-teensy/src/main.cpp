@@ -75,7 +75,17 @@ void loop()
     Serial.println(debug.z);
     debugLoopCount++;
     Serial.println("-----------------");
+    lcd.clear();
+    lcd.home();
+    lcd.print("DEBUG MODE!");
+    lcd.setCursor(0,1);
+    lcd.print("CLICK TO MOVE");
     while(!digitalRead(0));
+    lcd.clear();
+    lcd.home();
+    lcd.print("DEBUG MODE!");
+    lcd.setCursor(0,1);
+    lcd.print("PLZ WAIT:MOVING");
     #endif
     solver.EXrightHand();
     delay(500);
