@@ -39,6 +39,7 @@ class node{
         uint8_t getTile(uint8_t dir);
         void lackOfProgress();
         short getTempNode(uint8_t dir);
+        uint16_t getNowNodeNum(){return nowNodeNum;}
     private:
         uint16_t makeNewNode(coordinate _p,uint8_t side);
         short searchNode(coordinate _p);

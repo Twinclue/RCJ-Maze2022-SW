@@ -81,7 +81,7 @@ void loop()
     lcd.print("DEBUG MODE!");
     lcd.setCursor(0,1);
     lcd.print("CLICK TO MOVE");
-    while(!digitalRead(0));
+    //while(!digitalRead(0));
     lcd.clear();
     lcd.home();
     lcd.print("DEBUG MODE!");
@@ -92,20 +92,19 @@ void loop()
     delay(500);
   }
   else{
-    if(digitalRead(0)){
-      move.blink();
+
+    //lack of progress
+    if(digitalRead(0) == HIGH){
+      n.lackOfProgress();
     }
-    // debug = n.getNowCoor();
-    // lcd.clear();
-    // lcd.home();
-    // lcd.print(debug.x);
-    // lcd.print(":");
-    // lcd.print(debug.y);
+    debug = n.getNowCoor();
     lcd.clear();
     lcd.home();
-    lcd.print(victim.kitNumOneSide(true));
+    lcd.print(debug.x);
     lcd.print(":");
-    lcd.print(victim.kitNumOneSide(false));
-    delay(100);
+    lcd.print(debug.y);
+    lcd.setCursor(0,1);
+    lcd.print(n.getNowNodeNum());
+    delay(50);
   }
 }
