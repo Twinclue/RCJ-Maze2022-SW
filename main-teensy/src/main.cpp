@@ -67,6 +67,7 @@ void loop()
     Serial.print("LOOP COUNT : ");
     Serial.println(debugLoopCount);
     Serial.println("-----------------");
+    debug = n.getNowCoor();
     Serial.print("X : ");
     Serial.print(debug.x);
     Serial.print(" | Y : ");

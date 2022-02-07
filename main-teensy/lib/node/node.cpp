@@ -336,3 +336,7 @@ void node::lackOfProgress(){
     now = nodes[lastCheckPoint];
     nowNodeNum = lastCheckPoint;
 }
+
+short node::getTempNode(uint8_t dir){
+    return tempNode[dir];
+}

@@ -83,8 +83,15 @@ int solver::EXrightHand(){
     Serial.print(walls[left]);
     Serial.print(" | BACK : ");
     Serial.println(walls[back]);
-    
-
+    Serial.print("TEMP NODE :: ");
+    Serial.print("RIGHT : ");
+    Serial.print(n->getTempNode(right));
+    Serial.print(" | FRONT : ");
+    Serial.print(n->getTempNode(front));
+    Serial.print(" | LEFT : ");
+    Serial.print(n->getTempNode(left));
+    Serial.print(" | BACK : ");
+    Serial.println(n->getTempNode(back));
 
     Serial.print("MOVE TO : ");
     switch (moveto)
