@@ -92,7 +92,7 @@ short move_robot::fwd(short remDist = 300){
             right->on(255 - fwdPid->calcP(errorAng,0));
 
             if(avoidObstacle()){
-                remDist = this->fwd(remDist - errorDist);
+                return this->fwd(remDist - errorDist);
             }
 
             int8_t rVic = vic->kitNumOneSide(true);
