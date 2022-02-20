@@ -1,7 +1,7 @@
 #include <Adafruit_INA219.h>
 #include <SoftwareSerial.h>
 #define trigPin 3
-#define UILED 4
+#define main_loop_delay 1000
 
 // SoftwareSerial mySerial(1,4); // RX, TX
 
@@ -12,54 +12,39 @@ bool Trig=false;
 bool prevTrig=false;
 bool cutoff=false;
 
-void alert(){
-		digitalWrite(UILED, HIGH);
-		delay(10);
-		digitalWrite(UILED, LOW);
-		delay(50);
-}
-
 void setup(){
 	pinMode(trigPin,OUTPUT);
 	digitalWrite(trigPin, LOW);
-	pinMode(UILED,OUTPUT);
-	digitalWrite(UILED, LOW);
-
 	// mySerial.begin(4800);
 	// while(!mySerial.available()){
 	// 	delay(10);
 	// }
-
 	while(!ina219.begin()){
 		// mySerial.println("INA_fail");
-		alert();
 	}
-
 	ina219.setCalibration_16V_400mA();
 }
 
 void loop(){
-	if(!ina219.success()){
-		alert();
+	while(!ina219.success()){
+		digitalWrite(trigPin, false);
 	}
 	voltage=ina219.getBusVoltage_V();
-
 	// mySerial.println(voltage);
 	// mySerial.println(ina219.success());
 
-	if(prevTrig==true){
+	if(prevTrig==true){		//last time voltage was high enough 
 		Trig=voltage>minCV;
 	}else{
-		if(voltage>minCV){
+		if(voltage>minCV){	//voltage recovered
 			Trig=true;
-		}else{
+		}else{				//voltage is lower than Vth for 1 second
 			Trig=false;
 			cutoff=true;
 			}
 	}
 	digitalWrite(trigPin, !cutoff);
-	digitalWrite(UILED, cutoff);
 	while(cutoff);
 	prevTrig=Trig;
-	delay(1000);
+	delay(main_loop_delay);
 }
