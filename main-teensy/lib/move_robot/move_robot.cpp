@@ -1,5 +1,22 @@
 #include "move_robot.h"
 
+
+//interrupts
+volatile bool Rvicflag = false;
+volatile bool Lvicflag = false;
+volatile byte Rkitnum = 0;
+volatile byte Lkitnum = 0;
+
+void intrR(){
+    Rvicflag = true;
+    return;
+}
+
+void intrL(){
+    Lvicflag = true;
+    return;
+}
+
 move_robot::move_robot(drive_motor *_left,drive_motor *_right,read_tof *_front,read_tof *_back,read_imu *_imu,read_light *_light,LiquidCrystal *_disp,Adafruit_NeoPixel *_led){
     left = _left;
     right = _right;
@@ -28,14 +45,12 @@ short move_robot::fwd(short remDist = 300){
         short startAng = imu->getYaw();
         short errorAng = startAng - imu->getYaw();
         fwdPid->init();
+        attachInterrupts();
         while((errorDist < remDist) && (front->read(fc) > 50)){
             imu->read();
             errorAng = startAng - imu->getYaw();
-            // disp->home();
-            // disp->clear();
-            Serial.print("Pitch : ");
-            Serial.println(abs(prePitch - imu->getGPitch()));
             errorDist = startDist  - front->read(fc);
+
             left->on(255 + fwdPid->calcP(errorAng,0));
             right->on(255 - fwdPid->calcP(errorAng,0));
 
@@ -43,24 +58,7 @@ short move_robot::fwd(short remDist = 300){
                 remDist = this->fwd(remDist - errorDist);
             }
 
-            int8_t rVic = vic->kitNumOneSide(true);
-            int8_t lVic = vic->kitNumOneSide(false);
-            if((rVic != -1) &&  mwall->getSingleWall(0)==true){
-                left->on(0);
-                right->on(0);
-                blink();
-                for(int count = 0;count<rVic;count++){
-                    drop(false);
-                }
-            }
-            if(lVic != -1 &&  mwall->getSingleWall(2)==true){
-                left->on(0);
-                right->on(0);
-                blink();
-                for(int count = 0;count<lVic;count++){
-                    drop(true);
-                }
-            }
+            victim();
 
             if(light->getFloorColor() == 1){
                 remDist = 0;
@@ -69,7 +67,6 @@ short move_robot::fwd(short remDist = 300){
                 right->on(0);
                 return -1;
             }
-            //Serial.println(255 - fwdPid->calcP(errorAng,startAng));
             delay(1);
         }
     }
@@ -80,13 +77,10 @@ short move_robot::fwd(short remDist = 300){
         short startAng = imu->getYaw();
         short errorAng = startAng - imu->getYaw();
         fwdPid->init();
+        attachInterrupts();
         while((errorDist < remDist) && (front->read(fc) > 50)){
             imu->read();
             errorAng = startAng - imu->getYaw();
-            // disp->home();
-            // disp->clear();
-            Serial.print("Pitch : ");
-            Serial.println(abs(prePitch - imu->getGPitch()));
             errorDist = back->read(bc) - startDist;
             left->on(255 + fwdPid->calcP(errorAng,0));
             right->on(255 - fwdPid->calcP(errorAng,0));
@@ -95,24 +89,7 @@ short move_robot::fwd(short remDist = 300){
                 remDist = this->fwd(remDist - errorDist);
             }
 
-            int8_t rVic = vic->kitNumOneSide(true);
-            int8_t lVic = vic->kitNumOneSide(false);
-            if((rVic != -1) &&  mwall->getSingleWall(0)==true){
-                left->on(0);
-                right->on(0);
-                blink();
-                for(int count = 0;count<rVic;count++){
-                    drop(false);
-                }
-            }
-            if(lVic != -1 &&  mwall->getSingleWall(2)==true){
-                left->on(0);
-                right->on(0);
-                blink();
-                for(int count = 0;count<lVic;count++){
-                    drop(true);
-                }
-            }
+            victim();
 
             if(light->getFloorColor() == 1){
                 remDist = 0;
@@ -121,10 +98,11 @@ short move_robot::fwd(short remDist = 300){
                 right->on(0);
                 return -1;
             }
-            //Serial.println(255 - fwdPid->calcP(errorAng,startAng));
+
             delay(1);
         }
     }
+    detachInterrups();
 
     left->on(0);
     right->on(0);
@@ -164,12 +142,14 @@ short move_robot::turn(short remAng = 90){
     short startAng = imu->getYaw();
     short errorAng = 0;
     turnPid->init();
+    attachInterrupts();
     if(remAng > 0){
         while(errorAng < remAng){
             imu->read();
             errorAng = imu->getYaw() - startAng;
             left->on(-turnPid->calcPI(errorAng,remAng));
             right->on(turnPid->calcPI(errorAng,remAng));
+            victim();
             delay(1);
         }
     }
@@ -179,10 +159,11 @@ short move_robot::turn(short remAng = 90){
             errorAng = imu->getYaw() - startAng;
             left->on(turnPid->calcPI(-errorAng,-remAng));
             right->on(-turnPid->calcPI(-errorAng,-remAng));
-            //Serial.println(imu->getYaw());
+            victim();
             delay(1);
         }
     }
+    detachInterrups();
     left->on(0);
     right->on(0);
     this->corrDir();
@@ -347,5 +328,40 @@ void move_robot::blink(){
         led->setPixelColor(0,led->Color(0,0,0));
         led->show();
         delay(250);
+    }
+}
+
+void move_robot::attachInterrupts(){//ピン番号は仮
+    attachInterrupt(digitalPinToInterrupt(33),intrR,RISING);
+    attachInterrupt(digitalPinToInterrupt(33),intrL,RISING);
+}
+
+void move_robot::detachInterrups(){//ピン番号は仮
+    detachInterrupt(digitalPinToInterrupt(33));
+    detachInterrupt(digitalPinToInterrupt(32));
+}
+
+void move_robot::victim(){
+    if(Rvicflag){
+        if(mwall->getSingleWall(0)){
+            left->on(0);
+            right->on(0);
+            blink();
+            for(int count = 0;count<Rkitnum;count++){
+                drop(false);
+            }
+        }
+        Rvicflag = false;
+    }
+    if(Lvicflag){
+        if(mwall->getSingleWall(2)==true){
+            left->on(0);
+            right->on(0);
+            blink();
+            for(int count = 0;count<Lkitnum;count++){
+                drop(true);
+            }
+        }
+        Lvicflag = false;
     }
 }

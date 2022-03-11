@@ -12,6 +12,7 @@
 #include "detect_victim.h"
 #include "detect_wall.h"
 
+
 class move_robot{
     public:
         move_robot(drive_motor *_left,drive_motor *_right,read_tof *_front,read_tof *_back,read_imu *_imu,read_light *_light,LiquidCrystal *_disp,Adafruit_NeoPixel *_led);
@@ -67,6 +68,10 @@ class move_robot{
         detect_wall *mwall;
         uint8_t rescueKitNum = 12;
         short prePitch = 0;
+
+        void attachInterrupts();
+        void detachInterrups();
+        void victim();
 
 };
 #endif

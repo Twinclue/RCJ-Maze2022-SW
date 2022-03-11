@@ -42,23 +42,7 @@ int i=0;
 
 volatile bool pinStatus;
 
-void intr(){
-  pinStatus = digitalRead(34);
-  if(pinStatus){
-    tone(23,442,50);
-    digitalWrite(6,HIGH);
-    leftM.on(0);
-    rightM.on(0);
-    interrupts();
-    //delay(5000);
-    move.blink();
-    digitalWrite(6,LOW);
-  }
-  else{
-    digitalWrite(6,LOW);
-  }
-  return;
-}
+
 
 void setup()
 {
@@ -74,9 +58,7 @@ void setup()
   pinMode(34,INPUT);
   pinMode(33,INPUT);
   pinMode(6,OUTPUT);
-  attachInterrupt(digitalPinToInterrupt(33),intr,RISING);
   delay(100);
-
 }
 
 void loop()
