@@ -4,10 +4,10 @@ import sensor, image, time,pyb
 from pyb import Pin ,UART,LED
 
 
-led = Pin('P3',Pin.OUT_PP,Pin.PULL_NONE)
-start = Pin('P0',Pin.IN,Pin.PULL_UP)
-lighton = Pin('P1',Pin.IN,Pin.PULL_UP)
-status = Pin('P7',Pin.OUT_PP,Pin.PULL_NONE)
+led = Pin('P7',Pin.OUT_PP,Pin.PULL_NONE)
+start = Pin('P3',Pin.IN,Pin.PULL_UP)
+lighton = Pin('P6',Pin.IN,Pin.PULL_UP)
+status = Pin('P8',Pin.OUT_PP,Pin.PULL_NONE)
 
 status.off()
 uart = UART(3,9600)
