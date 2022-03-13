@@ -1,6 +1,8 @@
 #include <Arduino.h>
 #include <Encoder.h>
 #include <LiquidCrystal.h>
+#include "solver.h"
+#include "pinmap.h"
 #include "move_robot.h"
 #include "read_tof.h"
 #include "advanced_tof.h"
@@ -9,7 +11,7 @@
 #include "detect_victim.h"
 #include "solver.h"
 
-Encoder enc(8,7);
+Encoder enc(RE_A,RE_B);
 
 read_tof toff(&Wire2);
 read_tof tofb(&Wire);
