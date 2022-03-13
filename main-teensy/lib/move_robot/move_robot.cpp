@@ -1,6 +1,6 @@
 #include "move_robot.h"
 
-move_robot::move_robot(drive_motor *_left,drive_motor *_right,read_tof *_front,read_tof *_back,read_imu *_imu,read_light *_light,LiquidCrystal *_disp,Adafruit_NeoPixel *_led){
+move_robot::move_robot(drive_motor *_left,drive_motor *_right,read_tof *_front,read_tof *_back,read_BNO055 *_imu,read_light *_light,LiquidCrystal *_disp,Adafruit_NeoPixel *_led){
     left = _left;
     right = _right;
     front = _front;

@@ -7,14 +7,14 @@
 
 class solver{
     public:
-        solver(read_imu *_imu,read_light *_light,move_robot *_move,detect_wall *_wall,node *_node);
+        solver(read_BNO055 *_imu,read_light *_light,move_robot *_move,detect_wall *_wall,node *_node);
         int rightHand();
         int EXrightHand();
         bool walls[4];
         uint8_t moveto;
     private:
 
-        read_imu *imu;
+        read_BNO055 *imu;
         read_light *light;
         move_robot *move;
         detect_wall *wall;

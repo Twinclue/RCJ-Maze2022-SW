@@ -1,6 +1,7 @@
 #include <Arduino.h>
-#include <Encoder.h>
 #include <LiquidCrystal.h>
+#include <Encoder.h>
+#include "read_BNO055.h"
 #include "solver.h"
 #include "pinmap.h"
 #include "move_robot.h"
@@ -10,222 +11,80 @@
 #include "D6Tarduino.h"
 #include "detect_victim.h"
 
-Encoder enc(RE_A,RE_B);
+#define BNO055_SAMPLERATE_DELAY_MS (100)
 
-read_tof toff(&Wire2);
-read_tof tofb(&Wire);
+LiquidCrystal lcd (25,24,12,11,10,9);
+read_BNO055 bno = read_BNO055(55, 0X28, &Wire2, &lcd);
+Encoder enc(8,7);
 
-drive_motor leftM(35,36,37,15,16);
-drive_motor rightM(39,38,14,15,16);
+uint8_t calib[4];
+uint8_t trigPin=0, calibTrig1=1, calibTrig2=2;
+int Yaw, Pitch;
 
-read_imu imu;
-Adafruit_NeoPixel npix = Adafruit_NeoPixel(2,26, NEO_GRB + NEO_KHZ800);
-read_light light(&npix);
+void setup(){
+    Serial.begin(115200);
+    lcd.begin(16,2);
+    pinMode(trigPin, INPUT);
+    pinMode(calibTrig1,INPUT);
+    pinMode(calibTrig2,INPUT);
 
-LiquidCrystal lcd(25,24,12,11,10,9);
-detect_wall wall(&toff,&tofb);
-
-move_robot move(&leftM,&rightM,&toff,&tofb,&imu,&light,&lcd,&npix);
-node n;
-detect_victim victim(&Serial4, &Serial5, &Wire2, &Wire); 
-coordinate debug;
-
-solver solver(&imu,&light,&move,&wall,&n);
-
-D6Tarduino rightTempRaw;
-D6Tarduino leftTempRaw;
-
-const byte lTouch = 21;
-const byte rTouch = 17;
-
-char buff[30];
-int i=0;
-void setup()
-{
-  Serial.begin(19200);
-  Wire2.begin();
-  Wire.begin();
-  imu.begin(&Wire2);
-  lcd.begin(16,2);
-  rightTempRaw.setBus(&Wire2);
-  leftTempRaw.setBus(&Wire);
-  pinMode(rTouch,INPUT);
-  pinMode(lTouch,INPUT);
-  delay(100);
-
+    if(!bno.begin()){
+        Serial.println("failed to begin BNO055");
+        delay(BNO055_SAMPLERATE_DELAY_MS);
+    }
+    Serial.println("successfully begun");
+    while(!bno.calibAll(0)){
+        Serial.println("Failed to calibrate");
+    }
+    lcd.clear();    lcd.print("1st calib done");
 }
-
-void loop()
-{
-  if(digitalRead(27) == HIGH){
-    debug = n.getNowCoor();
-    lcd.clear();
-    lcd.home();
-    lcd.print(debug.x);
-    lcd.print(":");
-    lcd.print(debug.y);
-    Serial.print("X:");
-    Serial.println(debug.x);
-    Serial.print("Y:");
-    Serial.println(debug.y);
-    solver.EXrightHand();
-    delay(500);
-  }
-  else{
-      imu.read();
-      lcd.home();
-      lcd.clear();
-
-      switch (enc.read()){
-      case -28:
+void loop(){
+    Serial.println(enc.read());
+    switch (int8_t(enc.read()*0.25))
+    {
+    case -1:
+        Yaw=bno.getYaw();
+        lcd.clear();
+        lcd.print("Yaw: ");    lcd.setCursor(4,0);     lcd.print(Yaw);
         break;
-
-      case -24:
-        lcd.print("Press to");
-        lcd.setCursor(0,1);
-        lcd.print("turn to      <==");
-        if(digitalRead(0)){
-          move.turn();
+    case 0:
+        Pitch=bno.getPitch();
+        lcd.clear();
+        lcd.print("Pit: ");    lcd.setCursor(4,0);     lcd.print(Pitch);
+        break;
+    case 1:
+        lcd.clear();
+        lcd.print("ACC CALIB");
+        if(digitalRead(trigPin)){
+            bno.accCalib();
         }
         break;
-
-      case -20:
-        lcd.print("Press to      ^");
-        lcd.setCursor(0,1);
-        lcd.print("move to       |");
-        if(digitalRead(0)){
-          move.rev();
+    case 2:
+        lcd.clear();
+        lcd.print("GYRO CALIB:");
+        if(digitalRead(trigPin)){
+            bno.gyroCalib();
         }
         break;
-
-      case -16:
-        lcd.print("Press to");
-        lcd.setCursor(0,1);
-        lcd.print("turn to      ==>");
-        if(digitalRead(0)){
-          move.turn(-90);
+    case 3:
+        lcd.clear();
+        lcd.print("MAG CALIB:");
+        if(digitalRead(trigPin)){
+            bno.magCalib();
         }
         break;
-
-      case -12:
-        lcd.print("Press to      |");
-        lcd.setCursor(0,1);
-        lcd.print("move to       V");
-        if(digitalRead(0)){
-          move.fwd();
+    case 4:
+        lcd.clear();
+        lcd.print("MAN ALL CALIB");
+        if(digitalRead(trigPin)){
+            bno.calibAll(1);
         }
         break;
-
-      case -8:
-        lcd.print("Press to drop a");
-        lcd.setCursor(0,1);
-        lcd.print("RescueKit to ==>");
-        if(digitalRead(0)){
-          move.drop(true);
-        }
+    default:
+        lcd.clear();
+        lcd.print("ROTATE ENCODER");
         break;
-
-      case -4:
-        lcd.print("Press to drop a");
-        lcd.setCursor(0,1);
-        lcd.print("RescueKit to <==");
-        if(digitalRead(0)){
-          move.drop(false);
-        }
-        break;
-
-      case 0:
-        lcd.print("<== Sensor Check");
-        lcd.setCursor(0,1);
-        lcd.print("Action Test ==>");
-        break;
-      case 4:
-        lcd.print("Light Raw: ");
-        lcd.print(light.read());
-        lcd.setCursor(0,1);
-        lcd.print("Light Col: ");
-        switch (light.getFloorColor())
-        {
-        case 0:
-        lcd.print("WHT");
-          break;
-        case 1:
-          lcd.print("BLK");
-          break;
-        default:
-          lcd.print("SIL");
-          break;
-        }
-        break;
-      case 8:
-        lcd.print(toff.read(3));
-        lcd.setCursor(6,0);
-        lcd.print("Front");
-        lcd.setCursor(13,0);
-        lcd.print(toff.read(0));
-
-        lcd.setCursor(0,1);
-        lcd.print(toff.read(2));
-        lcd.setCursor(6,1);
-        lcd.print(toff.read(4));
-        lcd.setCursor(13,1);
-        lcd.print(toff.read(1));
-        delay(450);
-        break;
-      case 12:
-        lcd.print(tofb.read(1));
-        lcd.setCursor(6,0);
-        lcd.print(tofb.read(4));
-        lcd.setCursor(13,0);
-        lcd.print(tofb.read(2));
-
-        lcd.setCursor(0,1);
-        lcd.print(tofb.read(0));
-        lcd.setCursor(6,1);
-        lcd.print("Back");
-        lcd.setCursor(13,1);
-        lcd.print(tofb.read(3));
-        delay(450);
-        break;
-      case 16:
-        lcd.print("Touch");
-        lcd.setCursor(0,1);
-        lcd.print((digitalRead(rTouch)?"True":"False"));
-        lcd.setCursor(11,1);
-        lcd.print((digitalRead(lTouch)?"True":"False"));
-        break;
-      case 20:
-        lcd.print("Pitch: ");
-        lcd.print(imu.getGPitch());
-        lcd.setCursor(0,1);
-        lcd.print("Yaw  : ");
-        lcd.print(imu.getGYaw());
-        break;
-       case 24:
-        lcd.print("Right TEMP: ");
-        lcd.print(rightTempRaw.getTEMP());
-        lcd.setCursor(0,1);
-        lcd.print("Left  TEMP: ");
-        lcd.print(leftTempRaw.getTEMP());
-        break;
-      case 28:
-        lcd.print("Right PTAT: ");
-        lcd.print(rightTempRaw.getPTAT());
-        lcd.setCursor(0,1);
-        lcd.print("Left  PTAT: ");
-        lcd.print(leftTempRaw.getPTAT());
-        break;
-      case 32:
-        lcd.print("Right KitNum: ");
-        lcd.print(victim.kitNumOneSide(true));
-        lcd.setCursor(0,1);
-        lcd.print("Left  KitNum: ");
-        lcd.print(victim.kitNumOneSide(false));
-        break;
-      default:
-        lcd.print(enc.read());
-        break;
-      }
-      delay(50);
-  }
+    }
+    Serial.println("working");
+    delay(BNO055_SAMPLERATE_DELAY_MS);
 }
