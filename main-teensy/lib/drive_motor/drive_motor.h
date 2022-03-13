@@ -6,17 +6,13 @@
 class drive_motor
 {
 public:
-    drive_motor(uint8_t _in1, uint8_t _in2, uint8_t _pwm, uint8_t _lo1, uint8_t _lo2);
+    drive_motor(uint8_t _dir, uint8_t _pwm, uint8_t _flt);
     int on(int power);
 private:
-    uint8_t in1;
-    uint8_t in2;
+    uint8_t dir;
     uint8_t pwm;
-    uint8_t lo1;
-    uint8_t lo2;
+    uint8_t flt;
+    const uint32_t PWMfreq=80000;
 };
-
-
-
 
 #endif

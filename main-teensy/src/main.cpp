@@ -15,8 +15,8 @@ Encoder enc(RE_A,RE_B);
 read_tof toff(&Wire2);
 read_tof tofb(&Wire);
 
-drive_motor leftM(35,36,37,15,16);
-drive_motor rightM(39,38,14,15,16);
+drive_motor leftM(G2_A_DIR,G2_A_PWM,G2_A_FLT);
+drive_motor rightM(G2_B_DIR,G2_B_PWM,G2_B_FLT);
 
 read_imu imu;
 Adafruit_NeoPixel npix = Adafruit_NeoPixel(2,26, NEO_GRB + NEO_KHZ800);
