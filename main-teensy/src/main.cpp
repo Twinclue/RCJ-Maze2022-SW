@@ -13,9 +13,18 @@
 
 #define BNO055_SAMPLERATE_DELAY_MS (100)
 
-LiquidCrystal lcd (25,24,12,11,10,9);
+LiquidCrystal lcd(LCD_RS,LCD_EN,LCD_D4,LCD_D5,LCD_D6,LCD_D7);
 read_BNO055 bno = read_BNO055(55, 0X28, &Wire2, &lcd);
 Encoder enc(8,7);
+
+read_tof toff(&Wire2);
+read_tof tofb(&Wire);
+
+drive_motor leftM(G2_A_DIR,G2_A_PWM,G2_A_FLT);
+drive_motor rightM(G2_B_DIR,G2_B_PWM,G2_B_FLT);
+Adafruit_NeoPixel npix = Adafruit_NeoPixel(2,26, NEO_GRB + NEO_KHZ800);
+read_light light(&npix);
+move_robot move(&leftM,&rightM,&toff,&tofb,&bno,&light,&lcd,&npix);
 
 uint8_t calib[4];
 uint8_t trigPin=0, calibTrig1=1, calibTrig2=2;
@@ -27,6 +36,7 @@ void setup(){
     pinMode(trigPin, INPUT);
     pinMode(calibTrig1,INPUT);
     pinMode(calibTrig2,INPUT);
+    pinMode(RE_LED_R,OUTPUT);
 
     if(!bno.begin()){
         Serial.println("failed to begin BNO055");
@@ -78,6 +88,24 @@ void loop(){
         lcd.print("MAN ALL CALIB");
         if(digitalRead(trigPin)){
             bno.calibAll(1);
+        }
+        break;
+    case 5:
+        lcd.clear();
+        lcd.print("fwd");
+        if(digitalRead(RE_SW)){
+            digitalWrite(RE_LED_R,HIGH);
+            move.fwd();
+            digitalWrite(RE_LED_R,LOW);
+        }
+        break;
+    case 6:
+        lcd.clear();
+        lcd.print("turn 90");
+        if(digitalRead(RE_SW)){
+            digitalWrite(RE_LED_R,HIGH);
+            move.turn();
+            digitalWrite(RE_LED_R,LOW);
         }
         break;
     default:
