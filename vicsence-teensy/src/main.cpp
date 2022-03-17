@@ -4,12 +4,12 @@
 #include "read_temperature.h"
 #include "detect_victim.h"
 
-// read_camera camR(&Serial1);
-// read_temperature d6tR(&Wire);
+read_camera camR(&Serial1);
+read_temperature d6tR(&Wire);
 
 read_camera camL(&Serial2);
 read_temperature d6tL(&Wire1);
-// detect_victim victim(&Serial1, &Serial2, &Wire, &Wire1);
+detect_victim victim(&Serial1, &Serial2, &Wire, &Wire1);
 
 uint8_t interruptPin=21;
 int vicNumR, vicNumL;
@@ -23,13 +23,13 @@ void setup() {
 }
 
 void loop() {
-  // vicNumR=camR.victim_num();
-  // tempR=d6tR.temp();
-  // Serial.print(vicNumR);  Serial.print("\t");
-  // Serial.print(tempR);  Serial.print("\t");
+  vicNumR=camR.victim_num();
+  tempR=d6tR.temp();
   vicNumL=camL.victim_num();
   tempL=d6tL.temp();
-  Serial.print(vicNumL);  Serial.print("\t");
+  Serial.print(victim.kitNumOneSide(true));  Serial.print("\t");
+  Serial.print(tempR);  Serial.print("\t");
+  Serial.print(victim.kitNumOneSide(false));  Serial.print("\t");
   Serial.print(tempL);  Serial.print("\t");
   Serial.println("");
   if(tempL>30.0){
