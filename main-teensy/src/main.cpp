@@ -33,86 +33,18 @@ int Yaw, Pitch;
 void setup(){
     Serial.begin(115200);
     lcd.begin(16,2);
-    pinMode(trigPin, INPUT);
-    pinMode(calibTrig1,INPUT);
-    pinMode(calibTrig2,INPUT);
-    pinMode(RE_LED_R,OUTPUT);
-
-    if(!bno.begin()){
-        Serial.println("failed to begin BNO055");
-        delay(BNO055_SAMPLERATE_DELAY_MS);
-    }
-    Serial.println("successfully begun");
-    while(!bno.calibAll(0)){
-        Serial.println("Failed to calibrate");
-    }
-    lcd.clear();    lcd.print("1st calib done");
 }
 void loop(){
-    Serial.println(enc.read());
-    switch (int8_t(enc.read()*0.25))
-    {
-    case -1:
-        Yaw=bno.getYaw();
-        lcd.clear();
-        lcd.print("Yaw: ");    lcd.setCursor(4,0);     lcd.print(Yaw);
-        break;
-    case 0:
-        Pitch=bno.getPitch();
-        lcd.clear();
-        lcd.print("Pit: ");    lcd.setCursor(4,0);     lcd.print(Pitch);
-        break;
-    case 1:
-        lcd.clear();
-        lcd.print("ACC CALIB");
-        if(digitalRead(trigPin)){
-            bno.accCalib();
-        }
-        break;
-    case 2:
-        lcd.clear();
-        lcd.print("GYRO CALIB:");
-        if(digitalRead(trigPin)){
-            bno.gyroCalib();
-        }
-        break;
-    case 3:
-        lcd.clear();
-        lcd.print("MAG CALIB:");
-        if(digitalRead(trigPin)){
-            bno.magCalib();
-        }
-        break;
-    case 4:
-        lcd.clear();
-        lcd.print("MAN ALL CALIB");
-        if(digitalRead(trigPin)){
-            bno.calibAll(1);
-        }
-        break;
-    case 5:
-        lcd.clear();
-        lcd.print("fwd");
-        if(digitalRead(RE_SW)){
-            digitalWrite(RE_LED_R,HIGH);
-            move.fwd();
-            digitalWrite(RE_LED_R,LOW);
-        }
-        break;
-    case 6:
-        lcd.clear();
-        lcd.print("turn 90");
-        if(digitalRead(RE_SW)){
-            digitalWrite(RE_LED_R,HIGH);
-            move.turn();
-            digitalWrite(RE_LED_R,LOW);
-        }
-        break;
-    default:
-        lcd.clear();
-        lcd.print("ROTATE ENCODER");
-        break;
-    }
-    Serial.println("working");
-    delay(BNO055_SAMPLERATE_DELAY_MS);
+    Serial.print(digitalRead(R_COMM_ITR));
+    Serial.print(" ");
+    Serial.print(digitalRead(R_COMM_2));
+    Serial.print(" ");
+    Serial.print(digitalRead(R_COMM_3));
+    Serial.print(" ");
+    Serial.print(digitalRead(L_COMM_ITR));
+    Serial.print(" ");
+    Serial.print(digitalRead(L_COMM_2));
+    Serial.print(" ");
+    Serial.print(digitalRead(L_COMM_3));
+    Serial.println(" ");
 }
