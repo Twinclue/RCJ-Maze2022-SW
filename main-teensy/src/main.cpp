@@ -33,6 +33,12 @@ int Yaw, Pitch;
 void setup(){
     Serial.begin(115200);
     lcd.begin(16,2);
+    pinMode(R_COMM_ITR,INPUT);
+    pinMode(R_COMM_2,INPUT);
+    pinMode(R_COMM_3,INPUT);
+    pinMode(L_COMM_ITR,INPUT);
+    pinMode(L_COMM_2,INPUT);
+    pinMode(L_COMM_3,INPUT);
 }
 void loop(){
     Serial.print(digitalRead(R_COMM_ITR));
