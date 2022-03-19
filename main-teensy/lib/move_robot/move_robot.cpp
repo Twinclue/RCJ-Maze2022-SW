@@ -103,8 +103,8 @@ short move_robot::rev(short remDist = 300){
     while(errorDist > -remDist){
         errorAng = startAng - imu->getYaw();
         errorDist = startDist  - front->read(fc);
-        left->on(-255 + fwdPid->calcP(errorAng,0));
-        right->on(255 - fwdPid->calcP(errorAng,0));
+        left->on(-150 + fwdPid->calcP(errorAng,0));
+        right->on(150 - fwdPid->calcP(errorAng,0));
         delay(1);
     }
     left->on(0);
