@@ -11,7 +11,7 @@
 #include <Servo.h>
 #include "detect_victim.h"
 #include "detect_wall.h"
-
+#include "pinmap.h"
 
 class move_robot{
     public:
@@ -27,7 +27,8 @@ class move_robot{
 
         void drop(bool dir);
         uint8_t getRescueKitNum(){return rescueKitNum;}
-        
+        void attachInterrupts();
+        void detachInterrups();
         void blink();
     private:
 
@@ -69,8 +70,7 @@ class move_robot{
         uint8_t rescueKitNum = 12;
         short prePitch = 0;
 
-        void attachInterrupts();
-        void detachInterrups();
+        
         void victim();
 
 };

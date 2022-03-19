@@ -9,13 +9,16 @@ volatile byte Lkitnum = 0;
 
 void intrR(){
     Rvicflag = true;
+    digitalWrite(RE_LED_R,HIGH);
     return;
 }
 
 void intrL(){
     Lvicflag = true;
+    digitalWrite(RE_LED_B,HIGH);
     return;
 }
+
 
 
 move_robot::move_robot(drive_motor *_left,drive_motor *_right,read_tof *_front,read_tof *_back,read_BNO055 *_imu,read_light *_light,LiquidCrystal *_disp,Adafruit_NeoPixel *_led){
@@ -330,13 +333,13 @@ void move_robot::blink(){
 }
 
 void move_robot::attachInterrupts(){//ピン番号は仮
-    attachInterrupt(digitalPinToInterrupt(33),intrR,RISING);
-    attachInterrupt(digitalPinToInterrupt(33),intrL,RISING);
+    attachInterrupt(digitalPinToInterrupt(R_COMM_ITR),intrR,RISING);
+    attachInterrupt(digitalPinToInterrupt(L_COMM_ITR),intrL,RISING);
 }
 
 void move_robot::detachInterrups(){//ピン番号は仮
-    detachInterrupt(digitalPinToInterrupt(33));
-    detachInterrupt(digitalPinToInterrupt(32));
+    detachInterrupt(digitalPinToInterrupt(R_COMM_ITR));
+    detachInterrupt(digitalPinToInterrupt(L_COMM_ITR));
 }
 
 void move_robot::victim(){
@@ -350,6 +353,7 @@ void move_robot::victim(){
             }
         }
         Rvicflag = false;
+        digitalWrite(RE_LED_R,LOW);
     }
     if(Lvicflag){
         if(mwall->getSingleWall(2)==true){
@@ -361,5 +365,6 @@ void move_robot::victim(){
             }
         }
         Lvicflag = false;
+        digitalWrite(RE_LED_B,LOW);
     }
 }
