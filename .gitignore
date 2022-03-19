@@ -5,3 +5,9 @@ RCJ-Maze2022-SW/.pio/build/project.checksum
 workspace.code-workspace
 .DS_Store
 *.json
+*.o
+*.a
+*.hex
+*.checksum
+*.elf
+*.dblite
