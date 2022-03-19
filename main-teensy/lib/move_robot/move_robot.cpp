@@ -39,98 +39,63 @@ move_robot::move_robot(drive_motor *_left,drive_motor *_right,read_tof *_front,r
 }
 
 short move_robot::fwd(short remDist = 300){
-    imu->getPitch();
-    prePitch = imu->getPitch();
+    bool frontAnker = false;
+    int startDist;
     if(front->read(fc) < back->read(bc)){
-        int startDist = front->read(fc);
-        int errorDist = 0;
-        short startAng = imu->getYaw();
-        short errorAng = startAng - imu->getYaw();
         fwdPid->init();
-        attachInterrupts();
-        while((errorDist < remDist) && (front->read(fc) > 50)){
-            errorAng = startAng - imu->getYaw();
-            errorDist = startDist  - front->read(fc);
-
-            left->on(255 + fwdPid->calcP(errorAng,0));
-            right->on(-255 + fwdPid->calcP(errorAng,0));
-
-            if(avoidObstacle()){
-                remDist = this->fwd(remDist - errorDist);
-            }
-
-            victim();
-
-            if(light->getFloorColor() == 1){
-                remDist = 0;
-                this->rev(errorDist);
-                left->on(0);
-                right->on(0);
-                return -1;
-            }
-            delay(1);
-        }
+        frontAnker = true;
+        startDist = front->read(fc);
     }
     else{
-        int startDist = back->read(bc);
-        int errorDist = 0;
-        
-        short startAng = imu->getYaw();
-        short errorAng = startAng - imu->getYaw();
-        fwdPid->init();
-        attachInterrupts();
-        while((errorDist < remDist) && (front->read(fc) > 50)){
-            
-            errorAng = startAng - imu->getYaw();
-            errorDist = back->read(bc) - startDist;
-            left->on(255 + fwdPid->calcP(errorAng,0));
-            right->on(-255 + fwdPid->calcP(errorAng,0));
-
-            if(avoidObstacle()){
-                remDist = this->fwd(remDist - errorDist);
-            }
-
-            victim();
-
-            if(light->getFloorColor() == 1){
-                remDist = 0;
-                this->rev(errorDist);
-                left->on(0);
-                right->on(0);
-                return -1;
-            }
-
-            delay(1);
+        startDist = back->read(bc);
+    }
+    int errorDist = 0;
+    short startAng = imu->getYaw();
+    short errorAng = startAng - imu->getYaw();
+    fwdPid->init();
+    attachInterrupts();
+    while((errorDist < remDist) && (front->read(fc) > 50)){
+        errorAng = startAng - imu->getYaw();
+        if(frontAnker){
+            errorDist = startDist  - front->read(fc);
         }
+        else{
+            errorDist = back->read(bc) - startDist;
+        }
+        left->on(250 + fwdPid->calcP(errorAng,0));
+        right->on(-250 + fwdPid->calcP(errorAng,0));
+        if(avoidObstacle()){
+            remDist = this->fwd(remDist - errorDist);
+        }
+        victim();
+        if(light->getFloorColor() == 1){
+            remDist = 0;
+            this->rev(errorDist);
+            left->on(0);
+            right->on(0);
+            return -1;
+        }
+        delay(1);
     }
     detachInterrups();
 
     left->on(0);
     right->on(0);
     this->corrDir();
-    
-    imu->getPitch();
-    if(abs(prePitch - imu->getPitch()) >= 10){
-        digitalWrite(6,HIGH);
-        return -2;
-    }
-    digitalWrite(6,LOW);
     return 0;
 }
 
 short move_robot::rev(short remDist = 300){
     int startDist = front->read(fc);
     int errorDist = 0;
-    
     short startAng = imu->getYaw();
     short errorAng = startAng - imu->getYaw();
     fwdPid->init();
     while(errorDist > -remDist){
-        
         errorAng = startAng - imu->getYaw();
         errorDist = startDist  - front->read(fc);
         left->on(-255 + fwdPid->calcP(errorAng,0));
-        right->on(-255 - fwdPid->calcP(errorAng,0));
+        right->on(255 - fwdPid->calcP(errorAng,0));
         delay(1);
     }
     left->on(0);
