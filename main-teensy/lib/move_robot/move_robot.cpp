@@ -42,7 +42,6 @@ short move_robot::fwd(short remDist = 300){
     bool frontAnker = false;
     int startDist;
     if(front->read(fc) < back->read(bc)){
-        fwdPid->init();
         frontAnker = true;
         startDist = front->read(fc);
     }
