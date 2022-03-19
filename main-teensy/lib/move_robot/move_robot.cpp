@@ -62,14 +62,14 @@ short move_robot::fwd(short remDist = 300){
         else{
             errorDist = back->read(bc) - startDist;
         }
-        if(errorDist < remDist*fwdAccRatio){
-            power = fwdPmax * (errorDist/(remDist*fwdAccRatio)) + fwdPOffset;
+        if(errorDist < remDist*AccRatio){
+            power = Pmax * (errorDist/(remDist*AccRatio)) + POffset;
         }
-        else if(errorDist < remDist*(1-(fwdAccRatio))){
-            power = fwdPmax;
+        else if(errorDist < remDist*(1-(AccRatio))){
+            power = Pmax;
         }
         else{
-            power = fwdPmax - (fwdPmax * (errorDist/(remDist)));
+            power = Pmax - (Pmax * (errorDist/(remDist)));
         }
         left->on(power + fwdPid->calcP(errorAng,0));
         right->on(-power + fwdPid->calcP(errorAng,0));
@@ -113,27 +113,43 @@ short move_robot::rev(short remDist = 300){
 }
 
 short move_robot::turn(short remAng = 90){
-    
+    int power;
     short startAng = imu->getYaw();
     short errorAng = 0;
     turnPid->init();
     attachInterrupts();
     if(remAng > 0){
-        while(errorAng < remAng){
-            
+        while(true){
+            if(remAng -1 < errorAng && errorAng < remAng + 1){
+                break;
+            }
             errorAng = imu->getYaw() - startAng;
-            left->on(-turnPid->calcPI(errorAng,remAng));
-            right->on(-turnPid->calcPI(errorAng,remAng));
+            if(errorAng < remAng*AccRatio){
+                power = Pmax * (errorAng/(remAng*AccRatio)) + POffset;
+            }
+            else{
+                power = -turnPid->calcPI(errorAng,remAng);
+            }
+            left->on(power);
+            right->on(power);
             victim();
             delay(1);
         }
     }
     else{
-        while(errorAng > remAng){
-            
+        while(true){
+            if(remAng -1 < errorAng && errorAng < remAng + 1){
+                break;
+            }
             errorAng = imu->getYaw() - startAng;
-            left->on(turnPid->calcPI(-errorAng,-remAng));
-            right->on(turnPid->calcPI(-errorAng,-remAng));
+            if(errorAng > remAng*AccRatio){
+                power = -Pmax * (errorAng/(remAng*AccRatio)) - POffset;
+            }
+            else{
+                power = turnPid->calcPI(-errorAng,-remAng);
+            }
+            left->on(power);
+            right->on(power);
             victim();
             delay(1);
         }
