@@ -10,6 +10,7 @@
 #include "drive_motor.h"
 #include "D6Tarduino.h"
 #include "detect_victim.h"
+#include "solver.h"
 
 #define BNO055_SAMPLERATE_DELAY_MS (100)
 
@@ -39,6 +40,13 @@ void setup(){
     pinMode(L_COMM_ITR,INPUT);
     pinMode(L_COMM_2,INPUT);
     pinMode(L_COMM_3,INPUT);
+
+    pinMode(RE_SW,INPUT);
+
+    pinMode(RE_LED_B,OUTPUT);
+    pinMode(RE_LED_G,OUTPUT);
+    pinMode(RE_LED_R,OUTPUT);
+    move.attachInterrupts();
 }
 void loop(){
     Serial.print(digitalRead(R_COMM_ITR));
@@ -53,4 +61,7 @@ void loop(){
     Serial.print(" ");
     Serial.print(digitalRead(L_COMM_3));
     Serial.println(" ");
+    if(digitalRead(RE_SW)){
+      move.turn(-90);
+    }
 }
