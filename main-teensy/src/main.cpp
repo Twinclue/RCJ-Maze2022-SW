@@ -62,6 +62,6 @@ void loop(){
     Serial.print(digitalRead(L_COMM_3));
     Serial.println(" ");
     if(digitalRead(RE_SW)){
-      move.fwd();
+      move.turn(-90);
     }
 }
