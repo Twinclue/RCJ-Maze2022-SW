@@ -134,7 +134,6 @@ void loop(){
         lcd.print("<== Sensor Check");
         lcd.setCursor(0, 1);
         lcd.print("Action Test ==>");
-        move.corrDir();
         break;
       case 4:
         lcd.print("Light Raw: ");
