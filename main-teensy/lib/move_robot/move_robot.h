@@ -3,7 +3,7 @@
 
 #include <LiquidCrystal.h>
 #include "drive_motor.h"
-#include "read_imu.h"
+#include "read_BNO055.h"
 #include "read_tof.h"
 #include "advanced_tof.h"
 #include "pid.h"
@@ -15,7 +15,7 @@
 
 class move_robot{
     public:
-        move_robot(drive_motor *_left,drive_motor *_right,read_tof *_front,read_tof *_back,read_imu *_imu,read_light *_light,LiquidCrystal *_disp,Adafruit_NeoPixel *_led);
+        move_robot(drive_motor *_left,drive_motor *_right,read_tof *_front,read_tof *_back,read_BNO055 *_imu,read_light *_light,LiquidCrystal *_disp,Adafruit_NeoPixel *_led);
         short fwd(short remDist = 300);
         short rev(short remDist = 300);
         short turn(short remAng = 90);
@@ -36,7 +36,7 @@ class move_robot{
         read_tof *front;
         read_tof *back;
 
-        read_imu *imu;
+        read_BNO055 *imu;
 
         read_light *light;
         LiquidCrystal *disp;

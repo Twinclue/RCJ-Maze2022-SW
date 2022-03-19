@@ -1,10 +1,10 @@
-#include "read_imu.h"
+#include "read_BNO055.h"
 
-read_imu::read_imu(){
+read_BNO055::read_BNO055(){
     setThrottleTime(GY521_THROTTLE_TIME);
 }
 
-bool read_imu::begin(TwoWire *_bus){
+bool read_BNO055::begin(TwoWire *_bus){
     setBus(_bus);
     bus->begin();
     wakeup();
@@ -20,7 +20,7 @@ bool read_imu::begin(TwoWire *_bus){
     return isConnected();
 }
 
-float read_imu::getGPitch(){
+float read_BNO055::getGPitch(){
     tP = micros();
     deltatP = (tP - pretP) * 0.000001;
     pretP = tP;
@@ -31,7 +31,7 @@ float read_imu::getGPitch(){
     return angleP;
 }
 
-float read_imu::getGYaw(){
+float read_BNO055::getGYaw(){
     tY = micros();
     deltatY = (tY - pretY) * 0.000001;
     pretY = tY;

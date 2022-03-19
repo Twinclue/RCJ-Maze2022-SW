@@ -1,6 +1,6 @@
 #include "solver.h"
 
-solver::solver(read_imu *_imu,read_light *_light,move_robot *_move,detect_wall *_wall,node *_node){
+solver::solver(read_BNO055 *_imu,read_light *_light,move_robot *_move,detect_wall *_wall,node *_node){
     imu = _imu;
     light = _light;
     move = _move;
