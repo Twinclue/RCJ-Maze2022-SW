@@ -55,10 +55,6 @@ class move_robot{
         const byte bls = 3;
         const byte bc  = 4;
         const float kp = 20;
-
-        const uint8_t fwdPmax = 255;
-        const float fwdAccRatio = 0.3;
-        const uint8_t fwdPOffset = 100;
         pid *corrDirPid = new pid(25,0.001,0);
         pid *turnPid = new pid(5,1,0);
         pid *fwdPid = new pid(10,0,0);//50,0,0

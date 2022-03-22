@@ -41,7 +41,6 @@ move_robot::move_robot(drive_motor *_left,drive_motor *_right,read_tof *_front,r
 short move_robot::fwd(short remDist = 300){
     bool frontAnker = false;
     int startDist;
-    int power;
     if(front->read(fc) < back->read(bc)){
         frontAnker = true;
         startDist = front->read(fc);
@@ -62,17 +61,8 @@ short move_robot::fwd(short remDist = 300){
         else{
             errorDist = back->read(bc) - startDist;
         }
-        if(errorDist < remDist*fwdAccRatio){
-            power = fwdPmax * (errorDist/(remDist*fwdAccRatio)) + fwdPOffset;
-        }
-        else if(errorDist < remDist*(1-(fwdAccRatio))){
-            power = fwdPmax;
-        }
-        else{
-            power = fwdPmax - (fwdPmax * (errorDist/(remDist)));
-        }
-        left->on(power + fwdPid->calcP(errorAng,0));
-        right->on(-power + fwdPid->calcP(errorAng,0));
+        left->on(250 + fwdPid->calcP(errorAng,0));
+        right->on(-250 + fwdPid->calcP(errorAng,0));
         if(avoidObstacle()){
             remDist = this->fwd(remDist - errorDist);
         }
