@@ -3,7 +3,7 @@
 read_tof::read_tof(TwoWire *_bus){
     bus = _bus;
 
-    i2cSelect.attatch(*bus);
+    i2cSelect.attach(*bus);
     bus->begin();
     for(int i=0;i < VL61NUM;i++){
         vl61[i].setBus(bus);

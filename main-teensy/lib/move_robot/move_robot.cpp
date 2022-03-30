@@ -51,6 +51,8 @@ short move_robot::fwd(short remDist = 300){
     int errorDist = 0;
     short startAng = imu->getYaw();
     short errorAng = startAng - imu->getYaw();
+    short startPitch = imu->getPitch();
+
     fwdPid->init();
     attachInterrupts();
     while((errorDist < remDist) && (front->read(fc) > 50)){
@@ -63,6 +65,15 @@ short move_robot::fwd(short remDist = 300){
         }
         left->on(250 + fwdPid->calcP(errorAng,0));
         right->on(-250 + fwdPid->calcP(errorAng,0));
+
+        if(imu->getPitch()-startPitch>15){  //temporary threshold
+            digitalWrite(RE_LED_R, HIGH);
+            left->on(0);
+            right->on(0);
+            delay(10);
+            digitalWrite(RE_LED_R, LOW);    
+            return -2;  //making slopeflag ture    
+        }
         if(avoidObstacle()){
             remDist = this->fwd(remDist - errorDist);
         }

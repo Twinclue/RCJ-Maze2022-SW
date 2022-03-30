@@ -53,6 +53,9 @@ void setup(){
     pinMode(RE_LED_B,OUTPUT);
     pinMode(RE_LED_G,OUTPUT);
     pinMode(RE_LED_R,OUTPUT);
+
+    pinMode(STST, INPUT);
+
     lcd.home();
     lcd.clear();
     if(!bno.begin()){
@@ -69,11 +72,16 @@ void loop(){
   lcd.clear();
   if (digitalRead(STST) == HIGH) {
     lcd.print("SCORING RUN MODE");
+    solver.EXrightHand();
   }
   else {
     switch (enc.read()){
-      case -28:
+      case -32:
         enc.write(0);
+        break;
+      case -28:
+        lcd.print("corrDir");
+        move.corrDir();
         break;
 
       case -24:
@@ -134,7 +142,7 @@ void loop(){
         lcd.print("<== Sensor Check");
         lcd.setCursor(0, 1);
         lcd.print("Action Test ==>");
-        move.corrDir();
+        //move.corrDir();
         break;
       case 4:
         lcd.print("Light Raw: ");
@@ -257,6 +265,7 @@ void loop(){
         lcd.print(enc.read());
         break;
     }
+    Serial.println(bno.getPitch());
     delay(50);
   }
 }
