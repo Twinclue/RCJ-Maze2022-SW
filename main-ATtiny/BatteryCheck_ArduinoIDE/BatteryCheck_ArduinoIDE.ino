@@ -71,7 +71,7 @@ void loop(){
 
 	}
 	current=getCurrent()+0.001*idleCurrent_mA;
-	voltage=LPF(ina219.getBusVoltage_V()+current*BAT_resistance);	//copare with and without current calc
+	voltage=LPF(ina219.getBusVoltage_V());	//copare with and without current calc
 	// +current*BAT_resistance;
 	// // mySerial.println(voltage);
 	// // mySerial.println(ina219.success());
@@ -90,11 +90,13 @@ void loop(){
 	digitalWrite(trigPin, !cutoff);
 	while(cutoff);	//prolong cutoff state until manual shutdown
 	prevTrig=Trig;
-
+	
 	// digitalWrite(trigPin, HIGH);
 	mySerial.print(current);
 	mySerial.print("\t");
 	mySerial.print(voltage);
+	mySerial.print("\t");
+	mySerial.print(millis());
 	mySerial.print("\n");
 
 	delay(main_loop_delay);
