@@ -11,13 +11,26 @@ drive_motor::drive_motor(uint8_t _dir, uint8_t _pwm, uint8_t _flt){
 }
 
 int drive_motor::on(int power){
+    if(power > 255){
+        power = 255;
+    }
+    else if(power < -255){
+        power = -255;
+    }
     if(power>0){
-            digitalWrite(dir,HIGH);
-            analogWrite(pwm,power);
+        if(power - prePower > 100){
+            power = prePower + 10;
         }
-        else{
-            digitalWrite(dir,LOW);
-            analogWrite(pwm,-power);
+        digitalWrite(dir,HIGH);
+        analogWrite(pwm,power);
+    }
+    else{
+        if(power - prePower < -100){
+            power = prePower - 10;
         }
+        digitalWrite(dir,LOW);
+        analogWrite(pwm,-power);
+    }
+    prePower = power;
     return digitalRead(flt);    //0: error
 }

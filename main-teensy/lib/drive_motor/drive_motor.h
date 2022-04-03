@@ -13,6 +13,7 @@ private:
     uint8_t pwm;
     uint8_t flt;
     const uint32_t PWMfreq=80000;
+    int prePower;
 };
 
 #endif
