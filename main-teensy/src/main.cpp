@@ -69,6 +69,7 @@ void loop(){
   lcd.clear();
   if (digitalRead(STST) == HIGH) {
     lcd.print("SCORING RUN MODE");
+    solver.EXrightHand();
   }
   else {
     switch (enc.read()){
@@ -134,7 +135,6 @@ void loop(){
         lcd.print("<== Sensor Check");
         lcd.setCursor(0, 1);
         lcd.print("Action Test ==>");
-        move.corrDir();
         break;
       case 4:
         lcd.print("Light Raw: ");
