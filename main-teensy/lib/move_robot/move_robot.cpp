@@ -122,12 +122,15 @@ short move_robot::turn(short remAng = 90){
         }
         errorAng = imu->getYaw() - startAng;
         if(turnRight){
-            power = turnPid->calcPI(errorAng,remAng);
+            power = -turnPid->calcPI(-errorAng,-remAng);
         }
         else{
-            power = turnPid->calcPI(-errorAng,-remAng);
+            power = turnPid->calcPI(errorAng,remAng);
         }
-        left->on(power);
+        if(loopcount < 80){
+            //power = power - (255/(loopcount/80));
+        }
+        left->on(-power);
         right->on(-power);
         victim();
         delay(1);
