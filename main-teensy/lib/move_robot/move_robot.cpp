@@ -103,30 +103,34 @@ short move_robot::rev(short remDist = 300){
 }
 
 short move_robot::turn(short remAng = 90){
-    
+    uint16_t loopcount = 0;
     short startAng = imu->getYaw();
     short errorAng = 0;
+    bool turnRight = false;
+    int power = 0;
     turnPid->init();
     attachInterrupts();
     if(remAng > 0){
-        while(errorAng < remAng){
-            
-            errorAng = imu->getYaw() - startAng;
-            left->on(-turnPid->calcPI(errorAng,remAng));
-            right->on(-turnPid->calcPI(errorAng,remAng));
-            victim();
-            delay(1);
-        }
+        turnRight = true;
     }
-    else{
-        while(errorAng > remAng){
-            
-            errorAng = imu->getYaw() - startAng;
-            left->on(turnPid->calcPI(-errorAng,-remAng));
-            right->on(turnPid->calcPI(-errorAng,-remAng));
-            victim();
-            delay(1);
+    while(true){
+        loopcount++;
+        Serial.print("loopcount: ");
+        Serial.println(loopcount);
+        if(((errorAng>remAng) && turnRight) || ((errorAng<remAng) && !turnRight)){
+            break;
         }
+        errorAng = imu->getYaw() - startAng;
+        if(turnRight){
+            power = turnPid->calcPI(errorAng,remAng);
+        }
+        else{
+            power = turnPid->calcPI(-errorAng,-remAng);
+        }
+        left->on(power);
+        right->on(-power);
+        victim();
+        delay(1);
     }
     detachInterrups();
     left->on(0);
