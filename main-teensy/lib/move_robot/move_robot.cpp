@@ -115,8 +115,6 @@ short move_robot::turn(short remAng = 90){
     }
     while(true){
         loopcount++;
-        Serial.print("loopcount: ");
-        Serial.println(loopcount);
         if(((errorAng>remAng) && turnRight) || ((errorAng<remAng) && !turnRight)){
             break;
         }
@@ -127,9 +125,7 @@ short move_robot::turn(short remAng = 90){
         else{
             power = turnPid->calcPI(errorAng,remAng);
         }
-        if(loopcount < 80){
-            //power = power - (255/(loopcount/80));
-        }
+        Serial.println(power);
         left->on(-power);
         right->on(-power);
         victim();
