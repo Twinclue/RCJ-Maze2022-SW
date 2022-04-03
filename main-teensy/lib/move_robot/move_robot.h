@@ -56,7 +56,7 @@ class move_robot{
         const byte bc  = 4;
         const float kp = 20;
         pid *corrDirPid = new pid(25,0.001,0);
-        pid *turnPid = new pid(5,1,0);
+        pid *turnPid = new pid(5,0.00005,0);
         pid *fwdPid = new pid(10,0,0);//50,0,0
 
         const byte lTouch = 21;

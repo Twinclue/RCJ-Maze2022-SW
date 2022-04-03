@@ -103,30 +103,33 @@ short move_robot::rev(short remDist = 300){
 }
 
 short move_robot::turn(short remAng = 90){
-    
+    uint16_t loopcount = 0;
     short startAng = imu->getYaw();
     short errorAng = 0;
+    bool turnRight = false;
+    int power = 0;
     turnPid->init();
     attachInterrupts();
     if(remAng > 0){
-        while(errorAng < remAng){
-            
-            errorAng = imu->getYaw() - startAng;
-            left->on(-turnPid->calcPI(errorAng,remAng));
-            right->on(-turnPid->calcPI(errorAng,remAng));
-            victim();
-            delay(1);
-        }
+        turnRight = true;
     }
-    else{
-        while(errorAng > remAng){
-            
-            errorAng = imu->getYaw() - startAng;
-            left->on(turnPid->calcPI(-errorAng,-remAng));
-            right->on(turnPid->calcPI(-errorAng,-remAng));
-            victim();
-            delay(1);
+    while(true){
+        loopcount++;
+        if(((errorAng>remAng) && turnRight) || ((errorAng<remAng) && !turnRight)){
+            break;
         }
+        errorAng = imu->getYaw() - startAng;
+        if(turnRight){
+            power = -turnPid->calcPI(-errorAng,-remAng);
+        }
+        else{
+            power = turnPid->calcPI(errorAng,remAng);
+        }
+        Serial.println(power);
+        left->on(-power);
+        right->on(-power);
+        victim();
+        delay(1);
     }
     detachInterrups();
     left->on(0);
@@ -216,38 +219,38 @@ void move_robot::corrDist(){
 }
 
 bool move_robot::avoidObstacle(){
-    if(digitalRead(rTouch)){
-        right->on(255);
-        left->on(0);
-        delay(500);
-        right->on(0);
-        left->on(-255);
-        delay(500);
-        right->on(-255);
-        left->on(0);
-        delay(500);
-        right->on(0);
-        left->on(255);
-        delay(500);
-        left->on(0);
-        right->on(0);
+    if(digitalRead(SW_R)){
+        right->on(255,false);
+        left->on(0,false);
+        delay(250);
+        right->on(0,false);
+        left->on(-255,false);
+        delay(250);
+        right->on(-255,false);
+        left->on(0,false);
+        delay(250);
+        right->on(0,false);
+        left->on(255,false);
+        delay(250);
+        left->on(0,false);
+        right->on(0,false);
         return true;
     }
-    else if(digitalRead(lTouch)){
-        left->on(-255);
-        right->on(0);
-        delay(500);
-        left->on(0);
-        right->on(255);
-        delay(500);
-        left->on(255);
-        right->on(0);
-        delay(500);
-        left->on(0);
-        right->on(-255);
-        delay(500);
-        left->on(0);
-        right->on(0);
+    else if(digitalRead(SW_L)){
+        left->on(-255,false);
+        right->on(0,false);
+        delay(250);
+        left->on(0,false);
+        right->on(255,false);
+        delay(250);
+        left->on(255,false);
+        right->on(0,false);
+        delay(250);
+        left->on(0,false);
+        right->on(-255,false);
+        delay(250);
+        left->on(0,false);
+        right->on(0,false);
         return true;
     }
     return false;
