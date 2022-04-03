@@ -219,38 +219,38 @@ void move_robot::corrDist(){
 }
 
 bool move_robot::avoidObstacle(){
-    if(digitalRead(rTouch)){
-        right->on(255);
-        left->on(0);
-        delay(500);
-        right->on(0);
-        left->on(-255);
-        delay(500);
-        right->on(-255);
-        left->on(0);
-        delay(500);
-        right->on(0);
-        left->on(255);
-        delay(500);
-        left->on(0);
-        right->on(0);
+    if(digitalRead(SW_R)){
+        right->on(255,false);
+        left->on(0,false);
+        delay(250);
+        right->on(0,false);
+        left->on(-255,false);
+        delay(250);
+        right->on(-255,false);
+        left->on(0,false);
+        delay(250);
+        right->on(0,false);
+        left->on(255,false);
+        delay(250);
+        left->on(0,false);
+        right->on(0,false);
         return true;
     }
-    else if(digitalRead(lTouch)){
-        left->on(-255);
-        right->on(0);
-        delay(500);
-        left->on(0);
-        right->on(255);
-        delay(500);
-        left->on(255);
-        right->on(0);
-        delay(500);
-        left->on(0);
-        right->on(-255);
-        delay(500);
-        left->on(0);
-        right->on(0);
+    else if(digitalRead(SW_L)){
+        left->on(-255,false);
+        right->on(0,false);
+        delay(250);
+        left->on(0,false);
+        right->on(255,false);
+        delay(250);
+        left->on(255,false);
+        right->on(0,false);
+        delay(250);
+        left->on(0,false);
+        right->on(-255,false);
+        delay(250);
+        left->on(0,false);
+        right->on(0,false);
         return true;
     }
     return false;

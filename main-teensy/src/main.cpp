@@ -50,6 +50,8 @@ void setup(){
 
     pinMode(RE_SW,INPUT);
 
+    pinMode(STST,INPUT);
+
     pinMode(RE_LED_B,OUTPUT);
     pinMode(RE_LED_G,OUTPUT);
     pinMode(RE_LED_R,OUTPUT);

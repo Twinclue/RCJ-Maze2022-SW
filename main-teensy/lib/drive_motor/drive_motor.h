@@ -7,7 +7,7 @@ class drive_motor
 {
 public:
     drive_motor(uint8_t _dir, uint8_t _pwm, uint8_t _flt);
-    int on(int power);
+    int on(int power, bool acc = true);
 private:
     uint8_t dir;
     uint8_t pwm;
