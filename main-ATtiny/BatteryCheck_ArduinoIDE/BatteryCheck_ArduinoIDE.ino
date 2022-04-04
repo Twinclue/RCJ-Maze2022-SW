@@ -5,10 +5,10 @@
 #define VIOUTpin A2
 #define main_loop_delay 40
 #define calibSampleNum 20
-#define BAT_resistance 0.35	// according to the experiment data
+#define BAT_resistance 0.12	// measured value
 #define idleCurrent_mA 31
 
-SoftwareSerial mySerial(2,0); // RX, TX
+SoftwareSerial mySerial(5,1); // RX, TX
 Adafruit_INA219 ina219(0X41);
 
 float voltage=0.0;
@@ -19,7 +19,9 @@ const float VIOUT_coef=0.0244;
 float current=0.0;
 
 const float LPFcoef=0.1;
-	float prevLPF;
+float prevLPF=minCV;
+
+unsigned long time, prevTime;
 
 bool Trig=false;
 bool prevTrig=false;
@@ -50,7 +52,7 @@ void setup(){
 	pinMode(trigPin,OUTPUT);
 	// pinMode(1, OUTPUT);
 	digitalWrite(trigPin, LOW);
-	// mySerial.begin(4800);
+	mySerial.begin(4800);
 
 	VIOUT_offset=currentOffset();
 	// while(!mySerial.available()){
@@ -68,9 +70,9 @@ void loop(){
 		digitalWrite(trigPin, LOW);
 
 	}
-	current=LPF(getCurrent())+0.001*idleCurrent_mA;
-	voltage=ina219.getBusVoltage_V()+current*BAT_resistance;	//copare with and without current calc
-
+	current=getCurrent()+0.001*idleCurrent_mA;
+	voltage=LPF(ina219.getBusVoltage_V());	//copare with and without current calc
+	// +current*BAT_resistance;
 	// // mySerial.println(voltage);
 	// // mySerial.println(ina219.success());
 
@@ -88,9 +90,14 @@ void loop(){
 	digitalWrite(trigPin, !cutoff);
 	while(cutoff);	//prolong cutoff state until manual shutdown
 	prevTrig=Trig;
-
+	
 	// digitalWrite(trigPin, HIGH);
-	// mySerial.println(current);
+	mySerial.print(current);
+	mySerial.print("\t");
+	mySerial.print(voltage);
+	mySerial.print("\t");
+	mySerial.print(millis());
+	mySerial.print("\n");
 
 	delay(main_loop_delay);
 }

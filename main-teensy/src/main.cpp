@@ -50,6 +50,8 @@ void setup(){
 
     pinMode(RE_SW,INPUT);
 
+    pinMode(STST,INPUT);
+
     pinMode(RE_LED_B,OUTPUT);
     pinMode(RE_LED_G,OUTPUT);
     pinMode(RE_LED_R,OUTPUT);
@@ -142,7 +144,6 @@ void loop(){
         lcd.print("<== Sensor Check");
         lcd.setCursor(0, 1);
         lcd.print("Action Test ==>");
-        //move.corrDir();
         break;
       case 4:
         lcd.print("Light Raw: ");
