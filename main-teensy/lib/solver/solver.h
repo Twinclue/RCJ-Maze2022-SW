@@ -9,7 +9,7 @@ class solver{
     public:
         solver(read_BNO055 *_imu,read_light *_light,move_robot *_move,detect_wall *_wall,node *_node);
         int rightHand();
-        int EXrightHand();
+        bool EXrightHand();
         bool walls[4];
         uint8_t moveto;
     private:
@@ -20,7 +20,6 @@ class solver{
         detect_wall *wall;
         node *n;
 
-        
 
         bool slopeFlag = false;
 

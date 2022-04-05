@@ -38,6 +38,7 @@ class node{
         coordinate getNowCoor(){return now.p;}
         uint8_t getTile(uint8_t dir);
         void lackOfProgress();
+        bool isHome();
     private:
         uint16_t makeNewNode(coordinate _p,uint8_t side);
         short searchNode(coordinate _p);
@@ -48,6 +49,9 @@ class node{
         uint8_t rotateToRight(uint8_t _r);
         uint8_t rotateToLeft(uint8_t _r);
         uint8_t reverseR(uint8_t _r);
+        bool isFullySearched();
+        uint8_t getHome();
+        bool getHomeFlag = false;
         block nodes[nodeNum];
         block now;
         uint8_t rotate = 1;

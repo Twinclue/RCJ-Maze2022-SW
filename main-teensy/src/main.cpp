@@ -71,7 +71,11 @@ void loop(){
   lcd.clear();
   if (digitalRead(STST) == HIGH) {
     lcd.print("SCORING RUN MODE");
-    solver.EXrightHand();
+    if(solver.EXrightHand()){
+      //finished!
+      lcd.clear();
+      lcd.print("I'M HOME NOW!");
+    }
   }
   else {
     switch (enc.read()){
