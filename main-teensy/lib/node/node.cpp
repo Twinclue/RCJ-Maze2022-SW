@@ -87,17 +87,30 @@ uint8_t node::getMinCountDir(){
         compare[n] = ((tempNode[n]==-1) ? 255 : nodes[tempNode[n]].count);
         Serial.println(compare[n]);
     }
-    if(compare[right] <= compare[front] && compare[right] <= compare[left] && compare[right] <= compare[back]){
-        return right;
+    if(compare[right] >= 1 && compare[front] >= 1 && compare[left] >= 1 && compare[back] >= 1 && !getHomeFlag){
+        if(isFullySearched()){
+            digitalWrite(RE_LED_B,HIGH);
+            delay(500);
+            digitalWrite(RE_LED_B,LOW);
+            getHomeFlag = true;
+        }
     }
-    else if(compare[front] <= compare[left] && compare[front] <= compare[back]){
-        return front;
-    }
-    else if(compare[left] <= compare[back]){
-        return left;
+    if(getHomeFlag){
+        return getHome();
     }
     else{
-        return back;
+        if(compare[right] <= compare[front] && compare[right] <= compare[left] && compare[right] <= compare[back]){
+            return right;
+        }
+        else if(compare[front] <= compare[left] && compare[front] <= compare[back]){
+            return front;
+        }
+        else if(compare[left] <= compare[back]){
+            return left;
+        }
+        else{
+            return back;
+        }
     }
 }
 
@@ -336,4 +349,33 @@ uint8_t node::kagome(uint8_t _r,uint8_t _side){
 void node::lackOfProgress(){
     now = nodes[lastCheckPoint];
     nowNodeNum = lastCheckPoint;
+}
+
+bool node::isFullySearched(){
+    for(int i=0;i<lastNodeNum;i++){
+        if(nodes[i].count == 0){
+            return false;
+        }
+    }
+    return true;
+}
+
+uint8_t node::getHome(){
+    uint8_t minNodeNum = 255;
+    uint8_t minNodeDir = 0;
+    for(int i = 0; i < 4;i++){
+        if(tempNode[i] != -1 && minNodeNum > tempNode[i]){
+            minNodeNum = tempNode[i];
+            minNodeDir = i;
+        }
+    }
+    return minNodeDir;
+}
+
+bool node::isHome(){
+    if(now.p.x == 0 && now.p.y == 0 && now.p.z == 0 && isFullySearched()){
+        //finished!
+        return true;
+    }
+    return false;
 }
