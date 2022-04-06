@@ -3,6 +3,7 @@
 
 #include <Arduino.h>
 #include "read_light.h"
+#include "pinmap.h"
 
 const uint8_t front = 1;
 const uint8_t left = 2;

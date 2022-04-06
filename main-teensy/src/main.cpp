@@ -51,7 +51,7 @@ void setup(){
     pinMode(RE_SW,INPUT);
 
     pinMode(STST,INPUT);
-
+    pinMode(BUZZER,OUTPUT);
     pinMode(RE_LED_B,OUTPUT);
     pinMode(RE_LED_G,OUTPUT);
     pinMode(RE_LED_R,OUTPUT);
@@ -75,6 +75,7 @@ void loop(){
       //finished!
       lcd.clear();
       lcd.print("I'M HOME NOW!");
+      while(true);
     }
   }
   else {
