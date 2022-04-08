@@ -5,6 +5,11 @@
 #include "detect_wall.h"
 #include "node.h"
 
+#define FLAT 0
+#define GOUP 1
+#define GODOWN 2
+
+
 class solver{
     public:
         solver(read_BNO055 *_imu,read_light *_light,move_robot *_move,detect_wall *_wall,node *_node);
@@ -20,9 +25,7 @@ class solver{
         detect_wall *wall;
         node *n;
 
-        
-
-        bool slopeFlag = false;
+        byte slopeState = FLAT;//0:not slope, 1:go up slope, 2:go down slope
 
 };
 

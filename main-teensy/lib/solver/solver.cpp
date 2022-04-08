@@ -38,11 +38,14 @@ int solver::EXrightHand(){
     Serial.println(moveto);
     switch (moveto){
     case front:
-        if(slopeFlag){
+        if(slopeState == GOUP){
             moveResult = move->goUp();
         }
+        else if(slopeState == GODOWN){
+            moveResult = move->goDown();
+        }
         else{
-            moveResult =  move->fwd();
+            moveResult = move->fwd();
         }
         break;
     case left:
@@ -63,12 +66,16 @@ int solver::EXrightHand(){
     if(moveResult == 0){
         n->updatePosition(moveto);
         n->setTile(light->getFloorColor());
-        slopeFlag = false;
+        slopeState = FLAT;
     }
-    else if(moveResult == -2){
+    else if(moveResult == -2){//slope up
         n->updatePosition(moveto);
         //n->setTile(3);
-        slopeFlag = true;
+        slopeState = GOUP;
+    }
+    else if(moveResult == -3){//slope down
+        n->updatePosition(moveto);
+        slopeState = GODOWN;
     }
     else{
         n->setTile(black,moveto);

@@ -71,8 +71,16 @@ short move_robot::fwd(short remDist = 300){
             left->on(0);
             right->on(0);
             delay(10);
-            digitalWrite(RE_LED_R, LOW);    
-            return -2;  //making slopeflag ture    
+            digitalWrite(RE_LED_R, LOW);
+            return -2;  //making slopeState GOUP
+        }
+        else if(imu->getPitch()-startPitch<-15){
+            digitalWrite(RE_LED_G, HIGH);
+            left->on(0);
+            right->on(0);
+            delay(10);
+            digitalWrite(RE_LED_G, LOW);
+            return -3;  //making slopeState GODOWN
         }
         if(avoidObstacle()){
             remDist = this->fwd(remDist - errorDist);
@@ -150,16 +158,27 @@ short move_robot::turn(short remAng = 90){
 }
 
 short move_robot::goUp(){
-    
-    short prePitch = imu->getPitch();
     short startAng = imu->getYaw();
     short errorAng = startAng - imu->getYaw();
     fwdPid->init();
-    while(abs(prePitch-imu->getPitch()) <= 15 && front->read(frf) >= 250 && front->read(flf) >= 250){
-        
+    while(imu->getPitch() < 5 && imu->getPitch() > -5){
         Serial.println(prePitch - imu->getPitch());
         left->on(255 + fwdPid->calcP(errorAng,0));
         right->on(-255 + fwdPid->calcP(errorAng,0));
+    }
+    left->on(0);
+    right->on(0);
+    return 0;
+}
+
+short move_robot::geDown(){
+    short startAng = imu->getYaw();
+    short errorAng = startAng - imu->getYaw();
+    fwdPid->init();
+    while(imu->getPitch() < 5 && imu->getPitch() > -5){
+        Serial.println(prePitch - imu->getPitch());
+        left->on(150 + fwdPid->calcP(errorAng,0));
+        right->on(-150 + fwdPid->calcP(errorAng,0));
     }
     left->on(0);
     right->on(0);
