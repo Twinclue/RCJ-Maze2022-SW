@@ -69,6 +69,20 @@ void setup(){
     digitalWrite(RE_LED_B,HIGH);
     delay(1000);
     digitalWrite(RE_LED_B,LOW);
+    if(digitalRead(STST)){
+      lcd.clear();
+      lcd.print("STST IS ON NOW!");
+      lcd.setCursor(0,1);
+      lcd.print("PLEASE TURN OFF");
+      while(digitalRead(STST)){
+        tone(BUZZER,1000);
+        digitalWrite(RE_LED_R,HIGH);
+        delay(100);
+        digitalWrite(RE_LED_R,LOW);
+        noTone(BUZZER);
+        delay(100);
+      }
+    }
 }
 void loop(){
   lcd.home();
