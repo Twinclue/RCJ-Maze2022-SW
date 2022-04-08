@@ -169,10 +169,14 @@ short move_robot::goUp(){
         left->on(180 + fwdPid->calcP(errorAng,0));
         right->on(-180 + fwdPid->calcP(errorAng,0));
     }
+    left->on(180);
+    right->on(-180);
+    delay(500);
     left->on(0);
     right->on(0);
+    corrDir();
     digitalWrite(RE_LED_B,HIGH);
-    delay(500);
+    delay(300);
     digitalWrite(RE_LED_B,LOW);
     return 0;
 }
@@ -186,8 +190,12 @@ short move_robot::goDown(){
         left->on(100 + fwdPid->calcP(errorAng,0));
         right->on(-100 + fwdPid->calcP(errorAng,0));
     }
+    left->on(180);
+    right->on(-180);
+    delay(300);
     left->on(0);
     right->on(0);
+    corrDir();
     digitalWrite(RE_LED_B,HIGH);
     delay(500);
     digitalWrite(RE_LED_B,LOW);
