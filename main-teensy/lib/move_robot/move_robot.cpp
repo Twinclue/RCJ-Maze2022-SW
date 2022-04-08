@@ -66,19 +66,22 @@ short move_robot::fwd(short remDist = 300){
         left->on(250 + fwdPid->calcP(errorAng,0));
         right->on(-250 + fwdPid->calcP(errorAng,0));
 
-        if(imu->getPitch()-startPitch>15){  //temporary threshold
+        if(imu->getPitch()>15){  //temporary threshold
             digitalWrite(RE_LED_R, HIGH);
             left->on(0);
             right->on(0);
-            delay(10);
+            delay(1000);
             digitalWrite(RE_LED_R, LOW);
             return -2;  //making slopeState GOUP
         }
-        else if(imu->getPitch()-startPitch<-15){
+        else if(imu->getPitch()<-15){
             digitalWrite(RE_LED_G, HIGH);
-            left->on(0);
-            right->on(0);
-            delay(10);
+            for(int i = 255; i > 100;i--){
+                left->on(i);
+                right->on(-i);
+                delay(5);
+            }
+            //delay(1000);
             digitalWrite(RE_LED_G, LOW);
             return -3;  //making slopeState GODOWN
         }
@@ -161,27 +164,33 @@ short move_robot::goUp(){
     short startAng = imu->getYaw();
     short errorAng = startAng - imu->getYaw();
     fwdPid->init();
-    while(imu->getPitch() < 5 && imu->getPitch() > -5){
-        Serial.println(prePitch - imu->getPitch());
-        left->on(255 + fwdPid->calcP(errorAng,0));
-        right->on(-255 + fwdPid->calcP(errorAng,0));
+    while(!(imu->getPitch() < 5 && imu->getPitch() > -5)){
+        errorAng = startAng - imu->getYaw();
+        left->on(180 + fwdPid->calcP(errorAng,0));
+        right->on(-180 + fwdPid->calcP(errorAng,0));
     }
     left->on(0);
     right->on(0);
+    digitalWrite(RE_LED_B,HIGH);
+    delay(500);
+    digitalWrite(RE_LED_B,LOW);
     return 0;
 }
 
-short move_robot::geDown(){
+short move_robot::goDown(){
     short startAng = imu->getYaw();
     short errorAng = startAng - imu->getYaw();
     fwdPid->init();
-    while(imu->getPitch() < 5 && imu->getPitch() > -5){
-        Serial.println(prePitch - imu->getPitch());
-        left->on(150 + fwdPid->calcP(errorAng,0));
-        right->on(-150 + fwdPid->calcP(errorAng,0));
+    while(!(imu->getPitch() < 5 && imu->getPitch() > -5)){
+        errorAng = startAng - imu->getYaw();
+        left->on(100 + fwdPid->calcP(errorAng,0));
+        right->on(-100 + fwdPid->calcP(errorAng,0));
     }
     left->on(0);
     right->on(0);
+    digitalWrite(RE_LED_B,HIGH);
+    delay(500);
+    digitalWrite(RE_LED_B,LOW);
     return 0;
 }
 

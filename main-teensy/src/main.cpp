@@ -57,6 +57,7 @@ void setup(){
     pinMode(RE_LED_R,OUTPUT);
 
     pinMode(STST, INPUT);
+    pinMode(BUZZER, OUTPUT);
 
     lcd.home();
     lcd.clear();
