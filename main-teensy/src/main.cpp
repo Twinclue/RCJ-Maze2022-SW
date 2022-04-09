@@ -36,6 +36,8 @@ D6Tarduino leftTempRaw;
 uint8_t calib[4];
 int Yaw, Pitch;
 
+bool runningFlag = false;
+
 void setup(){
     Serial.begin(115200);
     lcd.begin(16,2);
@@ -88,10 +90,15 @@ void loop(){
   lcd.home();
   lcd.clear();
   if (digitalRead(STST) == HIGH) {
+    runningFlag = true;
     lcd.print("SCORING RUN MODE");
     solver.EXrightHand();
   }
   else {
+    if(runningFlag){
+      runningFlag = false;
+      n.lackOfProgress();
+    }
     switch (enc.read()){
       case -32:
         enc.write(0);

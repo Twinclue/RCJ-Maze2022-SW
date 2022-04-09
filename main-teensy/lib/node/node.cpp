@@ -336,4 +336,5 @@ uint8_t node::kagome(uint8_t _r,uint8_t _side){
 void node::lackOfProgress(){
     now = nodes[lastCheckPoint];
     nowNodeNum = lastCheckPoint;
+    rotate = 1;
 }

@@ -80,5 +80,6 @@ int solver::EXrightHand(){
     else{
         n->setTile(black,moveto);
         n->updateRotation(moveto);
+        slopeState = FLAT;
     }
 }
