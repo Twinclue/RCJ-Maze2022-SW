@@ -147,7 +147,6 @@ short move_robot::turn(short remAng = 90){
         else{
             power = turnPid->calcPI(errorAng,remAng);
         }
-        Serial.println(power);
         left->on(-power);
         right->on(-power);
         victim();

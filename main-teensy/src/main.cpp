@@ -227,7 +227,6 @@ void loop(){
         lcd.setCursor(0, 1);
         lcd.print("Yaw  : ");
         lcd.print(bno.getYaw());
-        Serial.println(bno.getPitch());
         break;
       case 24:
         lcd.print("CLICK TO CALIB");
@@ -289,7 +288,6 @@ void loop(){
         lcd.print(enc.read());
         break;
     }
-    Serial.println(bno.getPitch());
     delay(50);
   }
 }

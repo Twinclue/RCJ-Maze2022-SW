@@ -28,14 +28,29 @@ int solver::rightHand(){
 }
 
 int solver::EXrightHand(){
-    short moveResult = 0;;
+    short moveResult = 0;
+    String debug_buf;
     for(int i =0;i < 4;i++){
         walls[i] = wall->getSingleWall(i);
     }
     n->searchAroundNodes(walls[front],walls[left],walls[back],walls[right]);
     moveto = n->getMinCountDir();
-    Serial.print("Move to :");
-    Serial.println(moveto);
+    block debug = n->getNowNode();
+    Serial.println("===================================");
+    debug_buf = "Now Node Num      : " + String(n->getNowNodeNum()) + " / X : " + String(debug.p.x) + " / Y : " + String(debug.p.y) + " / count : " + String(debug.count);
+    Serial.println(debug_buf);
+    Serial.println("-----------------------------------");
+    debug_buf = "Wall              : R : " + String(walls[right]) + " / F : " + String(walls[front]) + " / L : " + String(walls[left]) + " / B : " + String(walls[back]);
+    Serial.println(debug_buf);
+    debug_buf = "Related Node Num   : R : " + String(n->getTempNodeNum(right)) + " / F : " + String(n->getTempNodeNum(front)) + " / L : " + String(n->getTempNodeNum(left)) + " / B : " + String(n->getTempNodeNum(back));
+    Serial.println(debug_buf);
+    debug_buf = "Related Node Count : R : " + String(n->getRelatedNodeCount(right)) + " / F : " + String(n->getRelatedNodeCount(front)) + " / L : " + String(n->getRelatedNodeCount(left)) + " / B : " + String(n->getRelatedNodeCount(back));
+    Serial.println(debug_buf);
+    Serial.println("-----------------------------------");
+    debug_buf = "Slope State       : " + String(slopeState);
+    Serial.println(debug_buf);
+    debug_buf = "Move to           : " + String(moveto);
+    Serial.println(debug_buf);
     switch (moveto){
     case front:
         if(slopeState == GOUP){
@@ -82,4 +97,6 @@ int solver::EXrightHand(){
         n->updateRotation(moveto);
         slopeState = FLAT;
     }
+    debug_buf = "Move Result       : " + String(moveResult);
+    Serial.println(debug_buf);
 }
