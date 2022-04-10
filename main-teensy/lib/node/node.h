@@ -42,6 +42,7 @@ class node{
         block getNowNode(){return now;}
         uint16_t getNowNodeNum(){return nowNodeNum;}
         short getRelatedNodeCount(uint8_t dir){return nodes[tempNode[dir]].count;}
+        uint8_t getRotate(){return rotate;}
     private:
         uint16_t makeNewNode(coordinate _p,uint8_t side);
         short searchNode(coordinate _p);

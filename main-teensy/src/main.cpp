@@ -28,7 +28,7 @@ read_light light(&npix);
 move_robot move(&leftM,&rightM,&toff,&tofb,&bno,&light,&lcd,&npix);
 detect_wall wall(&toff, &tofb);
 node n;
-solver solver(&bno, &light, &move, &wall, &n);
+solver solver(&bno, &light, &move, &wall, &n, &lcd);
 
 D6Tarduino rightTempRaw;
 D6Tarduino leftTempRaw;

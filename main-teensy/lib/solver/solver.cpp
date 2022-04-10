@@ -1,11 +1,12 @@
 #include "solver.h"
 
-solver::solver(read_BNO055 *_imu,read_light *_light,move_robot *_move,detect_wall *_wall,node *_node){
+solver::solver(read_BNO055 *_imu,read_light *_light,move_robot *_move,detect_wall *_wall,node *_node,LiquidCrystal *_lcd){
     imu = _imu;
     light = _light;
     move = _move;
     wall = _wall;
     n = _node;
+    disp = _lcd;
 }
 
 int solver::rightHand(){
@@ -35,6 +36,8 @@ int solver::EXrightHand(){
     }
     n->searchAroundNodes(walls[front],walls[left],walls[back],walls[right]);
     moveto = n->getMinCountDir();
+
+
     block debug = n->getNowNode();
     Serial.println("===================================");
     debug_buf = "Now Node Num      : " + String(n->getNowNodeNum()) + " / X : " + String(debug.p.x) + " / Y : " + String(debug.p.y) + " / count : " + String(debug.count);
@@ -51,32 +54,41 @@ int solver::EXrightHand(){
     Serial.println(debug_buf);
     debug_buf = "Move to           : " + String(moveto);
     Serial.println(debug_buf);
-    if(slopeState == GOUP){
-        moveResult = move->goUp();
-    }
-    else if(slopeState == GODOWN){
-        moveResult = move->goDown();
-    }
-    else{
-        switch (moveto){
-            case front:
+
+    //coordinate disp
+    disp->clear();
+    disp->print("X : ");
+    disp->print(debug.p.x);
+    disp->setCursor(0,1);
+    disp->print("Y : ");
+    disp->print(debug.p.y);
+
+    switch (moveto){
+        case front:
+            if(slopeState == GOUP){
+                moveResult = move->goUp();
+            }
+            else if(slopeState == GODOWN){
+                moveResult = move->goDown();
+            }
+            else{
                 moveResult = move->fwd();
-                break;
-            case left:
-                move->turn(-90);
-                moveResult =  move->fwd();
-                break;
-            case back:
-                move->turn(180);
-                moveResult =  move->fwd();
-                break;
-            case right:
-                move->turn();
-                moveResult =  move->fwd();
-                break;
-            default:
-                break;
-        }
+            }
+            break;
+        case left:
+            move->turn(-90);
+            moveResult =  move->fwd();
+            break;
+        case back:
+            move->turn(180);
+            moveResult =  move->fwd();
+            break;
+        case right:
+            move->turn();
+            moveResult =  move->fwd();
+            break;
+        default:
+            break;
     }
     if(moveResult == 0){
         n->updatePosition(moveto);

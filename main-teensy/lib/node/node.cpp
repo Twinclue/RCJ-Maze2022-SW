@@ -11,6 +11,7 @@ void node::updatePosition(uint8_t moveto){
     now.p = convRXYZtoCoorAddLengh(kagome(rotate,moveto),now.p.x,now.p.y,now.p.z);
     nowNodeNum = searchNode(now.p);
     nodes[nowNodeNum].count++;
+    now.count = nodes[nowNodeNum].count;
     switch (moveto){
     case front:
         break;
