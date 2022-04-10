@@ -28,7 +28,7 @@ int solver::rightHand(){
     return 0;
 }
 
-int solver::EXrightHand(){
+bool solver::EXrightHand(){
     short moveResult = 0;
     String debug_buf;
     for(int i =0;i < 4;i++){
