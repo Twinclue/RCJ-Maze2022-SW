@@ -97,7 +97,7 @@ void loop(){
   else {
     if(runningFlag){
       runningFlag = false;
-      n.lackOfProgress();
+      //n.lackOfProgress();
     }
     switch (enc.read()){
       case -32:

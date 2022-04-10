@@ -51,32 +51,32 @@ int solver::EXrightHand(){
     Serial.println(debug_buf);
     debug_buf = "Move to           : " + String(moveto);
     Serial.println(debug_buf);
-    switch (moveto){
-    case front:
-        if(slopeState == GOUP){
-            moveResult = move->goUp();
+    if(slopeState == GOUP){
+        moveResult = move->goUp();
+    }
+    else if(slopeState == GODOWN){
+        moveResult = move->goDown();
+    }
+    else{
+        switch (moveto){
+            case front:
+                moveResult = move->fwd();
+                break;
+            case left:
+                move->turn(-90);
+                moveResult =  move->fwd();
+                break;
+            case back:
+                move->turn(180);
+                moveResult =  move->fwd();
+                break;
+            case right:
+                move->turn();
+                moveResult =  move->fwd();
+                break;
+            default:
+                break;
         }
-        else if(slopeState == GODOWN){
-            moveResult = move->goDown();
-        }
-        else{
-            moveResult = move->fwd();
-        }
-        break;
-    case left:
-        move->turn(-90);
-        moveResult =  move->fwd();
-        break;
-    case back:
-        move->turn(180);
-        moveResult =  move->fwd();
-        break;
-    case right:
-        move->turn();
-        moveResult =  move->fwd();
-        break;
-    default:
-        break;
     }
     if(moveResult == 0){
         n->updatePosition(moveto);
