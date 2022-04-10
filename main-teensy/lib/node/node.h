@@ -3,6 +3,7 @@
 
 #include <Arduino.h>
 #include "read_light.h"
+#include "pinmap.h"
 
 const uint8_t front = 1;
 const uint8_t left = 2;
@@ -43,6 +44,7 @@ class node{
         uint16_t getNowNodeNum(){return nowNodeNum;}
         short getRelatedNodeCount(uint8_t dir){return nodes[tempNode[dir]].count;}
         uint8_t getRotate(){return rotate;}
+        bool isHome();
     private:
         uint16_t makeNewNode(coordinate _p,uint8_t side);
         short searchNode(coordinate _p);
@@ -53,6 +55,9 @@ class node{
         uint8_t rotateToRight(uint8_t _r);
         uint8_t rotateToLeft(uint8_t _r);
         uint8_t reverseR(uint8_t _r);
+        bool isFullySearched();
+        uint8_t getHome();
+        bool getHomeFlag = false;
         block nodes[nodeNum];
         block now;
         uint8_t rotate = 1;

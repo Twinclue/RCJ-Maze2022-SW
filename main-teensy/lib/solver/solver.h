@@ -15,7 +15,7 @@ class solver{
     public:
         solver(read_BNO055 *_imu,read_light *_light,move_robot *_move,detect_wall *_wall,node *_node,LiquidCrystal *_lcd);
         int rightHand();
-        int EXrightHand();
+        bool EXrightHand();
         bool walls[4];
         uint8_t moveto;
     private:

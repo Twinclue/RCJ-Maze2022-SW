@@ -111,4 +111,5 @@ int solver::EXrightHand(){
     }
     debug_buf = "Move Result       : " + String(moveResult);
     Serial.println(debug_buf);
+    return n->isHome();
 }
