@@ -28,13 +28,15 @@ read_light light(&npix);
 move_robot move(&leftM,&rightM,&toff,&tofb,&bno,&light,&lcd,&npix);
 detect_wall wall(&toff, &tofb);
 node n;
-solver solver(&bno, &light, &move, &wall, &n);
+solver solver(&bno, &light, &move, &wall, &n, &lcd);
 
 D6Tarduino rightTempRaw;
 D6Tarduino leftTempRaw;
 
 uint8_t calib[4];
 int Yaw, Pitch;
+
+bool runningFlag = false;
 
 void setup(){
     Serial.begin(115200);
@@ -55,6 +57,10 @@ void setup(){
     pinMode(RE_LED_B,OUTPUT);
     pinMode(RE_LED_G,OUTPUT);
     pinMode(RE_LED_R,OUTPUT);
+
+    pinMode(STST, INPUT);
+    pinMode(BUZZER, OUTPUT);
+
     lcd.home();
     lcd.clear();
     if(!bno.begin()){
@@ -65,11 +71,26 @@ void setup(){
     digitalWrite(RE_LED_B,HIGH);
     delay(1000);
     digitalWrite(RE_LED_B,LOW);
+    if(digitalRead(STST)){
+      lcd.clear();
+      lcd.print("STST IS ON NOW!");
+      lcd.setCursor(0,1);
+      lcd.print("PLEASE TURN OFF");
+      while(digitalRead(STST)){
+        tone(BUZZER,1000);
+        digitalWrite(RE_LED_R,HIGH);
+        delay(100);
+        digitalWrite(RE_LED_R,LOW);
+        noTone(BUZZER);
+        delay(100);
+      }
+    }
 }
 void loop(){
   lcd.home();
   lcd.clear();
   if (digitalRead(STST) == HIGH) {
+    runningFlag = true;
     lcd.print("SCORING RUN MODE");
     if(solver.EXrightHand()){
       //finished!
@@ -79,9 +100,17 @@ void loop(){
     }
   }
   else {
+    if(runningFlag){
+      runningFlag = false;
+      //n.lackOfProgress();
+    }
     switch (enc.read()){
-      case -28:
+      case -32:
         enc.write(0);
+        break;
+      case -28:
+        lcd.print("corrDir");
+        move.corrDir();
         break;
 
       case -24:

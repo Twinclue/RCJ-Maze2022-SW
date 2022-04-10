@@ -20,6 +20,7 @@ class move_robot{
         short rev(short remDist = 300);
         short turn(short remAng = 90);
         short goUp();
+        short goDown();
 
         void  corrDir();//correct direction
         void  corrDist();
