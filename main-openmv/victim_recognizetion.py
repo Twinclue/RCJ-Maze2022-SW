@@ -4,10 +4,10 @@ import sensor, image, time,pyb
 from pyb import Pin ,UART,LED
 
 
-led = Pin('P3',Pin.OUT_PP,Pin.PULL_NONE)
-start = Pin('P0',Pin.IN,Pin.PULL_UP)
-lighton = Pin('P1',Pin.IN,Pin.PULL_UP)
-status = Pin('P7',Pin.OUT_PP,Pin.PULL_NONE)
+led = Pin('P7',Pin.OUT_PP,Pin.PULL_NONE)
+start = Pin('P3',Pin.IN,Pin.PULL_UP)
+lighton = Pin('P6',Pin.IN,Pin.PULL_UP)
+status = Pin('P8',Pin.OUT_PP,Pin.PULL_NONE)
 
 status.off()
 uart = UART(3,9600)
@@ -25,7 +25,7 @@ while(start.value() == False):
 
 sensor.reset()
 sensor.set_pixformat(sensor.RGB565) # or RGB565.
-sensor.set_framesize(sensor.QQQVGA)
+sensor.set_framesize(sensor.QQQQVGA)
 sensor.skip_frames(time = 2000)
 sensor.set_auto_gain(False) # must be turned off for color tracking
 sensor.set_auto_whitebal(False) # must be turned off for color tracking
@@ -64,6 +64,7 @@ while(True):
         bsum += b[m]
 
     #uart.write(Lsum)
+    print(asum_pos)
     #uart.write(asum_neg)
     #uart.write(asum_pos)
     #uart.write(bsum)
