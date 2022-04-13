@@ -38,19 +38,15 @@ bool solver::EXrightHand(){
     Serial.println(moveto);
     switch (moveto){
     case front:
-        if(slopeFlag){
-            moveResult = move->goUp();
-        }
-        else{
-            moveResult =  move->fwd();
-        }
+        moveResult =  move->fwd();
         break;
     case left:
         move->turn(-90);
         moveResult =  move->fwd();
         break;
     case back:
-        move->turn(180);
+        move->turn();
+        move->turn();
         moveResult =  move->fwd();
         break;
     case right:
@@ -63,12 +59,6 @@ bool solver::EXrightHand(){
     if(moveResult == 0){
         n->updatePosition(moveto);
         n->setTile(light->getFloorColor());
-        slopeFlag = false;
-    }
-    else if(moveResult == -2){
-        n->updatePosition(moveto);
-        //n->setTile(3);
-        slopeFlag = true;
     }
     else{
         n->setTile(black,moveto);

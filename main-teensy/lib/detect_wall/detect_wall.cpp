@@ -14,7 +14,7 @@ bool detect_wall::getSingleWall(uint8_t dir){
         }
         break;
     case left://left
-        if(toff->read(fls) < wallThreshold || tofb->read(bls) < wallThreshold){
+        if(toff->read(fls) < wallThreshold && tofb->read(bls) < wallThreshold){
             return true;
         }
         break;
@@ -24,7 +24,7 @@ bool detect_wall::getSingleWall(uint8_t dir){
         }
         break;
     case right://right
-        if(toff->read(frs) < wallThreshold || tofb->read(brs) < wallThreshold){
+        if(toff->read(frs) < wallThreshold && tofb->read(brs) < wallThreshold){
             return true;
         }
         break;
