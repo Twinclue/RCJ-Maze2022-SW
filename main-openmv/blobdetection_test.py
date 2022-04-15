@@ -5,8 +5,8 @@ from ulab import numpy as np
 
 
 led = Pin('P7',Pin.OUT_PP,Pin.PULL_NONE)
-start = Pin('P3',Pin.IN,Pin.PULL_UP)
-lighton = Pin('P6',Pin.IN,Pin.PULL_UP)
+start = Pin('P3',Pin.IN,Pin.PULL_NONE)
+lighton = Pin('P6',Pin.IN,Pin.PULL_NONE)
 status = Pin('P8',Pin.OUT_PP,Pin.PULL_NONE)
 status.off()
 uart = UART(3,9600)
@@ -55,7 +55,7 @@ while(True):
             divhist.append(img.get_histogram(roi = [blob.x(),blob.y(),int(linecoor[i]),blob.h()]))
             img.draw_line(int(linecoor[i]),blob.y(),int(linecoor[i]),blob.y() + blob.h())
             divstati.append(divhist[i].get_statistics())
-            print(divstati[i].l_mean())
+            #print(divstati[i].l_mean())
 
         #print(blob.code())
         blobcode = blob.code()
