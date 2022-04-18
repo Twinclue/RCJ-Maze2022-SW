@@ -98,7 +98,6 @@ while(True):
         #for k in range(2):
 
 
-    print(result)
     print(clock.fps())
     uart.write(result)
     result = 'N'
