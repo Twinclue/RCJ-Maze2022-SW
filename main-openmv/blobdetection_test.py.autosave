@@ -16,12 +16,12 @@ red_led   = LED(1)
 green_led = LED(2)
 blue_led  = LED(3)
 
-tim = Timer(4, freq=2000)
+tim = Timer(4, freq=20000)
 
 #led.value(False)
 while(start.value() == False):
     if lighton.value() == True:
-        ch1 = tim.channel(1, Timer.PWM, pin=Pin("P7"), pulse_width_percent=10)
+        ch1 = tim.channel(1, Timer.PWM, pin=Pin("P7"), pulse_width_percent=5)
         #led.value(not led.value())
         time.sleep_ms(500)
 
