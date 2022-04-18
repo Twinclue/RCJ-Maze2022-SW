@@ -5,8 +5,8 @@ from ulab import numpy as np
 
 
 led = Pin('P7',Pin.OUT_PP,Pin.PULL_NONE)
-start = Pin('P3',Pin.IN,Pin.PULL_UP)
-lighton = Pin('P6',Pin.IN,Pin.PULL_UP)
+start = Pin('P3',Pin.IN,Pin.PULL_NONE)
+lighton = Pin('P6',Pin.IN,Pin.PULL_NONE)
 status = Pin('P8',Pin.OUT_PP,Pin.PULL_NONE)
 status.off()
 uart = UART(3,9600)
@@ -94,6 +94,6 @@ while(True):
         #for k in range(2):
 
 
-    print(result)
+    print(clock.fps())
     uart.write(result)
     result = 'N'
