@@ -41,13 +41,20 @@ move_robot::move_robot(drive_motor *_left,drive_motor *_right,read_tof *_front,r
 short move_robot::fwd(short remDist = 300){
     bool frontAnker = false;
     int startDist;
+    bool outOfRange = false;
+    ulong startTime = millis();
     if(front->read(fc) < back->read(bc)){
         frontAnker = true;
         startDist = front->read(fc);
     }
     else{
         startDist = back->read(bc);
+        if(back->read(bc) >= 1250){
+            outOfRange = true;
+        }
     }
+
+
     int errorDist = 0;
     short startAng = imu->getYaw();
     short errorAng = startAng - imu->getYaw();
