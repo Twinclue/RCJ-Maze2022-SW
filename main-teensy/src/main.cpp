@@ -105,8 +105,13 @@ void loop(){
       //n.lackOfProgress();
     }
     switch (enc.read()){
-      case -36:
+      case -40:
         enc.write(0);
+        break;
+      case -36:
+        if(digitalRead(RE_SW)){
+          move.loadRescueKit();
+        }
         break;
       case -32:
         lcd.print("CLICK TO BLINK");

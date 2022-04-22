@@ -31,6 +31,7 @@ class move_robot{
         void attachInterrupts();
         void detachInterrups();
         void blink();
+        void loadRescueKit(){flipper->write(0);}
     private:
 
         drive_motor *left;
