@@ -101,7 +101,7 @@ while(True):
         #for k in range(2):
 
     print(result)
-    print(blob_diagonal_sq)
-    #print(clock.fps())
+    #print(blob_diagonal_sq) #wrote for setting values
+    print(clock.fps())
     uart.write(result)
     result = 'N'
