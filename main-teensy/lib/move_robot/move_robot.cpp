@@ -36,7 +36,7 @@ move_robot::move_robot(drive_motor *_left,drive_motor *_right,read_tof *_front,r
     pinMode(rTouch,INPUT);
     mwall = new detect_wall(front,back);
     flipper->attach(servo);
-    flipper->write(140);
+    flipper->write(145);
     delay(500);
 }
 
@@ -365,19 +365,19 @@ bool move_robot::avoidObstacle(){
 void move_robot::drop(bool dir){
     if(rescueKitNum > 0){
         if(dir){
-            flipper->write(140);
+            flipper->write(145);
             delay(500);
-            flipper->write(172);
+            flipper->write(180);
             delay(500);
             flipper->write(130);
             delay(200);
             flipper->write(150);
             delay(200);
-            flipper->write(140);
+            flipper->write(145);
             delay(500);
         }
         else{
-            flipper->write(140);
+            flipper->write(145);
             delay(500);
             flipper->write(105);
             delay(500);
@@ -385,7 +385,7 @@ void move_robot::drop(bool dir){
             delay(200);
             flipper->write(130);
             delay(200);
-            flipper->write(140);
+            flipper->write(145);
             delay(500);
         }
         rescueKitNum--;
