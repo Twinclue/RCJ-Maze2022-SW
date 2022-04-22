@@ -46,7 +46,7 @@ short move_robot::fwd(short remDist = 300){
         frontAnker = true;
         startDist = front->read(fc);
     }
-    else if(front->read(fc) > back->read(bc) && !(back->read(bc) > 1000){
+    else if(front->read(fc) > back->read(bc) && (back->read(bc) < 1000)){
         startDist = back->read(bc);
     }
     else{
@@ -108,7 +108,9 @@ short move_robot::fwd(short remDist = 300){
 
     Serial.println(millis() - startTime);
 
-    while(millis() - startTime < 2000){//秒
+    while(millis() - startTime < 1500 && outOfRange){//秒
+        digitalWrite(RE_LED_B,HIGH);
+        digitalWrite(RE_LED_G,HIGH);
         errorAng = startAng - imu->getYaw();
         if(frontAnker){
             errorDist = startDist  - front->read(fc);
@@ -151,6 +153,8 @@ short move_robot::fwd(short remDist = 300){
         }
         delay(1);
     }
+    digitalWrite(RE_LED_B,LOW);
+    digitalWrite(RE_LED_G,LOW);
     detachInterrups();
 
     left->on(0);
