@@ -43,13 +43,19 @@ move_robot::move_robot(drive_motor *_left,drive_motor *_right,read_tof *_front,r
 short move_robot::fwd(short remDist = 300){
     bool frontAnker = false;
     int startDist;
-    if(front->read(fc) < back->read(bc)){
+    bool outOfRange = false;
+    if(front->read(fc) < back->read(bc) && front->read(fc) != 8190){
         frontAnker = true;
         startDist = front->read(fc);
     }
-    else{
+    else if(front->read(fc) > back->read(bc) && (back->read(bc) < 1000)){
         startDist = back->read(bc);
     }
+    else{
+        outOfRange = true;
+    }
+
+
     int errorDist = 0;
     short startAng = imu->getYaw();
     short errorAng = startAng - imu->getYaw();
@@ -57,7 +63,8 @@ short move_robot::fwd(short remDist = 300){
 
     fwdPid->init();
     attachInterrupts();
-    while((errorDist < remDist) && (front->read(fc) > 50)){
+    uint32_t startTime = millis();
+    while((errorDist < remDist) && (front->read(fc) > 50) && outOfRange == false){
         errorAng = startAng - imu->getYaw();
         if(frontAnker){
             errorDist = startDist  - front->read(fc);
@@ -100,6 +107,56 @@ short move_robot::fwd(short remDist = 300){
         }
         delay(1);
     }
+
+    Serial.println(millis() - startTime);
+
+    while(millis() - startTime < 1500 && outOfRange){//秒
+        digitalWrite(RE_LED_B,HIGH);
+        digitalWrite(RE_LED_G,HIGH);
+        errorAng = startAng - imu->getYaw();
+        if(frontAnker){
+            errorDist = startDist  - front->read(fc);
+        }
+        else{
+            errorDist = back->read(bc) - startDist;
+        }
+        left->on(250 + fwdPid->calcP(errorAng,0));
+        right->on(-250 + fwdPid->calcP(errorAng,0));
+
+        if(imu->getPitch()>15){  //temporary threshold
+            digitalWrite(RE_LED_R, HIGH);
+            left->on(0);
+            right->on(0);
+            delay(1000);
+            digitalWrite(RE_LED_R, LOW);
+            return -2;  //making slopeState GOUP
+        }
+        else if(imu->getPitch()<-15){
+            digitalWrite(RE_LED_G, HIGH);
+            for(int i = 255; i > 100;i--){
+                left->on(i);
+                right->on(-i);
+                delay(5);
+            }
+            //delay(1000);
+            digitalWrite(RE_LED_G, LOW);
+            return -3;  //making slopeState GODOWN
+        }
+        if(avoidObstacle()){
+            remDist = this->fwd(remDist - errorDist);
+        }
+        victim();
+        if(light->getFloorColor() == 1){
+            remDist = 0;
+            this->rev(errorDist);
+            left->on(0);
+            right->on(0);
+            return -1;
+        }
+        delay(1);
+    }
+    digitalWrite(RE_LED_B,LOW);
+    digitalWrite(RE_LED_G,LOW);
     detachInterrups();
 
     left->on(0);
