@@ -10,11 +10,13 @@ volatile byte Lkitnum = 0;
 void intrR(){
     Rvicflag = true;
     digitalWrite(RE_LED_R,HIGH);
+    Rkitnum = digitalRead(R_COMM_2) || (digitalRead(R_COMM_3) << 1);
     return;
 }
 
 void intrL(){
     Lvicflag = true;
+    Lkitnum = digitalRead(L_COMM_2) || (digitalRead(L_COMM_3) << 1);
     digitalWrite(RE_LED_B,HIGH);
     return;
 }
@@ -204,6 +206,7 @@ short move_robot::turn(short remAng = 90){
         else{
             power = turnPid->calcPI(errorAng,remAng);
         }
+        avoidObstacle();
         left->on(-power);
         right->on(-power);
         victim();
