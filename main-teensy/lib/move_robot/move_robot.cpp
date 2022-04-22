@@ -149,6 +149,7 @@ short move_robot::turn(short remAng = 90){
         else{
             power = turnPid->calcPI(errorAng,remAng);
         }
+        avoidObstacle();
         left->on(-power);
         right->on(-power);
         victim();
