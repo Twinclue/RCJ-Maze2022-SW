@@ -42,16 +42,15 @@ short move_robot::fwd(short remDist = 300){
     bool frontAnker = false;
     int startDist;
     bool outOfRange = false;
-    ulong startTime = millis();
-    if(front->read(fc) < back->read(bc)){
+    if(front->read(fc) < back->read(bc) && front->read(fc) != 8190){
         frontAnker = true;
         startDist = front->read(fc);
     }
-    else{
+    else if(front->read(fc) > back->read(bc) && !(back->read(bc) > 1000){
         startDist = back->read(bc);
-        if(back->read(bc) >= 1250){
-            outOfRange = true;
-        }
+    }
+    else{
+        outOfRange = true;
     }
 
 
@@ -62,7 +61,54 @@ short move_robot::fwd(short remDist = 300){
 
     fwdPid->init();
     attachInterrupts();
-    while((errorDist < remDist) && (front->read(fc) > 50)){
+    uint32_t startTime = millis();
+    while((errorDist < remDist) && (front->read(fc) > 50) && outOfRange == false){
+        errorAng = startAng - imu->getYaw();
+        if(frontAnker){
+            errorDist = startDist  - front->read(fc);
+        }
+        else{
+            errorDist = back->read(bc) - startDist;
+        }
+        left->on(250 + fwdPid->calcP(errorAng,0));
+        right->on(-250 + fwdPid->calcP(errorAng,0));
+
+        if(imu->getPitch()>15){  //temporary threshold
+            digitalWrite(RE_LED_R, HIGH);
+            left->on(0);
+            right->on(0);
+            delay(1000);
+            digitalWrite(RE_LED_R, LOW);
+            return -2;  //making slopeState GOUP
+        }
+        else if(imu->getPitch()<-15){
+            digitalWrite(RE_LED_G, HIGH);
+            for(int i = 255; i > 100;i--){
+                left->on(i);
+                right->on(-i);
+                delay(5);
+            }
+            //delay(1000);
+            digitalWrite(RE_LED_G, LOW);
+            return -3;  //making slopeState GODOWN
+        }
+        if(avoidObstacle()){
+            remDist = this->fwd(remDist - errorDist);
+        }
+        victim();
+        if(light->getFloorColor() == 1){
+            remDist = 0;
+            this->rev(errorDist);
+            left->on(0);
+            right->on(0);
+            return -1;
+        }
+        delay(1);
+    }
+
+    Serial.println(millis() - startTime);
+
+    while(millis() - startTime < 2000){//秒
         errorAng = startAng - imu->getYaw();
         if(frontAnker){
             errorDist = startDist  - front->read(fc);
