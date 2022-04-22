@@ -105,12 +105,21 @@ void loop(){
       //n.lackOfProgress();
     }
     switch (enc.read()){
-      case -32:
+      case -36:
         enc.write(0);
+        break;
+      case -32:
+        lcd.print("CLICK TO BLINK");
+        if(digitalRead(RE_SW)){
+          move.blink();
+        }
+        
         break;
       case -28:
         lcd.print("corrDir");
-        move.corrDir();
+        if(digitalRead(RE_SW)){
+          move.corrDir();
+        }
         break;
 
       case -24:
