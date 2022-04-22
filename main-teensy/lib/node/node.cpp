@@ -11,6 +11,7 @@ void node::updatePosition(uint8_t moveto){
     now.p = convRXYZtoCoorAddLengh(kagome(rotate,moveto),now.p.x,now.p.y,now.p.z);
     nowNodeNum = searchNode(now.p);
     nodes[nowNodeNum].count++;
+    now.count = nodes[nowNodeNum].count;
     switch (moveto){
     case front:
         break;
@@ -85,7 +86,6 @@ uint8_t node::getMinCountDir(){
     short compare[4];
     for(int n = 0;n < 4;n++){
         compare[n] = ((tempNode[n]==-1) ? 255 : nodes[tempNode[n]].count);
-        Serial.println(compare[n]);
     }
     if(compare[right] >= 1 && compare[front] >= 1 && compare[left] >= 1 && compare[back] >= 1 && !getHomeFlag){
         if(isFullySearched()){
@@ -349,6 +349,7 @@ uint8_t node::kagome(uint8_t _r,uint8_t _side){
 void node::lackOfProgress(){
     now = nodes[lastCheckPoint];
     nowNodeNum = lastCheckPoint;
+    rotate = 1;
 }
 
 bool node::isFullySearched(){
