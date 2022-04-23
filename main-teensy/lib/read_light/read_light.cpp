@@ -10,14 +10,14 @@ read_light::read_light(Adafruit_NeoPixel *_led){
 }
 
 int read_light::getFloorColor(){
-    if(this->read() < thresholdBW){
+    if(this->read() < thresholdBS){
         return 1;
     }
-    else if(this->read() < thresholdWS){
-        return 0;
+    else if(this->read() < thresholdSW){
+        return 2;
     }
     else{
-        return 2;
+        return 0;
     }
 }
 

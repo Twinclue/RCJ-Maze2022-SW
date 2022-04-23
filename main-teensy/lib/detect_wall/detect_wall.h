@@ -7,7 +7,7 @@
 class detect_wall{
     public:
         detect_wall(read_tof *_toff,read_tof *_tofb);
-        bool getSingleWall(uint8_t dir , bool victim = false);
+        bool getSingleWall(uint8_t dir);
     private:
         read_tof *toff;
         read_tof *tofb;

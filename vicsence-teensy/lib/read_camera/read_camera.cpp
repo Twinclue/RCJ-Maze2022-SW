@@ -3,16 +3,16 @@
 read_camera::read_camera(HardwareSerial *_serial){
 	serial=_serial;
 	// init
-	serial->begin(4800);
+	serial->begin(115200);
 }
 int read_camera::victim_num(){
 	while(serial->available() == -1);
 	switch (this->read())
 	{
-	case 'H':
-		return 3;
 	case 'S':
 		return 2;
+	case 'H':
+		return 3;
 	case 'R':
 	case 'Y':
 		return 1;

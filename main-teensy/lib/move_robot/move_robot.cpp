@@ -77,6 +77,7 @@ short move_robot::fwd(short remDist = 300){
 
         if(imu->getPitch()>15){  //temporary threshold
             digitalWrite(RE_LED_R, HIGH);
+            delay(500);
             left->on(0);
             right->on(0);
             delay(1000);
@@ -101,8 +102,8 @@ short move_robot::fwd(short remDist = 300){
         if(light->getFloorColor() == 1){
             remDist = 0;
             this->rev(errorDist);
-            left->on(0);
-            right->on(0);
+            left->on(0,false);
+            right->on(0,false);
             return -1;
         }
         delay(1);
@@ -111,8 +112,6 @@ short move_robot::fwd(short remDist = 300){
     Serial.println(millis() - startTime);
 
     while(millis() - startTime < 1000 && outOfRange){//秒
-        digitalWrite(RE_LED_B,HIGH);
-        digitalWrite(RE_LED_G,HIGH);
         errorAng = startAng - imu->getYaw();
         if(frontAnker){
             errorDist = startDist  - front->read(fc);
@@ -125,6 +124,7 @@ short move_robot::fwd(short remDist = 300){
 
         if(imu->getPitch()>15){  //temporary threshold
             digitalWrite(RE_LED_R, HIGH);
+            delay(500);
             left->on(0);
             right->on(0);
             delay(1000);
@@ -149,8 +149,8 @@ short move_robot::fwd(short remDist = 300){
         if(light->getFloorColor() == 1){
             remDist = 0;
             this->rev(errorDist);
-            left->on(0);
-            right->on(0);
+            left->on(0,false);
+            right->on(0,false);
             return -1;
         }
         delay(1);
@@ -421,7 +421,7 @@ void move_robot::detachInterrups(){//ピン番号は仮
 
 void move_robot::victim(){
     if(Rvicflag){
-        if(mwall->getSingleWall(0,true)){
+        if(mwall->getSingleWall(0)){
             left->on(0);
             right->on(0);
             blink();
@@ -433,7 +433,7 @@ void move_robot::victim(){
         digitalWrite(RE_LED_R,LOW);
     }
     if(Lvicflag){
-        if(mwall->getSingleWall(2,true)==true){
+        if(mwall->getSingleWall(2)==true){
             left->on(0);
             right->on(0);
             blink();
