@@ -267,7 +267,21 @@ short move_robot::goDown(){
 
 void move_robot::corrDir(){
     float relativeAng = 0;
-    if(front->read(frs) <= 200 && back->read(brs) <= 200){
+    int lenghCompare[4];
+    lenghCompare[0] = (front->read(frs) + back->read(brs));
+    lenghCompare[2] = (front->read(fls) + back->read(bls));
+    lenghCompare[1] = (front->read(frf) + front->read(flf));
+    lenghCompare[3] = (back->read(brf) + back->read(blf));
+
+    uint8_t minlengh = 0;
+
+    for(int i = 0; i < 4; i++){
+        if(lenghCompare[i] < lenghCompare[minlengh]){
+            minlengh = i;
+        }
+    }
+
+    if(minlengh == 0){
         relativeAng = readRAngle(front->read(frs),back->read(brs));
         corrDirPid->init();
         while(relativeAng <= -1 || 1 <= relativeAng){
@@ -276,7 +290,7 @@ void move_robot::corrDir(){
             right->on(corrDirPid->calcPI(relativeAng,0));//
         }
     }
-    else if(front->read(fls) <= 200 && back->read(bls) <= 200){
+    else if(minlengh == 2){
         relativeAng = readRAngle(front->read(fls),back->read(bls));
         corrDirPid->init();
         while(relativeAng <= -1 || 1 <= relativeAng){
@@ -285,7 +299,7 @@ void move_robot::corrDir(){
             right->on(-corrDirPid->calcPI(relativeAng,0));//
         }
     }
-    else if(front->read(flf) <= 200 && front->read(frf) <= 200){
+    else if(minlengh == 1){
         relativeAng = readRAngle(front->read(flf),front->read(frf),125);
         corrDirPid->init();
         while(relativeAng <= -1 || 1 <= relativeAng){
@@ -294,7 +308,7 @@ void move_robot::corrDir(){
             right->on(corrDirPid->calcPI(relativeAng,0));//
         }
     }
-    else if(back->read(blf) <= 200 && back->read(brf) <= 200){
+    else if(minlengh == 3){
         relativeAng = readRAngle(back->read(blf),back->read(brf),125);
         corrDirPid->init();
         while(relativeAng <= -1 || 1 <= relativeAng){
