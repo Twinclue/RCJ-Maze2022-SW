@@ -3,7 +3,7 @@
 read_camera::read_camera(HardwareSerial *_serial){
 	serial=_serial;
 	// init
-	serial->begin(9600);
+	serial->begin(4800);
 }
 int read_camera::victim_num(){
 	while(serial->available() == -1);

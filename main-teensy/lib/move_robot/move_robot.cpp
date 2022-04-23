@@ -48,7 +48,7 @@ short move_robot::fwd(short remDist = 300){
         frontAnker = true;
         startDist = front->read(fc);
     }
-    else if(front->read(fc) > back->read(bc) && (back->read(bc) < 1000)){
+    else if(front->read(fc) > back->read(bc) && (back->read(bc) < 800)){
         startDist = back->read(bc);
     }
     else{
@@ -110,7 +110,7 @@ short move_robot::fwd(short remDist = 300){
 
     Serial.println(millis() - startTime);
 
-    while(millis() - startTime < 1500 && outOfRange){//秒
+    while(millis() - startTime < 1000 && outOfRange){//秒
         digitalWrite(RE_LED_B,HIGH);
         digitalWrite(RE_LED_G,HIGH);
         errorAng = startAng - imu->getYaw();
@@ -206,7 +206,11 @@ short move_robot::turn(short remAng = 90){
         else{
             power = turnPid->calcPI(errorAng,remAng);
         }
-        avoidObstacle();
+        if(digitalRead(SW_L) == true || digitalRead(SW_R) == true){
+            left->on(-250);
+            right->on(250);
+            delay(100);
+        }
         left->on(-power);
         right->on(-power);
         victim();
@@ -417,7 +421,7 @@ void move_robot::detachInterrups(){//ピン番号は仮
 
 void move_robot::victim(){
     if(Rvicflag){
-        if(mwall->getSingleWall(0)){
+        if(mwall->getSingleWall(0,true)){
             left->on(0);
             right->on(0);
             blink();
@@ -429,7 +433,7 @@ void move_robot::victim(){
         digitalWrite(RE_LED_R,LOW);
     }
     if(Lvicflag){
-        if(mwall->getSingleWall(2)==true){
+        if(mwall->getSingleWall(2,true)==true){
             left->on(0);
             right->on(0);
             blink();

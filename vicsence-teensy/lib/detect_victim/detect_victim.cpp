@@ -23,16 +23,16 @@ int8_t detect_victim::kitNumOneSide(bool rightSide){
     int8_t kitNum=-1;
     if(rightSide){
         if(camR->victim_num()==3){kitNum=3;}
-        if(camR->victim_num()==2){kitNum=2;}
-        if(camR->victim_num()==1||this->isHeatedVictim(true)){kitNum = 1;}
-        if(camR->victim_num()==0){kitNum=0;}
-        if(camR->victim_num()==-1){kitNum=-1;}
+        else if(camR->victim_num()==2){kitNum=2;}
+        else if(camR->victim_num()==1||this->isHeatedVictim(true)){kitNum = 1;}
+        else if(camR->victim_num()==0){kitNum=0;}
+        else if(camR->victim_num()==-1){kitNum=-1;}
     }else{
         if(camL->victim_num()==3){kitNum=3;}
-        if(camL->victim_num()==2){kitNum=2;}
-        if(camL->victim_num()==1||this->isHeatedVictim(false)){kitNum = 1;}
-        if(camL->victim_num()==0){kitNum=0;}
-        if(camL->victim_num()==-1){kitNum=-1;}
+        else if(camL->victim_num()==2){kitNum=2;}
+        else if(camL->victim_num()==1||this->isHeatedVictim(false)){kitNum = 1;}
+        else if(camL->victim_num()==0){kitNum=0;}
+        else if(camL->victim_num()==-1){kitNum=-1;}
     }
     return kitNum;
 }

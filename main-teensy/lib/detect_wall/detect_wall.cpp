@@ -5,7 +5,7 @@ detect_wall::detect_wall(read_tof *_toff,read_tof *_tofb){
     tofb = _tofb;
 }
 
-bool detect_wall::getSingleWall(uint8_t dir){
+bool detect_wall::getSingleWall(uint8_t dir, bool victim = false){
     switch (dir)
     {
     case front://front
@@ -14,7 +14,10 @@ bool detect_wall::getSingleWall(uint8_t dir){
         }
         break;
     case left://left
-        if(toff->read(fls) < wallThreshold || tofb->read(bls) < wallThreshold){
+        if((toff->read(fls) < wallThreshold && tofb->read(bls) < wallThreshold) && !victim){
+            return true;
+        }
+        if((toff->read(fls) < wallThreshold || tofb->read(bls) < wallThreshold) && victim){
             return true;
         }
         break;
@@ -24,7 +27,10 @@ bool detect_wall::getSingleWall(uint8_t dir){
         }
         break;
     case right://right
-        if(toff->read(frs) < wallThreshold || tofb->read(brs) < wallThreshold){
+        if((toff->read(frs) < wallThreshold && tofb->read(brs) < wallThreshold) && !victim){
+            return true;
+        }
+        if((toff->read(frs) < wallThreshold || tofb->read(brs) < wallThreshold) && victim){
             return true;
         }
         break;

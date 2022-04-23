@@ -104,12 +104,14 @@ void loop() {
       lHighBit=false;
       break;
   }
+
   digitalWrite(R_COMM_ITR,rIntr);
   digitalWrite(R_COMM_2,rLowBit);
   digitalWrite(R_COMM_3,rHighBit);
   digitalWrite(L_COMM_ITR,lIntr);
   digitalWrite(L_COMM_2,lLowBit);
   digitalWrite(L_COMM_3,lHighBit);
+  /*
   Serial.print(rIntr);
   Serial.print(" ");
   Serial.print(rLowBit);
@@ -122,12 +124,14 @@ void loop() {
   Serial.print(lLowBit);
   Serial.print(" ");
   Serial.println(lHighBit);
-
-
+  */
+  //Serial.print(String(camR.read()));
+  //Serial.println(String(camL.read()));
   //tempR=d6tR.temp();
   //tempL=d6tL.temp();
   //Serial.print(tempR);  Serial.print("\t");
   //Serial.print(tempL);  Serial.print("\t");
   //Serial.println("");
   delay(50);
+
 }
