@@ -1,14 +1,12 @@
 #include "detect_victim.h"
 
-detect_victim::detect_victim(HardwareSerial *_serialR, HardwareSerial *_serialL, TwoWire *_busR, TwoWire *_busL){
-    serialR = _serialR;
-    serialL = _serialL;
+detect_victim::detect_victim(uint8_t _lowR,uint8_t _highR , uint8_t _lowL, uint8_t _highL , TwoWire *_busR, TwoWire *_busL){
     busR = _busR;
     busL = _busL;
     d6tL = new read_temperature(busL);
     d6tR = new read_temperature(busR);
-    camR = new read_camera(serialR);
-    camL = new read_camera(serialL);
+    camR = new read_camera(_lowR,_highR);
+    camL = new read_camera(_lowL,_highL);
 }
 
 int8_t detect_victim::isHeatedVictim(bool rightSide){

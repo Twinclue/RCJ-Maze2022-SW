@@ -16,8 +16,8 @@ void intrR(){
 
 void intrL(){
     Lvicflag = true;
-    Lkitnum = digitalRead(L_COMM_2) || (digitalRead(L_COMM_3) << 1);
     digitalWrite(RE_LED_B,HIGH);
+    Lkitnum = digitalRead(L_COMM_2) || (digitalRead(L_COMM_3) << 1);
     return;
 }
 

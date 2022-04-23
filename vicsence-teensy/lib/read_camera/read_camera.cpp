@@ -1,34 +1,14 @@
 #include "read_camera.h"
 
-read_camera::read_camera(HardwareSerial *_serial){
-	serial=_serial;
-	// init
-	serial->begin(115200);
+read_camera::read_camera(uint8_t _low,uint8_t _high){
+	low=_low;
+	high=_high;
+	pinMode(low,INPUT);
+	pinMode(high,INPUT);
 }
 int read_camera::victim_num(){
-	while(serial->available() == -1);
-	switch (this->read())
-	{
-	case 'S':
-		return 2;
-	case 'H':
-		return 3;
-	case 'R':
-	case 'Y':
-		return 1;
-	case 'U':
-	case 'G':
-		return 0;
-	case 'N':
-		return -1;
-	default:
-		return -2;
-	}
-}
-char read_camera::read(){
-	if(serial->available()){
-		return serial->read();
-	}else{
-		return -1;
-	}
+	bool lowbit = digitalRead(low);
+	bool highbit = digitalRead(high);
+	int res = (highbit<<1 | lowbit) - 1;
+	return res;
 }

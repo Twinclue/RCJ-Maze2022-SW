@@ -97,7 +97,7 @@ while(True):
     elif result == 'Y' or result == 'R':
         lowbit.value(False)
         highbit.value(True)
-    elif result == 'G' or result == 'U'
+    elif result == 'G' or result == 'U':
         lowbit.value(True)
         highbit.value(False)
     else:

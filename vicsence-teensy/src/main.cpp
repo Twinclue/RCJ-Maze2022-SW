@@ -5,12 +5,12 @@
 #include "detect_victim.h"
 #include "pinmap_vic.h"
 
-read_camera camR(&Serial1);
+read_camera camR(0,1);
 read_temperature d6tR(&Wire);
 
-read_camera camL(&Serial2);
+read_camera camL(11,12);
 read_temperature d6tL(&Wire1);
-detect_victim victim(&Serial1, &Serial2, &Wire, &Wire1);
+detect_victim victim(0,1,11,12,&Wire, &Wire1);
 
 uint8_t interruptPin=21;
 int vicNumR, vicNumL;
@@ -111,7 +111,7 @@ void loop() {
   digitalWrite(L_COMM_ITR,lIntr);
   digitalWrite(L_COMM_2,lLowBit);
   digitalWrite(L_COMM_3,lHighBit);
-  
+  /*
   Serial.print(rIntr);
   Serial.print(" ");
   Serial.print(rLowBit);
@@ -124,9 +124,9 @@ void loop() {
   Serial.print(lLowBit);
   Serial.print(" ");
   Serial.println(lHighBit);
-  
-  //Serial.print((camR.read()));
-  //Serial.println(camL.read());
+  */
+  Serial.print(digitalRead(0));
+  Serial.println(digitalRead(1));
   tempR=d6tR.temp();
   tempL=d6tL.temp();
   //Serial.print(tempR);  Serial.print("\t");

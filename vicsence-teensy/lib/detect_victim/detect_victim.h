@@ -7,14 +7,13 @@
 
 class detect_victim{
     public:
-        detect_victim(HardwareSerial *_serialR, HardwareSerial *_serialL, TwoWire *_busR, TwoWire *_busL);
+        detect_victim(uint8_t _lowR,uint8_t _highR , uint8_t _lowL, uint8_t _highL , TwoWire *_busR, TwoWire *_busL);
         int8_t kitNumOneSide(bool rightSide);
         int8_t isHeatedVictim(bool rightSide);
         //int8_t[2] kitNumBothSide(); 
     private:
-        const float temp_th = 26.0;
+        const float temp_th = 28.0;
         const bool camFirst = true;
-        HardwareSerial* serialR, *serialL;
         TwoWire* busR, *busL;
         read_camera* camR;
         read_camera* camL;
