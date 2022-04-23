@@ -4,25 +4,25 @@ from ulab import numpy as np
 
 
 
-#led = Pin('P7',Pin.OUT_PP,Pin.PULL_NONE)
+led = Pin('P7',Pin.OUT_PP,Pin.PULL_NONE)
 start = Pin('P3',Pin.IN,Pin.PULL_NONE)
 lighton = Pin('P6',Pin.IN,Pin.PULL_NONE)
 status = Pin('P8',Pin.OUT_PP,Pin.PULL_NONE)
 status.off()
 
-uart = UART(3,9600)
+uart = UART(3,4800)
 
 red_led   = LED(1)
 green_led = LED(2)
 blue_led  = LED(3)
 
-tim = Timer(4, freq=20000)
+#tim = Timer(4, freq=20000)
 
 #led.value(False)
 while(start.value() == False):
     if lighton.value() == True:
-        ch1 = tim.channel(1, Timer.PWM, pin=Pin("P7"), pulse_width_percent=50)
-        #led.value(not led.value())
+        #ch1 = tim.channel(1, Timer.PWM, pin=Pin("P7"), pulse_width_percent=50)
+        led.value(not led.value())
         time.sleep_ms(500)
 
 
@@ -37,7 +37,7 @@ sensor.set_auto_whitebal(False) # must be turned off for color tracking
 sensor.set_brightness(2)
 sensor.set_contrast(3)
 sensor.set_saturation(3)
-thr = [(18, 37, -128, 127, -128, 127),(31, 41, -40, -19, 7, 26),(75, 84, -1, 15, 59, 84),(39, 57, 16, 78, 9, 65)]#code 1,2,4,8/Black Green,Yellow,Red
+thr = [(6, 40, -128, 127, -128, 127),(31, 41, -40, -19, 7, 26),(46, 81, -1, 46, 23, 83),(33, 54, 3, 80, 16, 64)]#code 1,2,4,8/Black Green,Yellow,Red
 #llo,lhi,alo,ahi,blo,bhi
 min_degree = 0
 max_degree = 179
@@ -77,13 +77,13 @@ while(True):
             r_min = circle_r, r_max = circle_r + 10, r_step = 2):
                 img.draw_circle(c.x(), c.y(), c.r(), color = (255, 0, 0))
                 circlecount += 1
-            if linecount == 0 and circlecount == 0:
-                result = 'U'
-            elif circlecount >= 2 and linecount <= 1:
+            #if linecount == 0 and circlecount == 0:
+                #result = 'U'
+            if circlecount >= 2 and linecount <= 1:
                 result = 'S'
             elif linecount == 2 and circlecount >= 1:
                 result = 'U'
-            elif linecount >= 3:
+            elif linecount >=3 and circlecount== 0:
                 result = 'H'
             else:
                 result = 'N'
@@ -102,6 +102,6 @@ while(True):
 
     print(result)
     #print(blob_diagonal_sq) #wrote for setting values
-    print(clock.fps())
+    #print(clock.fps())
     uart.write(result)
     result = 'N'
