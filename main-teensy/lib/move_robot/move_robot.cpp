@@ -10,14 +10,36 @@ volatile byte Lkitnum = 0;
 void intrR(){
     Rvicflag = true;
     digitalWrite(RE_LED_R,HIGH);
-    Rkitnum = digitalRead(R_COMM_2) || (digitalRead(R_COMM_3) << 1);
+    if(digitalRead(R_COMM_2) && !digitalRead(R_COMM_3)){
+        Rkitnum = 1;
+    }
+    else if(!digitalRead(R_COMM_2) && digitalRead(R_COMM_3)){
+        Rkitnum = 2;
+    }
+    else if(digitalRead(R_COMM_2) && digitalRead(R_COMM_3)){
+        Rkitnum = 3;
+    }
+    else{
+        Rkitnum = 0;
+    }
     return;
 }
 
 void intrL(){
     Lvicflag = true;
     digitalWrite(RE_LED_B,HIGH);
-    Lkitnum = digitalRead(L_COMM_2) || (digitalRead(L_COMM_3) << 1);
+    if(digitalRead(L_COMM_2) && !digitalRead(L_COMM_3)){
+        Rkitnum = 1;
+    }
+    else if(!digitalRead(L_COMM_2) && digitalRead(L_COMM_3)){
+        Rkitnum = 2;
+    }
+    else if(digitalRead(L_COMM_2) && digitalRead(L_COMM_3)){
+        Rkitnum = 3;
+    }
+    else{
+        Rkitnum = 0;
+    }
     return;
 }
 
