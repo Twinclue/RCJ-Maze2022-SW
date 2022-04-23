@@ -23,7 +23,7 @@ tim = Timer(4, freq=20000)
 #led.value(False)
 while(start.value() == False):
     if lighton.value() == True:
-        ch1 = tim.channel(1, Timer.PWM, pin=Pin("P7"), pulse_width_percent=2)
+        ch1 = tim.channel(1, Timer.PWM, pin=Pin("P7"), pulse_width_percent=50)
         #led.value(not led.value())
         time.sleep_ms(500)
 
@@ -43,6 +43,7 @@ thr = [(0, 26, -128, 127, -128, 127),(31, 41, -40, -19, 7, 26),(75, 84, -1, 15, 
 #llo,lhi,alo,ahi,blo,bhi
 min_degree = 0
 max_degree = 179
+edge_cut_width = 0
 result = 'N'
 blob_diagonal_sq = 6000 # <- proper size for existing algorithm
 status.on()
@@ -56,7 +57,11 @@ while(True):
     for blob in img.find_blobs(thr, pixels_threshold=500, area_threshold=500,merge = True):
         blobcode = blob.code()
         blob_diagonal_sq = blob.w()*blob.w()+blob.h()*blob.h()
-        if blobcode==1:#black
+        blob_cutted = blob.x()<=edge_cut_width or blob.x()+blob.w()>=img.width()-edge_cut_width\
+         or blob.y()<=edge_cut_width or blob.y()+blob.h()>=img.height()-edge_cut_width
+        if blob_cutted:
+            result =='N'
+        elif blobcode==1:#black
             linecount = 0
             for l in img.find_lines(roi = blob.rect() ,threshold = 1200, theta_margin = 50, rho_margin = 20):#直線検知しきい値 あまりいじる必要なし
                 if (min_degree <= l.theta()) and (l.theta() <= max_degree):
@@ -97,7 +102,7 @@ while(True):
     elif result == 'Y' or result == 'R':
         lowbit.value(False)
         highbit.value(True)
-    elif result == 'G' or result == 'U'
+    elif result == 'G' or result == 'U':
         lowbit.value(True)
         highbit.value(False)
     else:
