@@ -10,6 +10,9 @@ read_light::read_light(Adafruit_NeoPixel *_led){
 }
 
 int read_light::getFloorColor(){
+    led->setPixelColor(lednum,cr,cg,cb);
+    led->setBrightness(255);
+    led->show();
     if(this->read() < thresholdBS){
         return 1;
     }

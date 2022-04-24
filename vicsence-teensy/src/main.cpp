@@ -8,9 +8,9 @@
 read_camera camR(0,1);
 read_temperature d6tR(&Wire);
 
-read_camera camL(11,12);
+read_camera camL(9,10);
 read_temperature d6tL(&Wire1);
-detect_victim victim(0,1,11,12,&Wire, &Wire1);
+detect_victim victim(0,1,9,10,&Wire, &Wire1);
 
 uint8_t interruptPin=21;
 int vicNumR, vicNumL;
@@ -125,8 +125,8 @@ void loop() {
   Serial.print(" ");
   Serial.println(lHighBit);
   */
-  Serial.print(digitalRead(0));
-  Serial.println(digitalRead(1));
+  Serial.print(digitalRead(9));
+  Serial.println(digitalRead(10));
   tempR=d6tR.temp();
   tempL=d6tL.temp();
   //Serial.print(tempR);  Serial.print("\t");
