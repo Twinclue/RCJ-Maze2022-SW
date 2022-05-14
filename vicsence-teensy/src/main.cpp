@@ -124,10 +124,10 @@ void loop() {
   Serial.println(lHighBit);
 
 
-  //tempR=d6tR.temp();
-  //tempL=d6tL.temp();
-  //Serial.print(tempR);  Serial.print("\t");
-  //Serial.print(tempL);  Serial.print("\t");
-  //Serial.println("");
+  tempR=d6tR.temp();
+  tempL=d6tL.temp();
+  Serial.print(tempR);  Serial.print("\t");
+  Serial.print(tempL);  Serial.print("\t");
+  Serial.println("");
   delay(50);
 }

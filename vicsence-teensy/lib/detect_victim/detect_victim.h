@@ -12,8 +12,9 @@ class detect_victim{
         int8_t isHeatedVictim(bool rightSide);
         //int8_t[2] kitNumBothSide(); 
     private:
-        const float temp_th = 22.0;
+        const float temp_th = 40.0;
         const bool camFirst = true;
+        int victim_num = -1;
         HardwareSerial* serialR, *serialL;
         TwoWire* busR, *busL;
         read_camera* camR;
