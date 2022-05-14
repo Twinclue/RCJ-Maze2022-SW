@@ -43,8 +43,9 @@ thr = [(0, 40, -15, 15, -15, 15),(0, 92, -80, -11, 15, 62),(45, 90, -20, 50, 40,
 min_degree = 0
 max_degree = 179
 result = 'N'
-#blob_diagonal_sq = 6000 # <- proper size for existing algorithm
-#status.on()
+edge_cut_width = 0
+blob_diagonal_sq = 6000 # <- proper size for existing algorithm
+status.on()
 
 #clock = time.clock()
 while(True):
@@ -52,7 +53,7 @@ while(True):
     #divstati = []
     #clock.tick()
     img = sensor.snapshot()
-    #img.lens_corr(1.8)
+    img.lens_corr(1.8)
     blobcode = 0
     #//
     for blob in img.find_blobs(thr, pixels_threshold=500, area_threshold=500,merge = True):
@@ -66,16 +67,21 @@ while(True):
 
         #print(blob.code())
         blobcode = blob.code()
-        #blob_diagonal_sq = blob.w()*blob.w()+blob.h()*blob.h()
-        if blobcode==1:#black
+        blob_diagonal_sq = blob.w()*blob.w()+blob.h()*blob.h()
+        blob_cutted = blob.x()<=edge_cut_width or blob.x()+blob.w()>=img.width()-edge_cut_width\
+         or blob.y()<=edge_cut_width or blob.y()+blob.h()>=img.height()-edge_cut_width
+        if blob_cutted:
+            result =='N'
+
+        elif blobcode==1:#black
             linecount = 0
             for l in img.find_lines(roi = blob.rect() ,threshold = 1200, theta_margin = 50, rho_margin = 20):#直線検知しきい値 あまりいじる必要なし
                 if (min_degree <= l.theta()) and (l.theta() <= max_degree):
                     img.draw_line(l.line(), color = (255, 0, 0))
                     linecount += 1
             circlecount = 0
-            #circle_r=int(blob_diagonal_sq*0.00167) #dividing by 600
-            circle_r = 10
+            circle_r=int(blob_diagonal_sq*0.00167) #dividing by 600
+            #circle_r = 10
             for c in img.find_circles(roi = blob.rect(), threshold = 2200, x_margin = 10, y_margin = 20, r_margin = 100,
             r_min = circle_r, r_max = circle_r + 10, r_step = 2):
                 img.draw_circle(c.x(), c.y(), c.r(), color = (255, 0, 0))
