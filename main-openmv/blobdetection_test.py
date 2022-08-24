@@ -17,7 +17,7 @@ uart = UART(3,9600)
 #green_led = LED(2)
 #blue_led  = LED(3)
 
-#tim = Timer(4, freq=20000)
+tim = Timer(4, freq=20000)
 
 led.value(False)
 while(start.value() == False):
@@ -106,7 +106,10 @@ while(True):
             result = 'R'
         else:
             result = 'N'
-        img.draw_rectangle(blob.rect())
+        if(blob_cutted):
+            img.draw_rectangle(blob.rect(), color = (0,0,255))
+        else:
+            img.draw_rectangle(blob.rect())
         #for k in range(2):
 
     #print(result)
