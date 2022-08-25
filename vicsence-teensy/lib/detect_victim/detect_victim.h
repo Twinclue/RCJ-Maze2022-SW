@@ -14,6 +14,7 @@ class detect_victim{
     private:
         const float temp_th = 26.0;
         const bool camFirst = true;
+        int victim_num = -1;
         HardwareSerial* serialR, *serialL;
         TwoWire* busR, *busL;
         read_camera* camR;
