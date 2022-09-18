@@ -20,7 +20,9 @@ int read_light::getFloorColor(){
         return 0;
     }
 }
+int read_light::getColorRaw(){
 
+}
 int read_light::read(){
     return analogRead(emitter);
 }

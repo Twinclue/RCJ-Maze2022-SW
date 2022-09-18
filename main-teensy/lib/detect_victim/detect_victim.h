@@ -4,6 +4,7 @@
 #include <Arduino.h>
 #include "read_camera.h"
 #include "read_temperature.h"
+#include "read_light.h"
 
 class detect_victim{
     public:
@@ -21,5 +22,6 @@ class detect_victim{
         read_camera* camL;
         read_temperature* d6tR;
         read_temperature* d6tL;
+        read_light *light;
 };
 #endif
