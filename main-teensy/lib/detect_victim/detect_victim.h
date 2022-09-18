@@ -9,6 +9,7 @@ class detect_victim{
     public:
         detect_victim(HardwareSerial *_serialR, HardwareSerial *_serialL, TwoWire *_busR, TwoWire *_busL);
         int8_t kitNumOneSide(bool rightSide);
+        int8_t kitNumOneSideMode(bool rightside);
         int8_t isHeatedVictim(bool rightSide);
         //int8_t[2] kitNumBothSide(); 
     private:

@@ -104,30 +104,36 @@ void loop(){
       runningFlag = false;
       //n.lackOfProgress();
     }
-    switch (enc.read()){
-      case -40:
-        enc.write(0);
+    int encoderValue=enc.read()*0.25;
+    switch (encoderValue){
+      case -11: 
+        enc.write(10*4);  //jumping to another end
         break;
-      case -36:
+      case -10:
+        lcd.print("<== Action Test");
+        lcd.setCursor(0, 1);
+        lcd.print("Sensor Check ==>");
+        break;
+      case -9:
         if(digitalRead(RE_SW)){
           move.loadRescueKit();
         }
         break;
-      case -32:
+      case -8:
         lcd.print("CLICK TO BLINK");
         if(digitalRead(RE_SW)){
           move.blink();
         }
         
         break;
-      case -28:
+      case -7:
         lcd.print("corrDir");
         if(digitalRead(RE_SW)){
           move.corrDir();
         }
         break;
 
-      case -24:
+      case -6:
         lcd.print("Press to");
         lcd.setCursor(0, 1);
         lcd.print("turn to      <==");
@@ -136,7 +142,7 @@ void loop(){
         }
         break;
 
-      case -20:
+      case -5:
         lcd.print("Press to      ^");
         lcd.setCursor(0, 1);
         lcd.print("move to       |");
@@ -145,7 +151,7 @@ void loop(){
         }
         break;
 
-      case -16:
+      case -4:
         lcd.print("Press to");
         lcd.setCursor(0, 1);
         lcd.print("turn to      ==>");
@@ -154,7 +160,7 @@ void loop(){
         }
         break;
 
-      case -12:
+      case -3:
         lcd.print("Press to      |");
         lcd.setCursor(0, 1);
         lcd.print("move to       V");
@@ -163,7 +169,7 @@ void loop(){
         }
         break;
 
-      case -8:
+      case -2:
         lcd.print("Press to drop a");
         lcd.setCursor(0, 1);
         lcd.print("RescueKit to ==>");
@@ -172,7 +178,7 @@ void loop(){
         }
         break;
 
-      case -4:
+      case -1:
         lcd.print("Press to drop a");
         lcd.setCursor(0, 1);
         lcd.print("RescueKit to <==");
@@ -186,7 +192,7 @@ void loop(){
         lcd.setCursor(0, 1);
         lcd.print("Action Test ==>");
         break;
-      case 4:
+      case 1:
         lcd.print("Light Raw: ");
         lcd.print(light.read());
         lcd.setCursor(0, 1);
@@ -203,7 +209,7 @@ void loop(){
             break;
         }
         break;
-      case 8:
+      case 2:
         lcd.print(toff.read(3));
         lcd.setCursor(6, 0);
         lcd.print("Front");
@@ -218,7 +224,7 @@ void loop(){
         lcd.print(toff.read(1));
         delay(450);
         break;
-      case 12:
+      case 3:
         lcd.print(tofb.read(1));
         lcd.setCursor(6, 0);
         lcd.print(tofb.read(4));
@@ -233,21 +239,21 @@ void loop(){
         lcd.print(tofb.read(3));
         delay(450);
         break;
-      case 16:
+      case 4:
         lcd.print("Touch");
         lcd.setCursor(0, 1);
         lcd.print((digitalRead(SW_R) ? "True" : "False"));
         lcd.setCursor(11, 1);
         lcd.print((digitalRead(SW_L) ? "True" : "False"));
         break;
-      case 20:
+      case 5:
         lcd.print("Pitch: ");
         lcd.print(bno.getPitch());
         lcd.setCursor(0, 1);
         lcd.print("Yaw  : ");
         lcd.print(bno.getYaw());
         break;
-      case 24:
+      case 6:
         lcd.print("CLICK TO CALIB");
         lcd.setCursor(0, 1);
         lcd.print("CALIB MODE : ALL");
@@ -257,7 +263,7 @@ void loop(){
           digitalWrite(RE_LED_R,LOW);
         }
         break;
-      case 28:
+      case 7:
         lcd.print("CLICK TO CALIB");
         lcd.setCursor(0, 1);
         lcd.print("CALIB MODE : MAG");
@@ -267,7 +273,7 @@ void loop(){
           digitalWrite(RE_LED_R,LOW);
         }
         break;
-      case 32:
+      case 8:
         lcd.print("CLICK TO CALIB");
         lcd.setCursor(0, 1);
         lcd.print("CALIB MODE : ACC");
@@ -277,7 +283,7 @@ void loop(){
           digitalWrite(RE_LED_R,LOW);
         }
         break;
-      case 36:
+      case 9:
         lcd.print("CLICK TO CALIB");
         lcd.setCursor(0, 1);
         lcd.print("CALIB MODE : GYR");
@@ -287,7 +293,7 @@ void loop(){
           digitalWrite(RE_LED_R,LOW);
         }
         break;
-      case 40:
+      case 10:
         lcd.print("Right COMM: ");
         lcd.print(digitalRead(R_COMM_ITR));
         lcd.print(" ");
@@ -300,11 +306,11 @@ void loop(){
         lcd.print(digitalRead(L_COMM_2));
         lcd.print(digitalRead(L_COMM_3));
         break;
-      case 44:
-        enc.write(0);
+      case 11:
+        enc.write(-10*4);   //jumping to another end
         break;
-      default:
-        lcd.print(enc.read());
+      default:    //should never happen
+        lcd.print(encoderValue);
         break;
     }
     delay(50);
