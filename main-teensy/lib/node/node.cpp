@@ -355,7 +355,9 @@ void node::lackOfProgress(){
 bool node::isFullySearched(){
     for(int i=0;i<lastNodeNum;i++){
         if(nodes[i].count == 0){
-            return false;
+            if(nodes[i].tile != black){
+                return false;
+            }
         }
     }
     return true;

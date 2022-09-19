@@ -20,8 +20,10 @@ int read_light::getFloorColor(){
         return 0;
     }
 }
-int read_light::getColorRaw(){
-
+void read_light::setColor(uint8_t cr,uint8_t cg, uint8_t cb){
+    led->setPixelColor(1,cr,cg,cb);
+    led->setBrightness(255);
+    led->show();
 }
 int read_light::read(){
     return analogRead(emitter);

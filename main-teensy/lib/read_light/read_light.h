@@ -11,18 +11,18 @@ class read_light{
         read_light(Adafruit_NeoPixel *_led);
         int read();
         int getFloorColor(); // returns 0 on W,1 on B, 2 on S
-        int getColorRaw();
+        void setColor(uint8_t cr,uint8_t cg, uint8_t cb);
     private:
         Adafruit_NeoPixel *led;
         const uint8_t lednum = 1;
-        const uint8_t cr = 0;
-        const uint8_t cg = 0;
-        const uint8_t cb = 80;
+        const uint8_t cr = 100;
+        const uint8_t cg = 100;
+        const uint8_t cb = 100;
 
         const uint8_t emitter = 22;
 
-        const uint16_t thresholdBS = 50;
-        const uint16_t thresholdSW = 200;
+        const uint16_t thresholdBS = 350;
+        const uint16_t thresholdSW = 650;
 };
 
 #endif

@@ -37,6 +37,7 @@ uint8_t calib[4];
 int Yaw, Pitch;
 
 bool runningFlag = false;
+uint8_t colorState=0;
 
 void setup(){
     Serial.begin(115200);
@@ -193,6 +194,23 @@ void loop(){
         lcd.print("Action Test ==>");
         break;
       case 1:
+        if (digitalRead(0)) {
+          colorState++;
+        }
+        switch (colorState%3)
+        {
+        case 0:
+          light.setColor(80, 80, 80);
+          break;
+        case 1:
+          light.setColor(150, 0,0);
+          break;
+        case 2:
+          light.setColor(0, 150, 0);
+          break;
+        default:
+          break;
+        }
         lcd.print("Light Raw: ");
         lcd.print(light.read());
         lcd.setCursor(0, 1);

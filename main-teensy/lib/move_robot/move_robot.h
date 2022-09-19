@@ -30,7 +30,7 @@ class move_robot{
         uint8_t getRescueKitNum(){return rescueKitNum;}
         void attachInterrupts();
         void detachInterrups();
-        void blink();
+        void blink(bool color=0);
         void loadRescueKit(){flipper->write(0);}
     private:
 
@@ -72,8 +72,14 @@ class move_robot{
         uint8_t rescueKitNum = 12;
         short prePitch = 0;
 
-        
-        void victim();
+        int red;
+        int green;
+        const int r_th=200;
+        const int g_th=450;
+
+    
+
+        bool victim();
 
 };
 #endif

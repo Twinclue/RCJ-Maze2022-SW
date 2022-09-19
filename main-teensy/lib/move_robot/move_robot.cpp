@@ -44,6 +44,8 @@ short move_robot::fwd(short remDist = 300){
     bool frontAnker = false;
     int startDist;
     bool outOfRange = false;
+    bool vicFound = false;
+    
     if(front->read(fc) < back->read(bc) && front->read(fc) != 8190){
         frontAnker = true;
         startDist = front->read(fc);
@@ -98,7 +100,6 @@ short move_robot::fwd(short remDist = 300){
         if(avoidObstacle()){
             remDist = this->fwd(remDist - errorDist);
         }
-        victim();
         if(light->getFloorColor() == 1){
             remDist = 0;
             this->rev(errorDist);
@@ -106,6 +107,7 @@ short move_robot::fwd(short remDist = 300){
             right->on(0,false);
             return -1;
         }
+        if(!vicFound){vicFound=victim();}
         delay(1);
     }
 
@@ -145,7 +147,6 @@ short move_robot::fwd(short remDist = 300){
         if(avoidObstacle()){
             remDist = this->fwd(remDist - errorDist);
         }
-        victim();
         if(light->getFloorColor() == 1){
             remDist = 0;
             this->rev(errorDist);
@@ -153,6 +154,7 @@ short move_robot::fwd(short remDist = 300){
             right->on(0,false);
             return -1;
         }
+        if(!vicFound){vicFound=victim();}
         delay(1);
     }
     digitalWrite(RE_LED_B,LOW);
@@ -213,7 +215,7 @@ short move_robot::turn(short remAng = 90){
         }
         left->on(-power);
         right->on(-power);
-        victim();
+        //victim();
         delay(1);
     }
     detachInterrups();
@@ -410,17 +412,31 @@ void move_robot::drop(bool dir){
     }
 }
 
-void move_robot::blink(){
-    for(int i = 0;i<12;i++){
-        tone(23,422,50);
-        led->setPixelColor(0,led->Color(255,0,0));
-        led->show();
-        delay(250);
-        tone(23,844,50);
-        led->setPixelColor(0,led->Color(0,0,0));
-        led->show();
-        delay(250);
+void move_robot::blink(bool color=0){
+    if(!color){
+        for(int i = 0;i<12;i++){
+            tone(23,422,50);
+            led->setPixelColor(0,led->Color(255,0,0));
+            led->show();
+            delay(250);
+            tone(23,844,50);
+            led->setPixelColor(0,led->Color(0,0,0));
+            led->show();
+            delay(250);
+        }
+    }else{
+        for(int i = 0;i<12;i++){
+            tone(23,422,50);
+            led->setPixelColor(0,led->Color(0,255,0));
+            led->show();
+            delay(250);
+            tone(23,844,50);
+            led->setPixelColor(0,led->Color(0,0,0));
+            led->show();
+            delay(250);
+        }
     }
+    
 }
 
 void move_robot::attachInterrupts(){//ピン番号は仮
@@ -433,7 +449,35 @@ void move_robot::detachInterrups(){//ピン番号は仮
     detachInterrupt(digitalPinToInterrupt(L_COMM_ITR));
 }
 
-void move_robot::victim(){
+bool move_robot::victim(){
+    if(light->getFloorColor()==2){
+        delay(80);
+        left->on(0,false);
+        right->on(0,false);
+
+        light->setColor(150, 0, 0);
+        delay(100);
+        red=light->read();
+        light->setColor(0,150,0);
+        delay(100);
+        green=light->read();
+        light->setColor(80, 80, 80);
+        if(red>r_th&&green<g_th){
+            blink(0);
+            return true;
+        }else if(red<r_th&&green>g_th){
+            blink(1);
+            return true;
+        }else{
+            left->on(100,false);
+            right->on(100,false);
+            delay(100);
+            left->on(0,false);
+            right->on(0,false);
+        }
+        return false;
+    }
+    /*
     if(Rvicflag){
         if(mwall->getSingleWall(0)){
             left->on(0);
@@ -458,4 +502,5 @@ void move_robot::victim(){
         Lvicflag = false;
         digitalWrite(RE_LED_B,LOW);
     }
+    */
 }
