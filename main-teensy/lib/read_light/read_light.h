@@ -4,7 +4,7 @@
 
 const uint8_t silver = 2;
 const uint8_t black = 1;
-const uint8_t whilte = 0;
+const uint8_t white = 0;
 
 class read_light{
     public:

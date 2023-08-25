@@ -11,13 +11,13 @@ read_light::read_light(Adafruit_NeoPixel *_led){
 
 int read_light::getFloorColor(){
     if(this->read() < thresholdBS){
-        return 1;
+        return black;   //Black
     }
     else if(this->read() < thresholdSW){
-        return 2;
+        return silver;   //Silver, other hued color
     }
     else{
-        return 0;
+        return white;   //White
     }
 }
 void read_light::setColor(uint8_t cr,uint8_t cg, uint8_t cb){

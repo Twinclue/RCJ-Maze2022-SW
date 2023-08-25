@@ -450,57 +450,70 @@ void move_robot::detachInterrups(){//ピン番号は仮
 }
 
 bool move_robot::victim(){
-    if(light->getFloorColor()==2){
-        delay(80);
-        left->on(0,false);
-        right->on(0,false);
+    switch (gameMode){  // グローバル変数gameMode
+        case WORLD: //ワールドリーグ仕様
+            if(Rvicflag){
+                if(mwall->getSingleWall(0)){
+                    left->on(0);
+                    right->on(0);
+                    blink();
+                    for(int count = 0;count<Rkitnum;count++){
+                        drop(false);
+                    }
+                }
+                Rvicflag = false;
+                digitalWrite(RE_LED_R,LOW);
+                return true;
 
-        light->setColor(150, 0, 0);
-        delay(100);
-        red=light->read();
-        light->setColor(0,150,0);
-        delay(100);
-        green=light->read();
-        light->setColor(80, 80, 80);
-        if(red>r_th&&green<g_th){
-            blink(0);
-            return true;
-        }else if(red<r_th&&green>g_th){
-            blink(1);
-            return true;
-        }else{
-            left->on(100,false);
-            right->on(100,false);
-            delay(100);
-            left->on(0,false);
-            right->on(0,false);
-        }
-        return false;
-    }
-    /*
-    if(Rvicflag){
-        if(mwall->getSingleWall(0)){
-            left->on(0);
-            right->on(0);
-            blink();
-            for(int count = 0;count<Rkitnum;count++){
-                drop(false);
+            }else if(Lvicflag){
+                if(mwall->getSingleWall(2)==true){
+                    left->on(0);
+                    right->on(0);
+                    blink();
+                    for(int count = 0;count<Lkitnum;count++){
+                        drop(true);
+                    }
+                }
+                Lvicflag = false;
+                digitalWrite(RE_LED_B,LOW);
+                return true;
+                
+            }else{
+                return false;
             }
-        }
-        Rvicflag = false;
-        digitalWrite(RE_LED_R,LOW);
-    }
-    if(Lvicflag){
-        if(mwall->getSingleWall(2)==true){
-            left->on(0);
-            right->on(0);
-            blink();
-            for(int count = 0;count<Lkitnum;count++){
-                drop(true);
+        
+        case ENTRY: //エントリーリーグ仕様，床面の色で判定
+            if(light->getFloorColor()==2){  //ここも単なる変数じゃなくて読んで意味が分かるようにしたい
+                //ちょっと進んで停止？
+                delay(80);
+                left->on(0,false);
+                right->on(0,false);
+                //計測
+                light->setColor(150, 0, 0);
+                delay(100);
+                red=light->read();
+                light->setColor(0,150,0);
+                delay(100);
+                green=light->read();
+                light->setColor(80, 80, 80);
+                //出力
+                if(red>r_th&&green<g_th){   //赤
+                    blink(0);
+                    return true;
+                }else if(red<r_th&&green>g_th){//緑
+                    blink(1);
+                    return true;
+                }else{  //判定不可
+                    left->on(100,false);
+                    right->on(100,false);
+                    delay(100);
+                    left->on(0,false);
+                    right->on(0,false);
+                }
+                return false;
             }
-        }
-        Lvicflag = false;
-        digitalWrite(RE_LED_B,LOW);
+        
+        default:
+        return false; //ここ適当なので，修正すること
     }
-    */
 }
