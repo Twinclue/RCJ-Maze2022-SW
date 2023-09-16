@@ -210,10 +210,36 @@ short move_robot::turn(short remAng = 90){
         else{
             power = turnPid->calcPI(errorAng,remAng);
         }
-        if(digitalRead(SW_L) == true || digitalRead(SW_R) == true){
-            left->on(-250);
-            right->on(250);
-            delay(100);
+        if(remAng > 0){//CWのとき
+            if(digitalRead(SW_L) == true){//バンパー引っかかり検知
+                left->on(-250,false);
+                right->on(0,false);
+                delay(300);
+                left->on(-250,false);
+                right->on(250,false);
+                delay(100);
+
+            }
+            else if(digitalRead(SW_R) == true){//壁衝突
+                left->on(-250,false);
+                right->on(250,false);
+                delay(100);
+            }
+        }
+        else{//CCWのとき
+            if(digitalRead(SW_L) == true){
+                left->on(-250,false);
+                right->on(250,false);
+                delay(100);
+            }
+            else if(digitalRead(SW_R) == true){
+                left->on(0,false);
+                right->on(250,false);
+                delay(300);
+                left->on(-250,false);
+                right->on(250,false);
+                delay(100);
+            }
         }
         left->on(-power);
         right->on(-power);
