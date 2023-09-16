@@ -450,7 +450,7 @@ void move_robot::detachInterrups(){//ピン番号は仮
 }
 
 bool move_robot::victim(){
-    switch (gameMode){  // グローバル変数gameMode
+    switch (currentMode){  // グローバル変数gameMode
         case WORLD: //ワールドリーグ仕様
             if(Rvicflag){
                 if(mwall->getSingleWall(0)){
@@ -477,7 +477,7 @@ bool move_robot::victim(){
                 Lvicflag = false;
                 digitalWrite(RE_LED_B,LOW);
                 return true;
-                
+
             }else{
                 return false;
             }
@@ -503,10 +503,10 @@ bool move_robot::victim(){
                 }else if(red<r_th&&green>g_th){//緑
                     blink(1);
                     return true;
-                }else{  //判定不可
+                }else{  //銀か何か
                     left->on(100,false);
-                    right->on(100,false);
-                    delay(100);
+                    right->on(-100,false);
+                    delay(200);
                     left->on(0,false);
                     right->on(0,false);
                 }
