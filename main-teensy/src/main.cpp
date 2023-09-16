@@ -39,10 +39,7 @@ int Yaw, Pitch;
 bool runningFlag = false;
 uint8_t colorState=0;
 
-enum class gameMode : uint8_t{
-  WORLD,
-  ENTRY,
-};
+_gameMode gameMode = _gameMode::WORLD;
 
 void setup(){
     Serial.begin(115200);

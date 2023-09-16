@@ -7,6 +7,8 @@ volatile bool Lvicflag = false;
 volatile byte Rkitnum = 0;
 volatile byte Lkitnum = 0;
 
+extern _gameMode gameMode;
+
 void intrR(){
     Rvicflag = true;
     digitalWrite(RE_LED_R,HIGH);
@@ -167,7 +169,7 @@ short move_robot::fwd(short remDist = 300){
     return 0;
 }
 
-short move_robot::rev(short remDist = 300){
+int move_robot::rev(int remDist = 300){
     int startDist = front->read(fc);
     int errorDist = 0;
     short startAng = imu->getYaw();
@@ -451,7 +453,7 @@ void move_robot::detachInterrups(){//ピン番号は仮
 
 bool move_robot::victim(){
     switch (gameMode){  // グローバル変数gameMode
-        case WORLD: //ワールドリーグ仕様
+        case _gameMode::WORLD: //ワールドリーグ仕様
             if(Rvicflag){
                 if(mwall->getSingleWall(0)){
                     left->on(0);
@@ -482,7 +484,7 @@ bool move_robot::victim(){
                 return false;
             }
         
-        case ENTRY: //エントリーリーグ仕様，床面の色で判定
+        case _gameMode::ENTRY: //エントリーリーグ仕様，床面の色で判定
             if(light->getFloorColor()==2){  //ここも単なる変数じゃなくて読んで意味が分かるようにしたい
                 //ちょっと進んで停止？
                 delay(80);

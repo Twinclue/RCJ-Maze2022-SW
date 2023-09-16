@@ -13,11 +13,16 @@
 #include "detect_wall.h"
 #include "pinmap.h"
 
+enum class _gameMode : uint8_t{
+  WORLD,
+  ENTRY,
+};
+
 class move_robot{
     public:
         move_robot(drive_motor *_left,drive_motor *_right,read_tof *_front,read_tof *_back,read_BNO055 *_imu,read_light *_light,LiquidCrystal *_disp,Adafruit_NeoPixel *_led);
         short fwd(short remDist = 300);
-        short rev(short remDist = 300);
+        int rev(int remDist = 300);
         short turn(short remAng = 90);
         short goUp();
         short goDown();
