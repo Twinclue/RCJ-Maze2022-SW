@@ -478,8 +478,8 @@ void move_robot::detachInterrups(){//ピン番号は仮
 }
 
 bool move_robot::victim(){
-    switch (gameMode){  // グローバル変数gameMode
-        case _gameMode::WORLD: //ワールドリーグ仕様
+    switch (currentMode){  // グローバル変数gameMode
+        case WORLD: //ワールドリーグ仕様
             if(Rvicflag){
                 if(mwall->getSingleWall(0)){
                     left->on(0);
@@ -510,7 +510,7 @@ bool move_robot::victim(){
                 return false;
             }
         
-        case _gameMode::ENTRY: //エントリーリーグ仕様，床面の色で判定
+        case ENTRY: //エントリーリーグ仕様，床面の色で判定
             if(light->getFloorColor()==2){  //ここも単なる変数じゃなくて読んで意味が分かるようにしたい
                 //ちょっと進んで停止？
                 delay(80);
