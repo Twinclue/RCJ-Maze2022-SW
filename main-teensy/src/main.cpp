@@ -90,6 +90,8 @@ void setup(){
     }
 }
 void loop(){
+
+
   lcd.home();
   lcd.clear();
   if (digitalRead(STST) == HIGH) {
@@ -110,7 +112,7 @@ void loop(){
     int encoderValue=enc.read()*0.25;
     switch (encoderValue){
       case -11: 
-        enc.write(10*4);  //jumping to another end
+        enc.write(11*4);  //jumping to another end
         break;
       case -10:
         lcd.print("<== Action Test");
@@ -198,6 +200,7 @@ void loop(){
       case 1:
         if (digitalRead(0)) {
           colorState++;
+          delay(100);
         }
         switch (colorState%3)
         {
@@ -327,6 +330,22 @@ void loop(){
         lcd.print(digitalRead(L_COMM_3));
         break;
       case 11:
+        lcd.print("GAME MODE:");
+        if(digitalRead(RE_SW)){
+          if(move.currentMode==move.WORLD){move.currentMode=move.ENTRY;}
+          else if(move.currentMode==move.ENTRY){move.currentMode=move.WORLD;}
+          else{
+            lcd.setCursor(0,1);
+            lcd.print("EXEPTION");
+            while(1);
+          }
+          delay(100);
+        }
+        lcd.setCursor(0, 1);
+        if(move.currentMode==move.WORLD){lcd.print("WORLD");}
+        if(move.currentMode==move.ENTRY){lcd.print("ENTRY");}
+        break;
+      case 12:
         enc.write(-10*4);   //jumping to another end
         break;
       default:    //should never happen

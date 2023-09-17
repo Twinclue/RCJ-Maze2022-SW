@@ -37,6 +37,13 @@ class move_robot{
         void detachInterrups();
         void blink(bool color=0);
         void loadRescueKit(){flipper->write(0);}
+
+        enum gameMode : uint8_t{
+            WORLD,
+            ENTRY,
+        };
+        gameMode currentMode=gameMode::WORLD;
+        
     private:
 
         drive_motor *left;
