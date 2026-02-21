@@ -10,13 +10,13 @@ volatile byte Lkitnum = 0;
 void intrR(){
     Rvicflag = true;
     digitalWrite(RE_LED_R,HIGH);
-    Rkitnum = digitalRead(R_COMM_2) || (digitalRead(R_COMM_3) << 1);
+    Rkitnum = digitalRead(R_COMM_2) | (digitalRead(R_COMM_3) << 1);
     return;
 }
 
 void intrL(){
     Lvicflag = true;
-    Lkitnum = digitalRead(L_COMM_2) || (digitalRead(L_COMM_3) << 1);
+    Lkitnum = digitalRead(L_COMM_2) | (digitalRead(L_COMM_3) << 1);
     digitalWrite(RE_LED_B,HIGH);
     return;
 }
@@ -40,7 +40,7 @@ move_robot::move_robot(drive_motor *_left,drive_motor *_right,read_tof *_front,r
     delay(500);
 }
 
-short move_robot::fwd(short remDist = 300){
+short move_robot::fwd(short remDist /*= 300*/){
     bool frontAnker = false;
     int startDist;
     bool outOfRange = false;
@@ -165,7 +165,7 @@ short move_robot::fwd(short remDist = 300){
     return 0;
 }
 
-short move_robot::rev(short remDist = 300){
+short move_robot::rev(short remDist /*= 300*/){
     int startDist = front->read(fc);
     int errorDist = 0;
     short startAng = imu->getYaw();
@@ -183,7 +183,7 @@ short move_robot::rev(short remDist = 300){
     return 0;
 }
 
-short move_robot::turn(short remAng = 90){
+short move_robot::turn(short remAng /*= 90*/){
     uint16_t loopcount = 0;
     short startAng = imu->getYaw();
     short errorAng = 0;
